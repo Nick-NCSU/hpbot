@@ -1,0 +1,135 @@
+const { Client, MessageEmbed } = require('discord.js');
+const { prefix, token } = require('./config.json');
+
+const client = new Client();
+const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
+const fetch = require('node-fetch');
+
+client.once('ready', () => {
+	console.log('Ready!');
+});
+
+client.on('message', async message => {
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+
+	const args = message.content.slice(prefix.length).split(/ +/);
+	const command = args.shift().toLowerCase();
+	if (command === 'link') {
+		// src!link <game>
+		if (!args[0]) {
+			return message.channel.send('src!link <game>');
+		}
+		const game = args.shift();
+		const { data } = await fetch(`https://www.speedrun.com/api/v1/games?abbreviation=${game}`).then(response => response.json());
+		if (!data.length) {
+			return message.channel.send(`No results found for **${game}**.`);
+		}
+		const [answer] = data;
+
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle(answer.names.international)
+			.setURL(answer.weblink)
+			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+		message.channel.send(embed);
+	}
+	else if (command === 'c' || command === 'categories') {
+		// src!categories <game>
+		if (!args[0]) {
+			return message.channel.send('src!categories <game>');
+		}
+		const game = args.shift();
+		const { data } = await fetch(`https://www.speedrun.com/api/v1/games?abbreviation=${game}&embed=categories.variables`).then(response => response.json());
+		if (!data.length) {
+			return message.channel.send(`No results found for **${game}**.`);
+		}
+		const [dataArr] = data;
+		const category = [];
+		for (let i = 0; i < dataArr.categories.data.length; i++) {
+			category[i] = [];
+			category[i][0] = dataArr.categories.data[i].name;
+			if (dataArr.categories.data[i].variables.data[0]) {
+				let varArr = dataArr.categories.data[i].variables.data[0].values.values;
+				varArr = Object.values(varArr);
+				for (let j = 0; j < varArr.length; j++) {
+					category[i][j + 1] = varArr[j].label;
+				}
+			}
+		}
+		let name1;
+		let name2 = '';
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle(dataArr.names.international)
+			.setURL(dataArr.weblink)
+			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+		for (let k = 0; k < category.length; k++) {
+			name1 = category[k][0];
+			for (let m = 0; m < category[k].length - 1; m++) {
+				name2 += category[k][m + 1];
+				if (m < category[k].length - 2) {
+					name2 += ', ';
+				}
+			}
+			if (!name2) {
+				name2 = 'None';
+			}
+			embed.addField('**Category:** ' + name1, ' **Variables:** ' + name2 + '\n');
+			name2 = '';
+		}
+		message.channel.send(embed);
+	}
+	else if (command === 'help') {
+		// src!help
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle('Help')
+			.setThumbnail('https://www.speedrun.com/themes/Default/1st.png')
+			.addField('src!help', 'Shows this help message.')
+			.addField('src!link <game>', 'Sends a link to the provided game.')
+			.addField('src!categories|c <game>', 'Shows the categories/variables for the provided game.')
+			.addField('src!search|s <keyword> (page)', 'Searches for games containing the keyword(s).')
+			.addField('src!wr <game> <category> (variable)', 'Tells you the WR for the provided game and category. (Not Implemented).')
+		message.channel.send(embed);
+	}
+	else if (command === 'search' || command === 's') {
+		// src!search <game> (page)
+		if (!args[0]) {
+			return message.channel.send('src!search <game>');
+		}
+		const game = args.shift();
+		let page = 0;
+		if (args[0]) {
+			page = (args.shift() - 1) * 20;
+		}
+		const { data } = await fetch(`https://www.speedrun.com/api/v1/games?name=${game}&offset=${page}`).then(response => response.json());
+		if (!data.length) {
+			return message.channel.send(`No results found for **${game}**.`);
+		}
+		const answer = [];
+		for (let i = 0; i < data.length; i++) {
+			answer[i] = [];
+			answer[i][0] = data[i].names.international;
+			answer[i][1] = data[i].abbreviation;
+		}
+		if (answer.length > 25) {
+			return message.channel.send('Please narrow your search. Max Results: Your Results: ' + answer.length);
+		}
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle('Results (' + answer.length + ')')
+			.setThumbnail('https://www.speedrun.com/themes/Default/1st.png')
+		answer.forEach(entry => {
+			embed.addField(entry[0], entry[1]);
+		});
+		if (answer.length == 20) {
+			embed.setFooter('There may be more pages. Use src!search <game> <page>')
+		}
+		message.channel.send(embed);
+	}
+	else if (command === 'wr') {
+		// src!wr <game> <category> (variable)
+		// https://www.speedrun.com/api/v1/leaderboards/9dow9rm1/category/9kvo3532?var-r8rod278=gq7kv3v1&top=1
+	}
+});
+client.login(token);
