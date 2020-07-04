@@ -1,0 +1,16 @@
+{
+  "name": "src-bot",
+  "version": "1.0.0",
+  "description": "src bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "penguin",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^12.2.0",
+    "eslint": "^7.3.1",
+    "node-fetch": "^2.6.0"
+  }
+}
