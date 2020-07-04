@@ -1,7 +1,5 @@
 const { Client, MessageEmbed } = require('discord.js');
-
-const token = process.env.token;
-const prefix = 'src!';
+const { prefix, token } = require('./config.json');
 
 const client = new Client();
 const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
@@ -58,7 +56,7 @@ client.on('message', async message => {
 				}
 			}
 		}
-		let name1;
+		let name1, name3;
 		let name2 = '';
 		const embed = new MessageEmbed()
 			.setColor('118855')
@@ -67,6 +65,12 @@ client.on('message', async message => {
 			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
 		for (let k = 0; k < category.length; k++) {
 			name1 = category[k][0];
+			if (dataArr.categories.data[k].variables.data[0]) {
+				name3 = dataArr.categories.data[k].variables.data[0].id;
+			}
+			else {
+				name3 = 'None'
+			}
 			for (let m = 0; m < category[k].length - 1; m++) {
 				name2 += category[k][m + 1];
 				if (m < category[k].length - 2) {
@@ -76,7 +80,7 @@ client.on('message', async message => {
 			if (!name2) {
 				name2 = 'None';
 			}
-			embed.addField('**Category:** ' + name1, ' **Variables:** ' + name2 + '\n');
+			embed.addField('**Category:** ' + name1 + '** - id:** ' + name3, ' **Variables:** ' + name2 + '\n');
 			name2 = '';
 		}
 		message.channel.send(embed);
@@ -91,7 +95,7 @@ client.on('message', async message => {
 			.addField('src!link <game>', 'Sends a link to the provided game.')
 			.addField('src!categories|c <game>', 'Shows the categories/variables for the provided game.')
 			.addField('src!search|s <keyword> (page)', 'Searches for games containing the keyword(s).')
-			.addField('src!wr <game> <category> (variable)', 'Tells you the WR for the provided game and category. (Not Implemented).')
+			.addField('src!wr <game> <category> (variable id) (variable)', 'Tells you the WR for the provided game and category.')
 		message.channel.send(embed);
 	}
 	else if (command === 'search' || command === 's') {
@@ -130,8 +134,41 @@ client.on('message', async message => {
 		message.channel.send(embed);
 	}
 	else if (command === 'wr') {
-		// src!wr <game> <category> (variable)
+		// src!wr <game> <category> (variable id) (variable)
 		// https://www.speedrun.com/api/v1/leaderboards/9dow9rm1/category/9kvo3532?var-r8rod278=gq7kv3v1&top=1
+		if (!args[0]) {
+			return message.channel.send('Missing Arguement: Game.\nsrc!wr <game> <category> (variable id) (variable)');
+		}
+		const game = args.shift();
+		if (!args[0]) {
+			return message.channel.send('Missing Arguement: Category.\nsrc!wr <game> <category> (variable id) (variable)');
+		}
+		const category = args.shift();
+		if (args[0] && !args[1]) {
+			return message.channel.send('Missing Arguement: variable.\nsrc!wr <game> <category> (variable id) (variable)');
+		}
+		let varId;
+		let variable;
+		if (args[0] && args[1]) {
+			varId = args.shift();
+			variable = args.shift();
+		}
+		const { data } = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}?var-${varId}=${variable}&top=1&embed=players`).then(response => response.json());
+		if (!data) {
+			return message.channel.send(`No results found for **${game}**.`);
+		}
+		const dataArr = data;
+		const runLength = new Date(dataArr.runs[0].run.times.primary_t * 1000).toISOString().slice(11, -1);
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle('World Record for ' + game + ': ' + category)
+			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+			.addField('Time', runLength)
+			.addField('WR Holder', dataArr.players.data[0].names.international)
+			.addField('Run Link', dataArr.runs[0].run.weblink)
+			.addField('Run Video Link', dataArr.runs[0].run.videos.links[0].uri)
+			.addField('Comment', dataArr.runs[0].run.comment)
+		message.channel.send(embed);
 	}
 });
 client.login(token);
