@@ -169,7 +169,7 @@ client.on('message', async message => {
 			.addField('WR Holder', dataArr.players.data[0].names.international)
 			.addField('Run Link', dataArr.runs[0].run.weblink)
 			.addField('Run Video Link', dataArr.runs[0].run.videos.links[0].uri)
-			.addField('Comment', trim(dataArr.runs[0].run.comment, 1024))
+			.addField('Description', trim(dataArr.runs[0].run.Description, 1024))
 		message.channel.send(embed);
 	}
 });
