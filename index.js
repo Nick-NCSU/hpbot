@@ -171,6 +171,7 @@ client.on('message', async message => {
 			.addField('Run Video Link', dataArr.runs[0].run.videos.links[0].uri)
 			.addField('Description', dataArr.runs[0].run.comment)
 		message.channel.send(embed);
+	}
 	else if (command === 'time') {
 		// src!wr <game> <category> <place> (variable id) (variable)
 		// https://www.speedrun.com/api/v1/leaderboards/9dow9rm1/category/9kvo3532?var-r8rod278=gq7kv3v1
