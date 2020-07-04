@@ -1,5 +1,7 @@
 const { Client, MessageEmbed } = require('discord.js');
-const { prefix, token } = require('./config.json');
+
+const token = process.env.BOT_TOKEN;
+const prefix = 'src!';
 
 const client = new Client();
 const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
