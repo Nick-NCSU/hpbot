@@ -204,7 +204,7 @@ client.on('message', async message => {
 		const runLength = new Date(dataArr.runs[0].run.times.primary_t * 1000).toISOString().slice(11, -1);
 		const embed = new MessageEmbed()
 			.setColor('118855')
-			.setTitle('World Record for ' + game + ': ' + category)
+			.setTitle('Result for ' + game + ': ' + category)
 			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
 			.addField('Time', runLength)
 			.addField('Runner', dataArr.players.data[place - 1].names.international)
