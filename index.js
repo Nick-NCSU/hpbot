@@ -1,6 +1,8 @@
 const { Client, MessageEmbed } = require('discord.js');
+
 const prefix = 'src!';
 const token = process.env.token;
+
 const client = new Client();
 const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
 const fetch = require('node-fetch');
