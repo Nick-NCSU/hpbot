@@ -171,6 +171,46 @@ client.on('message', async message => {
 			.addField('Run Video Link', dataArr.runs[0].run.videos.links[0].uri)
 			.addField('Description', dataArr.runs[0].run.comment)
 		message.channel.send(embed);
+	else if (command === 'time') {
+		// src!wr <game> <category> <place> (variable id) (variable)
+		// https://www.speedrun.com/api/v1/leaderboards/9dow9rm1/category/9kvo3532?var-r8rod278=gq7kv3v1
+		if (!args[0]) {
+			return message.channel.send('Missing Arguement: Game.\nsrc!time <game> <category> <place> (variable id) (variable)');
+		}
+		const game = args.shift();
+		if (!args[0]) {
+			return message.channel.send('Missing Arguement: Category.\nsrc!time <game> <category> <place> (variable id) (variable)');
+		}
+		const category = args.shift();
+		if (!args[0]) {
+			return message.channel.send('Missing Arguement: Place.\nsrc!time <game> <category> <place> (variable id) (variable)');
+		}
+		const place = args.shift();
+		if (args[0] && !args[1]) {
+			return message.channel.send('Missing Arguement: variable.\nsrc!time <game> <category> <place> (variable id) (variable)');
+		}
+		let varId;
+		let variable;
+		if (args[0] && args[1]) {
+			varId = args.shift();
+			variable = args.shift();
+		}
+		const { data } = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}?var-${varId}=${variable}&embed=players`).then(response => response.json());
+		if (!data) {
+			return message.channel.send(`No results found for **${game}**.`);
+		}
+		const dataArr = data;
+		const runLength = new Date(dataArr.runs[0].run.times.primary_t * 1000).toISOString().slice(11, -1);
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle('World Record for ' + game + ': ' + category)
+			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+			.addField('Time', runLength)
+			.addField('WR Holder', dataArr.players.data[0].names.international)
+			.addField('Run Link', dataArr.runs[place - 1].run.weblink)
+			.addField('Run Video Link', dataArr.runs[place - 1].run.videos.links[0].uri)
+			.addField('Description', dataArr.runs[place - 1].run.comment)
+		message.channel.send(embed);
 	}
 });
 client.login(token);
