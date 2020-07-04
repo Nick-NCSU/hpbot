@@ -201,7 +201,7 @@ client.on('message', async message => {
 			return message.channel.send(`No results found for **${game}**.`);
 		}
 		const dataArr = data;
-		const runLength = new Date(dataArr.runs[0].run.times.primary_t * 1000).toISOString().slice(11, -1);
+		const runLength = new Date(dataArr.runs[place - 1].run.times.primary_t * 1000).toISOString().slice(11, -1);
 		const embed = new MessageEmbed()
 			.setColor('118855')
 			.setTitle('Result for ' + game + ': ' + category)
