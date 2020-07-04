@@ -207,7 +207,7 @@ client.on('message', async message => {
 			.setTitle('World Record for ' + game + ': ' + category)
 			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
 			.addField('Time', runLength)
-			.addField('WR Holder', dataArr.players.data[place - 1].names.international)
+			.addField('Runner', dataArr.players.data[place - 1].names.international)
 			.addField('Run Link', dataArr.runs[place - 1].run.weblink)
 			.addField('Run Video Link', dataArr.runs[place - 1].run.videos.links[0].uri)
 			.addField('Description', dataArr.runs[place - 1].run.comment)
