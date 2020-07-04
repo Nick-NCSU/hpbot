@@ -1,6 +1,6 @@
 const { Client, MessageEmbed } = require('discord.js');
 
-const token = process.env.BOT_TOKEN;
+const token = process.env.token;
 const prefix = 'src!';
 
 const client = new Client();
