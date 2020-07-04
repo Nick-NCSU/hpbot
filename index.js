@@ -98,6 +98,7 @@ client.on('message', async message => {
 			.addField('src!categories|c <game>', 'Shows the categories/variables for the provided game.')
 			.addField('src!search|s <keyword> (page)', 'Searches for games containing the keyword(s).')
 			.addField('src!wr <game> <category> (variable id) (variable)', 'Tells you the WR for the provided game and category.')
+			.addField('src!time <game> <category> <place> (variable id) (variable)', 'Tells you the info for the provided game, category, and place.')
 		message.channel.send(embed);
 	}
 	else if (command === 'search' || command === 's') {
