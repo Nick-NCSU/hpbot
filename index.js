@@ -154,7 +154,7 @@ client.on('message', async message => {
 		let variable;
 		if (args[0] && args[1]) {
 			varId = args.shift();
-			variable = args;
+			variable = args.toString().replace(",", "_");
 		}
 		const { data } = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}?var-${varId}=${variable}&top=1&embed=players`).then(response => response.json());
 		if (!data) {
