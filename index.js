@@ -1,7 +1,8 @@
 const { Client, MessageEmbed } = require('discord.js');
+const commands = require('./modules');
 
 const prefix = 'src!';
-const token = process.env.token;
+const token = "NzI4NDAxODUwMDMzODk3NTc0.Xv53Fg.e27Bt75y9KUWY-ewx0hnzfvhiCQ";
 
 const client = new Client();
 const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
@@ -21,13 +22,12 @@ client.on('message', async message => {
 		if (!args[0]) {
 			return message.channel.send('src!link <game>');
 		}
-		const game = args.shift();
-		const { data } = await fetch(`https://www.speedrun.com/api/v1/games?abbreviation=${game}`).then(response => response.json());
-		if (!data.length) {
+		const game = args[0];
+		const {data} = await commands.Link.getLink(args);
+		[answer] = data;
+		if (answer.length == 0) {
 			return message.channel.send(`No results found for **${game}**.`);
 		}
-		const [answer] = data;
-
 		const embed = new MessageEmbed()
 			.setColor('118855')
 			.setTitle(answer.names.international)
@@ -40,8 +40,8 @@ client.on('message', async message => {
 		if (!args[0]) {
 			return message.channel.send('src!categories <game>');
 		}
-		const game = args.shift();
-		const { data } = await fetch(`https://www.speedrun.com/api/v1/games?abbreviation=${game}&embed=categories.variables`).then(response => response.json());
+		const game = args[0];
+		const { data } = await commands.Categories.getCategories(args);
 		if (!data.length) {
 			return message.channel.send(`No results found for **${game}**.`);
 		}
@@ -106,12 +106,7 @@ client.on('message', async message => {
 		if (!args[0]) {
 			return message.channel.send('src!search <game>');
 		}
-		const game = args.shift();
-		let page = 0;
-		if (args[0]) {
-			page = (args.shift() - 1) * 20;
-		}
-		const { data } = await fetch(`https://www.speedrun.com/api/v1/games?name=${game}&offset=${page}`).then(response => response.json());
+		const { data } = await commands.Search.getSearch(args);
 		if (!data.length) {
 			return message.channel.send(`No results found for **${game}**.`);
 		}
@@ -122,7 +117,7 @@ client.on('message', async message => {
 			answer[i][1] = data[i].abbreviation;
 		}
 		if (answer.length > 25) {
-			return message.channel.send('Please narrow your search. Max Results: Your Results: ' + answer.length);
+			return message.channel.send('Please narrow your search. Max Results: 25 Your Results: ' + answer.length);
 		}
 		const embed = new MessageEmbed()
 			.setColor('118855')
@@ -142,21 +137,13 @@ client.on('message', async message => {
 		if (!args[0]) {
 			return message.channel.send('Missing Arguement: Game.\nsrc!wr <game> <category> (variable id) (variable)');
 		}
-		const game = args.shift();
-		if (!args[0]) {
+		if (!args[1]) {
 			return message.channel.send('Missing Arguement: Category.\nsrc!wr <game> <category> (variable id) (variable)');
 		}
-		const category = args.shift();
-		if (args[0] && !args[1]) {
+		if (args[2] && !args[3]) {
 			return message.channel.send('Missing Arguement: variable.\nsrc!wr <game> <category> (variable id) (variable)');
 		}
-		let varId;
-		let variable;
-		if (args[0] && args[1]) {
-			varId = args.shift();
-			variable = args.toString().replace(",", " ");
-		}
-		const { data } = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}?var-${varId}=${variable}&top=1&embed=players`).then(response => response.json());
+		const {data} = await commands.Wr.getWr(args);
 		if (!data) {
 			return message.channel.send(`No results found for **${game}**.`);
 		}
