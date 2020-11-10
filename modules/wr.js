@@ -1,11 +1,11 @@
 const fetch = require('node-fetch');
 
-exports.getWr = async function getLink (args) {
-    const game = args[0];
-    const category = args[1];
+exports.getWr = async function getWr (args) {
+    const game = args.shift();
+    const category = args.shift();
     let varId;
     let variable;
-    if (args[2] && args[3]) {
+    if (args[0] && args[1]) {
         varId = args.shift();
         variable = args.toString().replace(",", " ");
     }

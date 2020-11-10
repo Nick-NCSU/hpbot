@@ -5,7 +5,6 @@ const prefix = 'src!';
 const token = "NzI4NDAxODUwMDMzODk3NTc0.Xv53Fg.e27Bt75y9KUWY-ewx0hnzfvhiCQ";
 
 const client = new Client();
-const trim = (str, max) => ((str.length > max) ? `${str.slice(0, max - 3)}...` : str);
 const fetch = require('node-fetch');
 
 client.once('ready', () => {
@@ -17,33 +16,54 @@ client.on('message', async message => {
 
 	const args = message.content.slice(prefix.length).split(/ +/);
 	const command = args.shift().toLowerCase();
-	if (command === 'link') {
-		// src!link <game>
+	switch(command) {
+		case 'help':
+			help();
+		case 'link':
+			link();
+			break;
+		case 'c':
+		case 'categories':
+			categories();
+			break;
+		case 's':
+		case 'search':
+			search();
+			break;
+		case 'wr':
+			wr();
+			break;
+		case 'time':
+			time();
+			break;
+	}
+
+	async function link() {
 		if (!args[0]) {
-			return message.channel.send('src!link <game>');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'src!link <game>');
 		}
 		const game = args[0];
 		const {data} = await commands.Link.getLink(args);
 		[answer] = data;
-		if (answer.length == 0) {
-			return message.channel.send(`No results found for **${game}**.`);
+		if (!answer || answer.length == 0) {
+			return message.channel.send('<@' + message.author.id + '>\n' + `No results found for **${game}**.`);
 		}
 		const embed = new MessageEmbed()
 			.setColor('118855')
 			.setTitle(answer.names.international)
 			.setURL(answer.weblink)
 			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
-		message.channel.send(embed);
+		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
-	else if (command === 'c' || command === 'categories') {
-		// src!categories <game>
+
+	async function categories() {
 		if (!args[0]) {
-			return message.channel.send('src!categories <game>');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'src!categories <game>');
 		}
 		const game = args[0];
 		const { data } = await commands.Categories.getCategories(args);
 		if (!data.length) {
-			return message.channel.send(`No results found for **${game}**.`);
+			return message.channel.send('<@' + message.author.id + '>\n' + `No results found for **${game}**.`);
 		}
 		const [dataArr] = data;
 		const category = [];
@@ -85,10 +105,10 @@ client.on('message', async message => {
 			embed.addField('**Category:** ' + name1 + '** - id:** ' + name3, ' **Variables:** ' + name2 + '\n');
 			name2 = '';
 		}
-		message.channel.send(embed);
+		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
-	else if (command === 'help') {
-		// src!help
+
+	function help() {
 		const embed = new MessageEmbed()
 			.setColor('118855')
 			.setTitle('Help')
@@ -99,25 +119,23 @@ client.on('message', async message => {
 			.addField('src!search|s <keyword> (page)', 'Searches for games containing the keyword(s).')
 			.addField('src!wr <game> <category> (variable id) (variable)', 'Tells you the WR for the provided game and category.')
 			.addField('src!time <game> <category> <place> (variable id) (variable)', 'Tells you the info for the provided game, category, and place.')
-		message.channel.send(embed);
+		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
-	else if (command === 'search' || command === 's') {
-		// src!search <game> (page)
+
+	async function search() {
 		if (!args[0]) {
-			return message.channel.send('src!search <game>');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'src!search <game>');
 		}
+		const game = args[0];
 		const { data } = await commands.Search.getSearch(args);
 		if (!data.length) {
-			return message.channel.send(`No results found for **${game}**.`);
+			return message.channel.send('<@' + message.author.id + '>\n' + `No results found for **${game}**.`);
 		}
 		const answer = [];
 		for (let i = 0; i < data.length; i++) {
 			answer[i] = [];
 			answer[i][0] = data[i].names.international;
 			answer[i][1] = data[i].abbreviation;
-		}
-		if (answer.length > 25) {
-			return message.channel.send('Please narrow your search. Max Results: 25 Your Results: ' + answer.length);
 		}
 		const embed = new MessageEmbed()
 			.setColor('118855')
@@ -129,23 +147,24 @@ client.on('message', async message => {
 		if (answer.length == 20) {
 			embed.setFooter('There may be more pages. Use src!search <game> <page>')
 		}
-		message.channel.send(embed);
+		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
-	else if (command === 'wr') {
-		// src!wr <game> <category> (variable id) (variable)
-		// https://www.speedrun.com/api/v1/leaderboards/9dow9rm1/category/9kvo3532?var-r8rod278=gq7kv3v1&top=1
+
+	async function wr() {
 		if (!args[0]) {
-			return message.channel.send('Missing Arguement: Game.\nsrc!wr <game> <category> (variable id) (variable)');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Game.\nsrc!wr <game> <category> (variable id) (variable)');
 		}
 		if (!args[1]) {
-			return message.channel.send('Missing Arguement: Category.\nsrc!wr <game> <category> (variable id) (variable)');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Category.\nsrc!wr <game> <category> (variable id) (variable)');
 		}
 		if (args[2] && !args[3]) {
-			return message.channel.send('Missing Arguement: variable.\nsrc!wr <game> <category> (variable id) (variable)');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: variable.\nsrc!wr <game> <category> (variable id) (variable)');
 		}
+		const game = args[0];
+		const category = args[1];
 		const {data} = await commands.Wr.getWr(args);
 		if (!data) {
-			return message.channel.send(`No results found for **${game}**.`);
+			return message.channel.send('<@' + message.author.id + '>\n' + `No results found for **${game}**.`);
 		}
 		const dataArr = data;
 		const runLength = new Date(dataArr.runs[0].run.times.primary_t * 1000).toISOString().slice(11, -1);
@@ -158,35 +177,28 @@ client.on('message', async message => {
 			.addField('Run Link', dataArr.runs[0].run.weblink)
 			.addField('Run Video Link', dataArr.runs[0].run.videos.links[0].uri)
 			.addField('Description', dataArr.runs[0].run.comment)
-		message.channel.send(embed);
+		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
-	else if (command === 'time') {
-		// src!wr <game> <category> <place> (variable id) (variable)
-		// https://www.speedrun.com/api/v1/leaderboards/9dow9rm1/category/9kvo3532?var-r8rod278=gq7kv3v1
+
+	async function time() {
 		if (!args[0]) {
-			return message.channel.send('Missing Arguement: Game.\nsrc!time <game> <category> <place> (variable id) (variable)');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Game.\nsrc!time <game> <category> <place> (variable id) (variable)');
 		}
-		const game = args.shift();
-		if (!args[0]) {
-			return message.channel.send('Missing Arguement: Category.\nsrc!time <game> <category> <place> (variable id) (variable)');
+		if (!args[1]) {
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Category.\nsrc!time <game> <category> <place> (variable id) (variable)');
 		}
-		const category = args.shift();
-		if (!args[0]) {
-			return message.channel.send('Missing Arguement: Place.\nsrc!time <game> <category> <place> (variable id) (variable)');
+		if (!args[2]) {
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Place.\nsrc!time <game> <category> <place> (variable id) (variable)');
 		}
-		const place = args.shift();
-		if (args[0] && !args[1]) {
-			return message.channel.send('Missing Arguement: variable.\nsrc!time <game> <category> <place> (variable id) (variable)');
+		if (args[3] && !args[4]) {
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: variable.\nsrc!time <game> <category> <place> (variable id) (variable)');
 		}
-		let varId;
-		let variable;
-		if (args[0] && args[1]) {
-			varId = args.shift();
-			variable = args.shift();
-		}
-		const { data } = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}?var-${varId}=${variable}&embed=players`).then(response => response.json());
+		const game = args[0];
+		const category = args[1];
+		const place = args[2];
+		const { data } = await commands.Time.getTime(args);
 		if (!data) {
-			return message.channel.send(`No results found for **${game}**.`);
+			return message.channel.send('<@' + message.author.id + '>\n' + `No results found for **${game}**.`);
 		}
 		const dataArr = data;
 		const runLength = new Date(dataArr.runs[place - 1].run.times.primary_t * 1000).toISOString().slice(11, -1);
@@ -195,11 +207,24 @@ client.on('message', async message => {
 			.setTitle('Result for ' + game + ': ' + category)
 			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
 			.addField('Time', runLength)
-			.addField('Runner', dataArr.players.data[place - 1].names.international)
+			.addField('Runner(s)', await players(dataArr.runs[place - 1].run.players))
 			.addField('Run Link', dataArr.runs[place - 1].run.weblink)
 			.addField('Run Video Link', dataArr.runs[place - 1].run.videos.links[0].uri)
 			.addField('Description', dataArr.runs[place - 1].run.comment)
-		message.channel.send(embed);
+		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
 });
 client.login(token);
+
+async function players(args) {
+	let str = "";
+	for(const element of args) {
+		if(element.rel == "user") {
+			let temp = await commands.Player.getPlayer(element.id);
+			str += ', ' + temp.data.names.international;
+		} else if (element.rel == "guest") {
+			str += ', ' + element.name;
+		}
+	}
+	return str.substr(2);
+}

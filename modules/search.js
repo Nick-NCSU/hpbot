@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 
-exports.getSearch = async function getLink (args) {
+exports.getSearch = async function getSearch (args) {
     const game = args.shift();
     let page = 0;
     if (args[0]) {
