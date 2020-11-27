@@ -2,7 +2,7 @@ const { Client, MessageEmbed } = require('discord.js');
 const commands = require('./modules');
 
 const prefix = 'src!';
-const token = "NzI4NDAxODUwMDMzODk3NTc0.Xv53Fg.e27Bt75y9KUWY-ewx0hnzfvhiCQ";
+const token = process.env.token;
 
 const client = new Client();
 const fetch = require('node-fetch');
