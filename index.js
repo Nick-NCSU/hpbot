@@ -1,8 +1,15 @@
 const { Client, MessageEmbed } = require('discord.js');
 const commands = require('./modules');
+const fs = require('fs');
 
 const prefix = 'src!';
-const token = "NzI4NDAxODUwMDMzODk3NTc0.Xv53Fg.e27Bt75y9KUWY-ewx0hnzfvhiCQ";
+let token = '';
+if (fs.existsSync('./token.json')) {
+	const tokenFile = require('./token.json');
+	token = tokenFile.token;
+} else {
+	token = process.env.token;
+}
 
 const client = new Client();
 const fetch = require('node-fetch');
@@ -119,7 +126,7 @@ client.on('message', async message => {
 			.addField('src!categories|c <game>', 'Shows the categories/variables for the provided game.')
 			.addField('src!search|s <keyword> (page)', 'Searches for games containing the keyword(s).')
 			.addField('src!wr <game> <category> (variable)', 'Tells you the WR for the provided game and category. (Only supports one variable currently)')
-			.addField('src!time <game> <category> <place> (variable id) (variable)', 'Tells you the info for the provided game, category, and place.')
+			.addField('src!time <game> <category> <place> (variable)', 'Tells you the info for the provided game, category, and place. (Only supports one variable currently)')
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
 
