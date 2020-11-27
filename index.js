@@ -240,6 +240,9 @@ exports.searchVariables = async function searchVariables(game, category, variabl
 	let id2 = "";
 	let num1 = 0;
 	let num2 = 0;
+	if(!data[0]){
+		return["",""];
+	}
 	a:
 	for(item of data[0].categories.data) {
 		if(item.name.toLowerCase().trim() === category.toLowerCase().trim()) {
