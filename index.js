@@ -19,6 +19,7 @@ client.on('message', async message => {
 	switch(command) {
 		case 'help':
 			help();
+			break;
 		case 'link':
 			link();
 			break;
@@ -61,7 +62,7 @@ client.on('message', async message => {
 			return message.channel.send('<@' + message.author.id + '>\n' + 'src!categories <game>');
 		}
 		const game = args[0];
-		const { data } = await commands.Categories.getCategories(args);
+		const { data } = await commands.Categories.getCategories(args.shift());
 		if (!data.length) {
 			return message.channel.send('<@' + message.author.id + '>\n' + `No results found for **${game}**.`);
 		}
@@ -91,7 +92,7 @@ client.on('message', async message => {
 				name3 = dataArr.categories.data[k].variables.data[0].id;
 			}
 			else {
-				name3 = 'None'
+				name3 = 'None';
 			}
 			for (let m = 0; m < category[k].length - 1; m++) {
 				name2 += category[k][m + 1];
@@ -117,7 +118,7 @@ client.on('message', async message => {
 			.addField('src!link <game>', 'Sends a link to the provided game.')
 			.addField('src!categories|c <game>', 'Shows the categories/variables for the provided game.')
 			.addField('src!search|s <keyword> (page)', 'Searches for games containing the keyword(s).')
-			.addField('src!wr <game> <category> (variable id) (variable)', 'Tells you the WR for the provided game and category.')
+			.addField('src!wr <game> <category> (variable)', 'Tells you the WR for the provided game and category. (Only supports one variable currently)')
 			.addField('src!time <game> <category> <place> (variable id) (variable)', 'Tells you the info for the provided game, category, and place.')
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
@@ -152,13 +153,10 @@ client.on('message', async message => {
 
 	async function wr() {
 		if (!args[0]) {
-			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Game.\nsrc!wr <game> <category> (variable id) (variable)');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Game.\nsrc!wr <game> <category> (variable)');
 		}
 		if (!args[1]) {
-			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Category.\nsrc!wr <game> <category> (variable id) (variable)');
-		}
-		if (args[2] && !args[3]) {
-			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: variable.\nsrc!wr <game> <category> (variable id) (variable)');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Category.\nsrc!wr <game> <category> (variable)');
 		}
 		const game = args[0];
 		const category = args[1];
@@ -173,7 +171,7 @@ client.on('message', async message => {
 			.setTitle('World Record for ' + game + ': ' + category)
 			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
 			.addField('Time', runLength)
-			.addField('WR Holder', dataArr.players.data[0].names.international)
+			.addField('WR Holder', await players(dataArr.runs[0].run.players))
 			.addField('Run Link', dataArr.runs[0].run.weblink)
 			.addField('Run Video Link', dataArr.runs[0].run.videos.links[0].uri)
 			.addField('Description', dataArr.runs[0].run.comment)
@@ -227,4 +225,42 @@ async function players(args) {
 		}
 	}
 	return str.substr(2);
+}
+
+exports.searchVariables = async function searchVariables(game, category, variable) {
+	const {data} = await commands.Categories.getCategories(game);
+	let id = "";
+	let id2 = "";
+	let num1 = 0;
+	let num2 = 0;
+	a:
+	for(item of data[0].categories.data) {
+		if(item.name.toLowerCase().trim() === category.toLowerCase().trim()) {
+			for(item2 of item.variables.data) {
+				for(item3 in item2.values.values) {
+					const check = data[0].categories.data[num1].variables.data[num2].values.values[item3].label;
+					if(check.toLowerCase().trim() === variable.toLowerCase().trim()) {
+						id = item.id;
+						id2 = item2.id;
+						break a;
+					}
+				}
+				num2++;
+			}
+		}
+		num1++;
+	}
+	let newdata = await commands.Variables.getVariables(id);
+	if(!newdata.data) {
+		return ["",""];
+	}
+	for(const data1 of newdata.data) {
+		if(data1.id === id2) {
+			for(const element in data1.values.values) {
+				if(data1.values.values[element].label.toLowerCase().trim() === variable.toLowerCase().trim()) {
+					return [data1.id, element];
+				}
+			}
+		}
+	}
 }
