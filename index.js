@@ -221,7 +221,7 @@ client.on('message', async message => {
 	}
 });
 client.login(token).then(() => {
-	cron.schedule("* * 22 * * *", async function() {
+	cron.schedule("* 15 22 * * *", async function() {
 		let embed = await lb('hypixel_ce');
 		client.channels.cache.get('782073727881183304').send(embed);
 		embed = await lb('hypixel_bw');
@@ -257,7 +257,6 @@ client.login(token).then(() => {
 		playerList.sort(function(a, b) {
 			return b[1] - a[1];
 		});
-		console.log(playerList);
 		let place = 1;
 		const date = new Date().toISOString().slice(0, 10);
 		const embed = new MessageEmbed()
