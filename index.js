@@ -188,16 +188,13 @@ client.on('message', async message => {
 
 	async function time() {
 		if (!args[0]) {
-			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Game.\nsrc!time <game> <category> <place> (variable id) (variable)');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Game.\nsrc!time <game> <category> <place> (variable)');
 		}
 		if (!args[1]) {
-			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Category.\nsrc!time <game> <category> <place> (variable id) (variable)');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Category.\nsrc!time <game> <category> <place> (variable)');
 		}
 		if (!args[2]) {
-			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Place.\nsrc!time <game> <category> <place> (variable id) (variable)');
-		}
-		if (args[3] && !args[4]) {
-			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: variable.\nsrc!time <game> <category> <place> (variable id) (variable)');
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Place.\nsrc!time <game> <category> <place> (variable)');
 		}
 		const game = args[0];
 		const category = args[1];
