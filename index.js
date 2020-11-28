@@ -1,6 +1,7 @@
 const { Client, MessageEmbed } = require('discord.js');
 const commands = require('./modules');
 const fs = require('fs');
+const cron = require("node-cron"); 
 
 const prefix = 'src!';
 let token = '';
@@ -219,7 +220,62 @@ client.on('message', async message => {
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
 });
-client.login(token);
+client.login(token).then(() => {
+	cron.schedule("* * 22 * * *", async function() {
+		let embed = await lb('hypixel_ce');
+		client.channels.cache.get('782073727881183304').send(embed);
+		embed = await lb('hypixel_bw');
+		client.channels.cache.get('782073727881183304').send(embed);
+		embed = await lb('hypixel_sw');
+		client.channels.cache.get('782073727881183304').send(embed);
+	});
+	async function lb(game) {
+		const {data} = await commands.Leaderboard.getLeaderboard(game);
+		let playerList = [];
+		for(board of data) {
+			b:
+			for(player of board.runs[0].run.players) {
+				for(item of playerList) {
+					if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0] == player.name) {
+						item[1] = item[1] + 1;
+						continue b;
+					}
+				}
+				if(player.rel == "user") {
+					for(user of board.players.data) {
+						if(player.id == user.id) {
+							playerList.push([user.names.international, 1, user.id]);
+							continue b;
+						}
+					}
+				} else if(player.rel == "guest") {
+					playerList.push([player.name, 1, player.name]);
+					continue b;
+				}
+			}
+		}
+		playerList.sort(function(a, b) {
+			return b[1] - a[1];
+		});
+		console.log(playerList);
+		let place = 1;
+		const date = new Date().toISOString().slice(0, 10);
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle('Leaderboard for ' + game + ':')
+			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+			.setFooter(date)
+			for(player of playerList) {
+				if(player[2] == "user") {
+					let temp = await commands.Player.getPlayer(player[0]);
+					player[0] = temp.data.names.international;
+				}
+				embed.addField('#' + place + ' ' + player[0], `WRs:${player[1]}`, true)
+				place++;
+			}
+		return embed;
+	}
+});
 
 async function players(args) {
 	let str = "";
