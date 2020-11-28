@@ -223,11 +223,11 @@ client.on('message', async message => {
 client.login(token).then(() => {
 	cron.schedule("* 15 22 * * *", async function() {
 		let embed = await lb('hypixel_ce');
-		client.channels.cache.get('782073727881183304').send(embed);
+		client.channels.cache.get('728402518014689333').send(embed);
 		embed = await lb('hypixel_bw');
-		client.channels.cache.get('782073727881183304').send(embed);
+		client.channels.cache.get('728402518014689333').send(embed);
 		embed = await lb('hypixel_sw');
-		client.channels.cache.get('782073727881183304').send(embed);
+		client.channels.cache.get('728402518014689333').send(embed);
 	});
 	async function lb(game) {
 		const {data} = await commands.Leaderboard.getLeaderboard(game);
