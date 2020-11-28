@@ -128,6 +128,7 @@ client.on('message', async message => {
 			.addField('src!search|s <keyword> (page)', 'Searches for games containing the keyword(s).')
 			.addField('src!wr <game> <category> (variable)', 'Tells you the WR for the provided game and category. (Only supports one variable currently)')
 			.addField('src!time <game> <category> <place> (variable)', 'Tells you the info for the provided game, category, and place. (Only supports one variable currently)')
+			.addField(new Date().toISOString())
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
 
