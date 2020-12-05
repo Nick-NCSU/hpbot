@@ -8,7 +8,7 @@ exports.getTime = async function getTime (args) {
     let varId;
     let variable;
     if (args[0]) {
-        const vars = await main.searchVariables(game, category, args.toString().replace(",", " "));
+        const vars = await main.searchVariables(game, category.replace("_", " "), args.toString().replace(",", " "));
         if(!vars || vars[0] === "" && vars[1] === "") {
             return {};
         }

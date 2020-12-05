@@ -45,6 +45,9 @@ client.on('message', async message => {
 		case 'time':
 			time();
 			break;
+		case 'lb':
+			message.channel.send('<@' + message.author.id + '>\n', await lb(args.shift()));
+			break;
 	}
 
 	async function link() {
@@ -128,6 +131,7 @@ client.on('message', async message => {
 			.addField('src!search|s <keyword> (page)', 'Searches for games containing the keyword(s).')
 			.addField('src!wr <game> <category> (variable)', 'Tells you the WR for the provided game and category. (Only supports one variable currently)')
 			.addField('src!time <game> <category> <place> (variable)', 'Tells you the info for the provided game, category, and place. (Only supports one variable currently)')
+			.addField('src!lb <game>', 'Provides a leaderboard for the given game.')
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
 
@@ -216,15 +220,58 @@ client.on('message', async message => {
 			.addField('Description', dataArr.runs[place - 1].run.comment)
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
+
+	async function lb(game) {
+		const {data} = await commands.Leaderboard.getLeaderboard(game);
+		let playerList = [];
+		for(board of data) {
+			b:
+			for(player of board.runs[0].run.players) {
+				for(item of playerList) {
+					if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0] == player.name) {
+						item[1] = item[1] + 1;
+						continue b;
+					}
+				}
+				if(player.rel == "user") {
+					for(user of board.players.data) {
+						if(player.id == user.id) {
+							playerList.push([user.names.international, 1, user.id]);
+							continue b;
+						}
+					}
+				} else if(player.rel == "guest") {
+					playerList.push([player.name, 1, player.name]);
+					continue b;
+				}
+			}
+		}
+		playerList.sort(function(a, b) {
+			return b[1] - a[1];
+		});
+		let place = 1;
+		const date = new Date().toISOString().slice(0, 10);
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle('Leaderboard for ' + game + ':')
+			.setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+			.setFooter(date)
+			for(player of playerList) {
+				if(player[2] == "user") {
+					let temp = await commands.Player.getPlayer(player[0]);
+					player[0] = temp.data.names.international;
+				}
+				embed.addField('#' + place + ' ' + player[0], `WRs:${player[1]}`, true)
+				place++;
+			}
+		return embed;
+	}
 });
 client.login(token).then(() => {
 	cron.schedule("0 0 4 * * *", async function() {
-		let embed = await lb('hypixel_ce');
-		client.channels.cache.get('782073727881183304').send(embed);
-		embed = await lb('hypixel_bw');
-		client.channels.cache.get('782073727881183304').send(embed);
-		embed = await lb('hypixel_sw');
-		client.channels.cache.get('782073727881183304').send(embed);
+		client.channels.cache.get('782073727881183304').send(await lb('hypixel_ce'));
+		client.channels.cache.get('782073727881183304').send(await lb('hypixel_bw'));
+		client.channels.cache.get('782073727881183304').send(await lb('hypixel_sw'));
 	});
 	async function lb(game) {
 		const {data} = await commands.Leaderboard.getLeaderboard(game);
