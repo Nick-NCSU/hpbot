@@ -6,3 +6,7 @@ exports.Wr = require('./wr.js');
 exports.Player = require('./player.js');
 exports.Variables = require('./variables.js');
 exports.Leaderboard = require('./leaderboard.js');
+exports.User = require('./user.js');
+exports.Examine = require('./examine.js');
+exports.Game = require('./game.js');
+exports.New = require('./new.js');

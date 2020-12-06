@@ -48,6 +48,14 @@ client.on('message', async message => {
 		case 'lb':
 			message.channel.send('<@' + message.author.id + '>\n', await lb(args.shift()));
 			break;
+		case 'verified':
+		case 'v':
+			examine();
+			break;
+		case 'unverified':
+		case 'uv':
+			unexamine();
+			break;
 	}
 
 	async function link() {
@@ -132,6 +140,8 @@ client.on('message', async message => {
 			.addField('src!wr <game> <category> (variable)', 'Tells you the WR for the provided game and category. (Only supports one variable currently)')
 			.addField('src!time <game> <category> <place> (variable)', 'Tells you the info for the provided game, category, and place. (Only supports one variable currently)')
 			.addField('src!lb <game>', 'Provides a leaderboard for the given game.')
+			.addField('src!verified|v <user>', 'Provides the number of runs verified by the given user.')
+			.addField('src!unverified|uv <game>', 'Provides the number of unverified runs for the given game.')
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
 
@@ -265,6 +275,50 @@ client.on('message', async message => {
 				place++;
 			}
 		return embed;
+	}
+
+	async function examine() {
+		if(!args[0]) {
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: User.\nsrc!verified <user>');
+		}
+		const playerData = await commands.User.getUser(args);
+		if(!playerData.data) {
+			return message.channel.send('<@' + message.author.id + '>\n' + 'User does not exist.');
+		}
+		const id = playerData.data.id;
+		let data = await commands.Examine.getExamine(id, 0);
+		while (data.size == 200){
+			data = await commands.Examine.getExamine(id, data.offset + 200);
+		}
+		const num = data.offset + data.size;
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle('Result for :' + args)
+			.addField('Number of verified runs: ', num)
+		message.channel.send('<@' + message.author.id + '>\n', embed);
+	}
+
+	async function unexamine() {
+		if(!args[0]) {
+			return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: User.\nsrc!unverified <game>');
+		}
+		const gameData = await commands.Game.getGame(args);
+		if(!gameData.data) {
+			return message.channel.send('<@' + message.author.id + '>\n' + 'User does not exist.');
+		}
+		const id = gameData.data.id;
+		let data = await commands.New.getUnexamine(id, 0);
+		while (data.pagination.size == 200){
+			data = await commands.New.getUnexamine(id, data.pagination.offset + 200);
+		}
+		const num = data.pagination.offset + data.pagination.size;
+		const firstPage = await commands.New.getUnexamine(id, 0);
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle('Result for: ' + args)
+			.addField('Number of unverified runs: ', num)
+			.addField('Oldest unverified run: ', firstPage.data[0].date)
+		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
 });
 client.login(token).then(() => {
