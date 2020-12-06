@@ -293,7 +293,7 @@ client.on('message', async message => {
 		const num = data.offset + data.size;
 		const embed = new MessageEmbed()
 			.setColor('118855')
-			.setTitle('Result for :' + args)
+			.setTitle('Result for: ' + args)
 			.addField('Number of verified runs: ', num)
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
