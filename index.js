@@ -56,6 +56,9 @@ client.on('message', async message => {
 		case 'uv':
 			unexamine();
 			break;
+		case 'dream':
+			dream();
+			break;
 	}
 
 	async function link() {
@@ -318,6 +321,20 @@ client.on('message', async message => {
 			.setTitle('Result for: ' + args)
 			.addField('Number of unverified runs: ', num)
 			.addField('Oldest unverified run: ', firstPage.data[0].date)
+		message.channel.send('<@' + message.author.id + '>\n', embed);
+	}
+
+	async function dream() {
+		let num = 0;
+		for(let i = 0; i < 264; i++) {
+			if(Math.random() * 100 <= 4.73) {
+				num++;
+			}
+		}
+		const embed = new MessageEmbed()
+			.setColor('118855')
+			.setTitle('Number of pearls: ' + num)
+			.setFooter('Number of pearls (Dream): 41')
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
 });
