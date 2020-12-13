@@ -346,7 +346,8 @@ client.on('message', async message => {
 			.setColor('118855')
 			.setTitle('Number of rods: ' + num)
 			.setFooter('Number of rods (Dream): 211')
-		message.channel.send('<@' + message.author.id + '>\n', embed, embed2);
+		message.channel.send('<@' + message.author.id + '>\n', embed);
+		message.channel.send(embed2);
 	}
 });
 client.login(token).then(() => {
