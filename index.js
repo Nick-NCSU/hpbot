@@ -326,16 +326,27 @@ client.on('message', async message => {
 
 	async function dream() {
 		let num = 0;
-		for(let i = 0; i < 264; i++) {
-			if(Math.random() * 100 <= 4.73) {
+		for(let i = 0; i < 263; i++) {
+			if(Math.random() <= (20/423)) {
 				num++;
 			}
 		}
 		const embed = new MessageEmbed()
 			.setColor('118855')
 			.setTitle('Number of pearls: ' + num)
-			.setFooter('Number of pearls (Dream): 41')
-		message.channel.send('<@' + message.author.id + '>\n', embed);
+			.setFooter('Number of pearls (Dream): 42')
+
+		num = 0;
+		for(let i = 0; i < 306; i++) {
+			if(Math.random() * 100 <= 50) {
+				num++;
+			}
+		}
+		const embed2 = new MessageEmbed()
+			.setColor('118855')
+			.setTitle('Number of rods: ' + num)
+			.setFooter('Number of rods (Dream): 211')
+		message.channel.send('<@' + message.author.id + '>\n', embed, embed2);
 	}
 });
 client.login(token).then(() => {
