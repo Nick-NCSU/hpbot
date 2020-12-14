@@ -1,4 +1,4 @@
-const { Client, MessageEmbed } = require('discord.js');
+const { Client, MessageEmbed, MessageManager } = require('discord.js');
 const commands = require('./modules');
 const fs = require('fs');
 const cron = require("node-cron"); 
@@ -16,6 +16,7 @@ const client = new Client();
 const fetch = require('node-fetch');
 
 client.once('ready', () => {
+	client.user.setActivity('speedrun.com', { type: 'WATCHING' })
 	console.log('Ready!');
 });
 
@@ -357,8 +358,10 @@ client.login(token).then(() => {
 		client.channels.cache.get('782073727881183304').send(await lb('hypixel_sw'));
 	});
 
-	cron.schedule("0 */5 * * * *", async function() {
-		client.channels.cache.get('787866205900898305').send(await adam());
+	cron.schedule("*/15 * * * * *", async function() {
+		const e = await adam();
+		client.channels.cache.get('787866205900898305').messages.fetch('787876531527352320')
+		.then(msg => msg.edit(e));
 	});
 	async function adam() {
 		const data = await commands.Adam.getAdam();
