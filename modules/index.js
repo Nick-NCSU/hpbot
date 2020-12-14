@@ -10,3 +10,4 @@ exports.User = require('./user.js');
 exports.Examine = require('./examine.js');
 exports.Game = require('./game.js');
 exports.New = require('./new.js');
+exports.Adam = require('./adam.js');

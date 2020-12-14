@@ -333,8 +333,8 @@ client.on('message', async message => {
 		}
 		const embed = new MessageEmbed()
 			.setColor('118855')
-			.setTitle('Number of pearls: ' + num)
-			.setFooter('Number of pearls (Dream): 42')
+			.setTitle('Number of pearls: ' + num + '/262')
+			.setFooter('Number of pearls (Dream): 42/262')
 
 		num = 0;
 		for(let i = 0; i < 306; i++) {
@@ -344,8 +344,8 @@ client.on('message', async message => {
 		}
 		const embed2 = new MessageEmbed()
 			.setColor('118855')
-			.setTitle('Number of rods: ' + num)
-			.setFooter('Number of rods (Dream): 211')
+			.setTitle('Number of rods: ' + num + '/305')
+			.setFooter('Number of rods (Dream): 211/305')
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 		message.channel.send(embed2);
 	}
@@ -356,6 +356,27 @@ client.login(token).then(() => {
 		client.channels.cache.get('782073727881183304').send(await lb('hypixel_bw'));
 		client.channels.cache.get('782073727881183304').send(await lb('hypixel_sw'));
 	});
+
+	cron.schedule("0 */5 * * * *", async function() {
+		client.channels.cache.get('787866205900898305').send(await adam());
+	});
+	async function adam() {
+		const data = await commands.Adam.getAdam();
+		if(data.session.online == true) {
+			const embed = new MessageEmbed()
+				.setColor('118855')
+				.setTitle('Adam Larry Lipson is ONLINE!!!!')
+				.addField('Game:', data.session.gameType)
+				.addField('Mode:', data.session.mode)
+				.addField('Map:', data.session.map)
+			return embed;
+		} else {
+			const embed = new MessageEmbed()
+				.setColor('118855')
+				.setTitle('Adam Larry Lipson is offline :(');
+			return embed;
+		}
+	}
 	async function lb(game) {
 		const {data} = await commands.Leaderboard.getLeaderboard(game);
 		let playerList = [];
