@@ -192,6 +192,7 @@ client.on('message', async message => {
 		}
 		const dataArr = data;
 		const runLength = new Date(dataArr.runs[0].run.times.primary_t * 1000).toISOString().slice(11, -1);
+		const links = dataArr.runs[0].run.videos ? dataArr.runs[0].run.videos.links[0].uri : 'No Link Provided';
 		const embed = new MessageEmbed()
 			.setColor('118855')
 			.setTitle('World Record for ' + game + ': ' + category)
@@ -199,7 +200,7 @@ client.on('message', async message => {
 			.addField('Time', runLength)
 			.addField('WR Holder', await players(dataArr.runs[0].run.players))
 			.addField('Run Link', dataArr.runs[0].run.weblink)
-			.addField('Run Video Link', dataArr.runs[0].run.videos.links[0].uri)
+			.addField('Run Video Link', links)
 			.addField('Description', dataArr.runs[0].run.comment)
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
@@ -369,9 +370,15 @@ client.login(token).then(() => {
 			const embed = new MessageEmbed()
 				.setColor('118855')
 				.setTitle('Adam Larry Lipson is ONLINE!!!!')
-				.addField('Game:', data.session.gameType)
-				.addField('Mode:', data.session.mode)
-				.addField('Map:', data.session.map)
+			if(data.session.gameType) {
+				embed.addField('Game:', data.session.gameType)
+			}
+			if(data.session.mode) {
+				embed.addField('Mode:', data.session.mode)
+			}
+			if(data.session.map) {
+				embed.addField('Map:', data.session.map)
+			}
 			return embed;
 		} else {
 			const embed = new MessageEmbed()
