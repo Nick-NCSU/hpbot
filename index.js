@@ -1,9 +1,12 @@
+// Imports
 const { Client, MessageEmbed, MessageManager } = require('discord.js');
 const commands = require('./modules');
 const fs = require('fs');
 const cron = require("node-cron"); 
 
+// Prefix to call the bot
 const prefix = 'src!';
+// Determines the token for bot
 let token = '';
 if (fs.existsSync('./token.json')) {
 	const tokenFile = require('./token.json');
@@ -12,18 +15,23 @@ if (fs.existsSync('./token.json')) {
 	token = process.env.token;
 }
 
+// Creates new Client
 const client = new Client();
 const fetch = require('node-fetch');
 
+// Sets bot activity and announces that bot is ready for use
 client.once('ready', () => {
 	client.user.setActivity('speedrun.com', { type: 'WATCHING' })
 	console.log('Ready!');
 });
 
 client.on('message', async message => {
+	// Checks if message starts with the given prefix
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
 
+	// Removes prefix from the message
 	const args = message.content.slice(prefix.length).split(/ +/);
+	// Sets the command to the next text after the prefix
 	const command = args.shift().toLowerCase();
 	switch(command) {
 		case 'help':
@@ -62,16 +70,22 @@ client.on('message', async message => {
 			break;
 	}
 
+	/**
+	 * Function to provide a link to the given game
+	 */
 	async function link() {
+		// Checks if game is provided
 		if (!args[0]) {
 			return message.channel.send('<@' + message.author.id + '>\n' + 'src!link <game>');
 		}
 		const game = args[0];
 		const {data} = await commands.Link.getLink(args);
 		[answer] = data;
+		// Checks if game exists
 		if (!answer || answer.length == 0) {
 			return message.channel.send('<@' + message.author.id + '>\n' + `No results found for **${game}**.`);
 		}
+		// Embed to return
 		const embed = new MessageEmbed()
 			.setColor('118855')
 			.setTitle(answer.names.international)
@@ -80,17 +94,23 @@ client.on('message', async message => {
 		message.channel.send('<@' + message.author.id + '>\n', embed);
 	}
 
+	/**
+	 * Function to provide a list of categories for the given game
+	 */
 	async function categories() {
+		// Checks if game is provided
 		if (!args[0]) {
 			return message.channel.send('<@' + message.author.id + '>\n' + 'src!categories <game>');
 		}
 		const game = args[0];
 		const { data } = await commands.Categories.getCategories(args.shift());
+		// Checks if game exists
 		if (!data.length) {
 			return message.channel.send('<@' + message.author.id + '>\n' + `No results found for **${game}**.`);
 		}
 		const [dataArr] = data;
 		const category = [];
+		// Iterates through all the categories for the game
 		for (let i = 0; i < dataArr.categories.data.length; i++) {
 			category[i] = [];
 			category[i][0] = dataArr.categories.data[i].name;
@@ -358,35 +378,6 @@ client.login(token).then(() => {
 		client.channels.cache.get('782073727881183304').send(await lb('hypixel_bw'));
 		client.channels.cache.get('782073727881183304').send(await lb('hypixel_sw'));
 	});
-
-	cron.schedule("*/15 * * * * *", async function() {
-		const e = await adam();
-		client.channels.cache.get('787866205900898305').messages.fetch('787876531527352320')
-		.then(msg => msg.edit(e));
-	});
-	async function adam() {
-		const data = await commands.Adam.getAdam();
-		if(data.session.online == true) {
-			const embed = new MessageEmbed()
-				.setColor('118855')
-				.setTitle('Adam Larry Lipson is ONLINE!!!!')
-			if(data.session.gameType) {
-				embed.addField('Game:', data.session.gameType)
-			}
-			if(data.session.mode) {
-				embed.addField('Mode:', data.session.mode)
-			}
-			if(data.session.map) {
-				embed.addField('Map:', data.session.map)
-			}
-			return embed;
-		} else {
-			const embed = new MessageEmbed()
-				.setColor('118855')
-				.setTitle('Adam Larry Lipson is offline :(');
-			return embed;
-		}
-	}
 	async function lb(game) {
 		const {data} = await commands.Leaderboard.getLeaderboard(game);
 		let playerList = [];
