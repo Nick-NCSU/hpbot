@@ -146,15 +146,13 @@ exports.newlb = async function newlb(param, game, type) {
     let pasteid = '';
     await pastebin.createPaste({
         text: pasteString,
-        title: game + "Leaderboard",
-        privacy: 1,
-        expiration: '2W'
+        title: game + " Leaderboard " + date,
+        privacy: 1
     }).then((data) => {
         pasteid = data;
     })
     let place = 1;
     let iterator = 0;
-    date = new Date().toISOString().slice(0, 10);
     embed = new MessageEmbed()
         .setColor('118855')
         .setTitle('Leaderboard for ' + game + ':')
