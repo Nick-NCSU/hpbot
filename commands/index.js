@@ -8,3 +8,4 @@ exports.Time = require('./time.js');
 exports.Unverified = require('./unverified.js');
 exports.Verified = require('./verified.js');
 exports.Wr = require('./wr.js');
+exports.NewLeaderboard = require('./newlb.js');

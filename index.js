@@ -69,12 +69,19 @@ client.on('message', async message => {
 		case 'dream':
 			commands.Dream.dream(message, args);
 			break;
+		case 'newlb':
+			commands.NewLeaderboard.newlb(message, args, 'Message');
+			break;
 	}
 });
 client.login(token).then(() => {
 	cron.schedule("0 0 4 * * *", async function() {
 		lb(client.channels.cache.get('782073727881183304'), 'hypixel_ce', 'Channel');
+	});
+	cron.schedule("0 5 4 * * *", async function() {
 		lb(client.channels.cache.get('782073727881183304'), 'hypixel_bw', 'Channel');
+	});
+	cron.schedule("0 10 4 * * *", async function() {
 		lb(client.channels.cache.get('782073727881183304'), 'hypixel_sw', 'Channel');
 	});
 });
