@@ -56,7 +56,6 @@ exports.newlb = async function newlb(param, game, type) {
         .addField('Progress:', `${progress}/${count}`)
     let id = "";
     let msg = await channel.send(embed);
-    console.log(id);
     let playerList = [];
     for(c of subcategories) {
         let data;
