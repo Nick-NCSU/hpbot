@@ -1,19 +1,13 @@
 const commands = require('../api');
+const tokens = require('../index.js');
 const fetch = require('node-fetch');
 const PastebinAPI = require('pastebin-ts');
 const { MessageEmbed } = require('discord.js');
-let pasteapi = '';
-if (fs.existsSync('./token.json')) {
-	const tokenFile = require('./token.json');
-	pasteapi = tokenFile.pasteapi;
-} else {
-	pasteapi = process.env.pasteapi;
-}
 exports.newlb = async function newlb(param, game, type) {
     // From rsp via https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
     const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
     const pastebin = new PastebinAPI({
-        'api_dev_key' : pasteapi
+        'api_dev_key' : tokens.tokens().pasteapi
     });
     let channel, message;
     if(type == 'Channel') {
@@ -145,9 +139,13 @@ exports.newlb = async function newlb(param, game, type) {
     playerList.sort(function(a, b) {
         return b[1] - a[1];
     });
+    let pasteString = '';
+    for(player of playerList) {
+        pasteString += player[0] + ', ' + player[1] + '\n';
+    }
     let pasteid = '';
-    pastebin.createPaste({
-        text: playerList,
+    await pastebin.createPaste({
+        text: pasteString,
         title: game + "Leaderboard",
         privacy: 1,
         expiration: '2W'
@@ -174,8 +172,8 @@ exports.newlb = async function newlb(param, game, type) {
             iterator++;
         }
     if(message) {
-        return msg.edit('<@' + message.author.id + `>\nwww.pastebin.com/${pasteid}`, embed);
+        return msg.edit('<@' + message.author.id + `>\n${pasteid}`, embed);
     } else {
-        return msg.edit(`www.pastebin.com/${pasteid}`, embed);
+        return msg.edit(`${pasteid}`, embed);
     }
 }
