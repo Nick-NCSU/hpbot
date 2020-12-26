@@ -78,14 +78,14 @@ client.on('message', async message => {
 	}
 });
 client.login(token).then(() => {
-	cron.schedule("30 0 4 * * *", async function() {
-		lb(client.channels.cache.get('782073727881183304'), 'hypixel_ce', 'Channel');
-	});
-	cron.schedule("30 5 4 * * *", async function() {
-		lb(client.channels.cache.get('782073727881183304'), 'hypixel_bw', 'Channel');
-	});
 	cron.schedule("30 10 4 * * *", async function() {
-		lb(client.channels.cache.get('782073727881183304'), 'hypixel_sw', 'Channel');
+		commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_ce', 'Channel');
+	});
+	cron.schedule("30 15 4 * * *", async function() {
+		commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_bw', 'Channel');
+	});
+	cron.schedule("30 20 4 * * *", async function() {
+		commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_sw', 'Channel');
 	});
 });
 
