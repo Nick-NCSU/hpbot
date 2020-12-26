@@ -78,6 +78,12 @@ client.on('message', async message => {
 	}
 });
 client.login(token).then(() => {
+	cron.schedule("30 0 4 * * *", async function() {
+		commands.NewLeaderboard.newlb(client.channels.cache.get('792473904391651369'), 'hypixel_sb', 'Channel');
+	});
+	cron.schedule("30 5 4 * * *", async function() {
+		commands.NewLeaderboard.newlb(client.channels.cache.get('792473904391651369'), 'hypixel_sbce', 'Channel');
+	});
 	cron.schedule("30 10 4 * * *", async function() {
 		commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_ce', 'Channel');
 	});
