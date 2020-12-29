@@ -78,6 +78,7 @@ client.on('message', async message => {
 	}
 });
 client.login(token).then(() => {
+	// Schedules the automatic daily leaderboards (Time in GMT)
 	cron.schedule("30 0 4 * * *", async function() {
 		commands.NewLeaderboard.newlb(client.channels.cache.get('792473904391651369'), 'hypixel_sb', 'Channel');
 	});
@@ -95,6 +96,7 @@ client.login(token).then(() => {
 	});
 });
 
+// Returns a list of the players in a given run.
 exports.players = async function players(args) {
 	let str = "";
 	for(const element of args) {
@@ -108,6 +110,7 @@ exports.players = async function players(args) {
 	return str.substr(2);
 }
 
+// Searches the variables in a game
 exports.searchVariables = async function searchVariables(game, category, variable) {
 	const {data} = await commands.Categories.getCategories(game);
 	let id = "";
