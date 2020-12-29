@@ -17,6 +17,6 @@ exports.verified = async function verified(message, args) {
     const embed = new MessageEmbed()
         .setColor('118855')
         .setTitle('Result for: ' + args)
-        .addField('Number of verified runs: ', num)
+        .addField('Number of runs verified: ', num)
     message.channel.send('<@' + message.author.id + '>\n', embed);
 }
