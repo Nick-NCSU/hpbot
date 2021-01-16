@@ -1,8 +1,22 @@
 // Imports
 const { Client, MessageEmbed} = require('discord.js');
 const commands = require('./commands');
+const api = require('./api');
 const fs = require('fs');
 const cron = require("node-cron"); 
+const {RateLimiterMemory, RateLimiterQueue} = require('rate-limiter-flexible');
+const Queue = require('queue-promise');
+
+const limiterFlexible = new RateLimiterMemory({
+  points: 90,
+  duration: 60, // minute
+});
+const limiter = new RateLimiterQueue(limiterFlexible);
+
+const queue = new Queue({
+	concurrent: 1,
+	interval: 2000
+});
 
 // Prefix to call the bot
 const prefix = 'src!';
@@ -20,8 +34,6 @@ if (fs.existsSync('./token.json')) {
 
 // Creates new Client
 const client = new Client();
-const fetch = require('node-fetch');
-const { lb } = require('./commands/leaderboard');
 
 // Sets bot activity and announces that bot is ready for use
 client.once('ready', () => {
@@ -37,45 +49,52 @@ client.on('message', async message => {
 	const args = message.content.slice(prefix.length).split(/ +/);
 	// Sets the command to the next text after the prefix
 	const command = args.shift().toLowerCase();
-	switch(command) {
-		case 'help':
-			commands.Help.help(message);
-			break;
-		case 'link':
-			commands.Link.link(message, args);
-			break;
-		case 'c':
-		case 'categories':
-			commands.Categories.categories(message, args);
-			break;
-		case 's':
-		case 'search':
-			commands.Search.search(message, args);
-			break;
-		case 'wr':
-			commands.Wr.wr(message, args);
-			break;
-		case 'time':
-			commands.Time.time(message, args);
-			break;
-		case 'lb':
-			commands.Leaderboard.lb(message, args, 'Message');
-			break;
-		case 'verified':
-		case 'v':
-			commands.Verified.verified(message, args);
-			break;
-		case 'unverified':
-		case 'uv':
-			commands.Unverified.unverified(message, args);
-			break;
-		case 'dream':
-			commands.Dream.dream(message, args);
-			break;
-		case 'newlb':
-			commands.NewLeaderboard.newlb(message, args, 'Message');
-			break;
-	}
+	queue.enqueue(async () => {
+		try {
+			switch(command) {
+				case 'help':
+					await commands.Help.help(message);
+					break;
+				case 'link':
+					await commands.Link.link(message, args);
+					break;
+				case 'c':
+				case 'categories':
+					await commands.Categories.categories(message, args);
+					break;
+				case 's':
+				case 'search':
+					await commands.Search.search(message, args);
+					break;
+				case 'wr':
+					await commands.Wr.wr(message, args);
+					break;
+				case 'time':
+					await commands.Time.time(message, args);
+					break;
+				case 'lb':
+					await commands.Leaderboard.lb(message, args, 'Message');
+					break;
+				case 'verified':
+				case 'v':
+					await commands.Verified.verified(message, args);
+					break;
+				case 'unverified':
+				case 'uv':
+					await commands.Unverified.unverified(message, args);
+					break;
+				case 'dream':
+					await commands.Dream.dream(message, args);
+					break;
+				case 'newlb':
+					await commands.NewLeaderboard.newlb(message, args, 'Message');
+					break;
+			}
+		} catch(err) {
+			message.channel.send("An unexpected error occurred.");
+			console.log(message.content);
+		}
+	});
 });
 client.login(token).then(() => {
 	// Schedules the automatic daily leaderboards (Time in GMT)
@@ -101,7 +120,7 @@ exports.players = async function players(args) {
 	let str = "";
 	for(const element of args) {
 		if(element.rel == "user") {
-			let temp = await commands.Player.getPlayer(element.id);
+			let temp = await api.Player.getPlayer(element.id);
 			str += ', ' + temp.data.names.international;
 		} else if (element.rel == "guest") {
 			str += ', ' + element.name;
@@ -112,7 +131,7 @@ exports.players = async function players(args) {
 
 // Searches the variables in a game
 exports.searchVariables = async function searchVariables(game, category, variable) {
-	const {data} = await commands.Categories.getCategories(game);
+	const {data} = await api.Categories.getCategories(game);
 	let id = "";
 	let id2 = "";
 	let num1 = 0;
@@ -137,7 +156,7 @@ exports.searchVariables = async function searchVariables(game, category, variabl
 		}
 		num1++;
 	}
-	let newdata = await commands.Variables.getVariables(id);
+	let newdata = await api.Variables.getVariables(id);
 	if(!newdata.data) {
 		return ["",""];
 	}
@@ -157,4 +176,8 @@ exports.tokens = function getTokens() {
 		token: token,
 		pasteapi: pasteapi
 	}
+}
+
+exports.limit = function getLimit() {
+	return limiter;
 }

@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const main = require('../index.js');
+const tokens = require('../index.js');
 
 exports.getTime = async function getTime (args) {
     const game = args.shift();
@@ -15,5 +16,7 @@ exports.getTime = async function getTime (args) {
         variable = vars[1];
         varId = vars[0];
     }
-    return await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}?var-${varId}=${variable}&embed=players`).then(response => response.json());
+    let data;
+    console.log(await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}?var-${varId}=${variable}&embed=players`).then(response => response.json())));
+    return data;
 }

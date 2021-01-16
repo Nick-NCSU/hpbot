@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-exports.help = function help(message) {
+exports.help = async function help(message) {
     const embed = new MessageEmbed()
         .setColor('118855')
         .setTitle('Help')

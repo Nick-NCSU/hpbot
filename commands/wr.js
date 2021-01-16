@@ -1,5 +1,7 @@
 const commands = require('../api');
 const { MessageEmbed } = require('discord.js');
+const tokens = require('../index.js');
+
 exports.wr = async function wr(message, args) {
     if (!args[0]) {
         return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Game.\nsrc!wr <game> <category> (variable)');
@@ -21,7 +23,7 @@ exports.wr = async function wr(message, args) {
         .setTitle('World Record for ' + game + ': ' + category)
         .setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
         .addField('Time', runLength)
-        .addField('WR Holder', await players(dataArr.runs[0].run.players))
+        .addField('WR Holder', await tokens.players(dataArr.runs[0].run.players))
         .addField('Run Link', dataArr.runs[0].run.weblink)
         .addField('Run Video Link', links)
         .addField('Description', dataArr.runs[0].run.comment)

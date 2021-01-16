@@ -3,6 +3,7 @@ const tokens = require('../index.js');
 const fetch = require('node-fetch');
 const PastebinAPI = require('pastebin-ts');
 const { MessageEmbed } = require('discord.js');
+
 exports.newlb = async function newlb(param, game, type) {
     // From rsp via https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
     const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
@@ -59,13 +60,12 @@ exports.newlb = async function newlb(param, game, type) {
         .setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
         .setFooter(date)
         .addField('Progress:', `${progress}/${count}`)
-    let id = "";
     let msg = await channel.send(embed);
     let playerList = [];
     for(c of subcategories) {
         let data;
         if(c[2].length == 0) {
-            data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?top=1&embed=players`).then(response => response.json());
+            console.log(await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?top=1&embed=players`).then(response => response.json())));
             for(run of data.data.runs) {
                 b:
                 for(player of run.run.players) {
@@ -99,7 +99,12 @@ exports.newlb = async function newlb(param, game, type) {
                 } else {
                     varString += `&var-${c[1][0]}=${o}`;
                 }
-                data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players').then(response => response.json());
+                console.log(await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players').then(response => response.json())));
+                if(!data.data) {
+                    console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players');
+                    console.log(data);
+                    continue;
+                }
                 for(run of data.data.runs) {
                     b:
                     for(player of run.run.players) {
@@ -139,18 +144,20 @@ exports.newlb = async function newlb(param, game, type) {
     playerList.sort(function(a, b) {
         return b[1] - a[1];
     });
-    let pasteString = '';
-    for(player of playerList) {
-        pasteString += player[0] + ', ' + player[1] + '\n';
+    if(type == 'Channel') {
+        let pasteString = '';
+        for(player of playerList) {
+            pasteString += player[0] + ', ' + player[1] + '\n';
+        }
+        let pasteid = '';
+        await pastebin.createPaste({
+            text: pasteString,
+            title: game + " Leaderboard " + date,
+            privacy: 1
+        }).then((data) => {
+            pasteid = data;
+        })
     }
-    let pasteid = '';
-    await pastebin.createPaste({
-        text: pasteString,
-        title: game + " Leaderboard " + date,
-        privacy: 1
-    }).then((data) => {
-        pasteid = data;
-    })
     let place = 1;
     let iterator = 0;
     embed = new MessageEmbed()
@@ -169,9 +176,17 @@ exports.newlb = async function newlb(param, game, type) {
             }
             iterator++;
         }
-    if(message) {
-        return msg.edit('<@' + message.author.id + `>\n${pasteid}`, embed);
+    if(type == 'Channel') {
+        if(message) {
+            return msg.edit('<@' + message.author.id + `>\n${pasteid}`, embed);
+        } else {
+            return msg.edit(`${pasteid}`, embed);
+        }
     } else {
-        return msg.edit(`${pasteid}`, embed);
+        if(message) {
+            return msg.edit('<@' + message.author.id + `>\n`, embed);
+        } else {
+            return msg.edit(embed);
+        }
     }
 }

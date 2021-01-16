@@ -1,5 +1,7 @@
 const commands = require('../api');
 const { MessageEmbed } = require('discord.js');
+const tokens = require('../index.js');
+
 exports.time = async function time(message, args) {
     if (!args[0]) {
         return message.channel.send('<@' + message.author.id + '>\n' + 'Missing Arguement: Game.\nsrc!time <game> <category> <place> (variable)');
@@ -24,7 +26,7 @@ exports.time = async function time(message, args) {
         .setTitle('Result for ' + game + ': ' + category)
         .setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
         .addField('Time', runLength)
-        .addField('Runner(s)', await players(dataArr.runs[place - 1].run.players))
+        .addField('Runner(s)', await tokens.players(dataArr.runs[place - 1].run.players))
         .addField('Run Link', dataArr.runs[place - 1].run.weblink)
         .addField('Run Video Link', dataArr.runs[place - 1].run.videos.links[0].uri)
         .addField('Description', dataArr.runs[place - 1].run.comment)

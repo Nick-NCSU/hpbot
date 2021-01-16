@@ -13,6 +13,8 @@
     "eslint": "^7.3.1",
     "node-cron": "^2.0.3",
     "node-fetch": "^2.6.0",
-    "pastebin-ts": "^1.2.0"
+    "pastebin-ts": "^1.2.0",
+    "queue-promise": "^2.1.0",
+    "rate-limiter-flexible": "^2.1.15"
   }
 }
