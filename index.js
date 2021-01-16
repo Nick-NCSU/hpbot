@@ -66,7 +66,7 @@ client.on('message', async message => {
 				case 'search':
 					await commands.Search.search(message, args);
 					break;
-				case 'wr':
+				/**case 'wr':
 					await commands.Wr.wr(message, args);
 					break;
 				case 'time':
@@ -74,7 +74,7 @@ client.on('message', async message => {
 					break;
 				case 'lb':
 					await commands.Leaderboard.lb(message, args, 'Message');
-					break;
+					break;*/
 				case 'verified':
 				case 'v':
 					await commands.Verified.verified(message, args);
@@ -86,7 +86,7 @@ client.on('message', async message => {
 				case 'dream':
 					await commands.Dream.dream(message, args);
 					break;
-				case 'newlb':
+				case 'lb':
 					await commands.NewLeaderboard.newlb(message, args, 'Message');
 					break;
 			}
@@ -99,19 +99,34 @@ client.on('message', async message => {
 client.login(token).then(() => {
 	// Schedules the automatic daily leaderboards (Time in GMT)
 	cron.schedule("30 0 4 * * *", async function() {
-		commands.NewLeaderboard.newlb(client.channels.cache.get('792473904391651369'), 'hypixel_sb', 'Channel');
+		queue.enqueue(async () => {
+			await commands.NewLeaderboard.newlb(client.channels.cache.get('792473904391651369'), 'hypixel_sb', 'Channel');
+		});
 	});
 	cron.schedule("30 5 4 * * *", async function() {
-		commands.NewLeaderboard.newlb(client.channels.cache.get('792473904391651369'), 'hypixel_sbce', 'Channel');
+		queue.enqueue(async () => {
+			await commands.NewLeaderboard.newlb(client.channels.cache.get('792473904391651369'), 'hypixel_sbce', 'Channel');
+		});
 	});
 	cron.schedule("30 10 4 * * *", async function() {
-		commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_ce', 'Channel');
+		queue.enqueue(async () => {
+			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_ce', 'Channel');
+		});
 	});
 	cron.schedule("30 15 4 * * *", async function() {
-		commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_bw', 'Channel');
+		queue.enqueue(async () => {
+			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_bw', 'Channel');
+		});
 	});
 	cron.schedule("30 20 4 * * *", async function() {
-		commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_sw', 'Channel');
+		queue.enqueue(async () => {
+			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_sw', 'Channel');
+		});
+	});
+	cron.schedule("30 25 4 * * *", async function() {
+		queue.enqueue(async () => {
+			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_ag', 'Channel');
+		});
 	});
 });
 

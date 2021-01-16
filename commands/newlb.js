@@ -14,9 +14,6 @@ exports.newlb = async function newlb(param, game, type) {
     if(type == 'Channel') {
         channel = param;
     } else if(type == 'Message') {
-        if(param.author.id != '168420049462362112') {
-            return param.channel.send('<@' + param.author.id + '>\n' + `You do not have permission to use this command.`);
-        }
         channel = param.channel;
         message = param;
     }
@@ -65,7 +62,7 @@ exports.newlb = async function newlb(param, game, type) {
     for(c of subcategories) {
         let data;
         if(c[2].length == 0) {
-            console.log(await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?top=1&embed=players`).then(response => response.json())));
+            await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?top=1&embed=players`).then(response => response.json()));
             for(run of data.data.runs) {
                 b:
                 for(player of run.run.players) {
@@ -99,7 +96,7 @@ exports.newlb = async function newlb(param, game, type) {
                 } else {
                     varString += `&var-${c[1][0]}=${o}`;
                 }
-                console.log(await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players').then(response => response.json())));
+                await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players').then(response => response.json()));
                 if(!data.data) {
                     console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players');
                     console.log(data);
