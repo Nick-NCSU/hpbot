@@ -8,7 +8,7 @@ const {RateLimiterMemory, RateLimiterQueue} = require('rate-limiter-flexible');
 const Queue = require('queue-promise');
 
 const limiterFlexible = new RateLimiterMemory({
-  points: 90,
+  points: 49,
   duration: 60, // minute
 });
 const limiter = new RateLimiterQueue(limiterFlexible);
@@ -93,6 +93,7 @@ client.on('message', async message => {
 		} catch(err) {
 			message.channel.send("An unexpected error occurred.");
 			console.log(message.content);
+			console.log(err);
 		}
 	});
 });
@@ -126,6 +127,12 @@ client.login(token).then(() => {
 	cron.schedule("30 25 4 * * *", async function() {
 		queue.enqueue(async () => {
 			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_ag', 'Channel');
+		});
+	});
+
+	cron.schedule("30 55 3 * * *", async function() {
+		queue.enqueue(async () => {
+			await commands.NewLeaderboard.newlb(client.channels.cache.get('728402518014689333'), 'hypixel_ag', 'Channel');
 		});
 	});
 });

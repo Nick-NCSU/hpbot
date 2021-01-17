@@ -106,7 +106,7 @@ exports.newlb = async function newlb(param, game, type) {
                     b:
                     for(player of run.run.players) {
                         for(item of playerList) {
-                            if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0] == player.name) {
+                            if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0].toLowerCase() == player.name.toLowerCase()) {
                                 item[1] = item[1] + 1;
                                 continue b;
                             }
@@ -141,20 +141,22 @@ exports.newlb = async function newlb(param, game, type) {
     playerList.sort(function(a, b) {
         return b[1] - a[1];
     });
-    if(type == 'Channel') {
-        let pasteString = '';
-        for(player of playerList) {
-            pasteString += player[0] + ', ' + player[1] + '\n';
-        }
-        let pasteid = '';
-        await pastebin.createPaste({
-            text: pasteString,
-            title: game + " Leaderboard " + date,
-            privacy: 1
-        }).then((data) => {
-            pasteid = data;
-        })
-    }
+    playerList = playerList.filter(word => word[0].toLowerCase() !== 'n/a');
+    let pasteid = '';
+    // if(type == 'Channel') {
+    //     let pasteString = '';
+    //     for(player of playerList) {
+    //         pasteString += player[0] + ', ' + player[1] + '\n';
+    //     }
+    //     let pasteid = '';
+    //     await pastebin.createPaste({
+    //         text: pasteString,
+    //         title: game + " Leaderboard " + date,
+    //         privacy: 1
+    //     }).then((data) => {
+    //         pasteid = data;
+    //     })
+    // }
     let place = 1;
     let iterator = 0;
     embed = new MessageEmbed()
@@ -174,16 +176,8 @@ exports.newlb = async function newlb(param, game, type) {
             iterator++;
         }
     if(type == 'Channel') {
-        if(message) {
-            return msg.edit('<@' + message.author.id + `>\n${pasteid}`, embed);
-        } else {
-            return msg.edit(`${pasteid}`, embed);
-        }
+        await msg.edit(`${pasteid}`, embed);
     } else {
-        if(message) {
-            return msg.edit('<@' + message.author.id + `>\n`, embed);
-        } else {
-            return msg.edit(embed);
-        }
+        await msg.edit('<@' + message.author.id + `>\n`, embed);
     }
 }

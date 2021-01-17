@@ -15,6 +15,6 @@ exports.getWr = async function getWr (args) {
         varId = vars[0];
     }
     let data;
-    console.log(await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}?var-${varId}=${variable}&top=1&embed=players`).then(response => response.json())));
+    await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}?var-${varId}=${variable}&top=1&embed=players`).then(response => response.json()));
     return data;
 }

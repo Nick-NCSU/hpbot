@@ -8,6 +8,6 @@ exports.getSearch = async function getSearch (args) {
         page = (args.shift() - 1) * 20;
     }
     let data;
-    console.log(await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/games?name=${game}&offset=${page}`).then(response => response.json())));
+    await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/games?name=${game}&offset=${page}`).then(response => response.json()));
     return data;
 }
