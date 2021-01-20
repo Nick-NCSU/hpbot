@@ -129,12 +129,6 @@ client.login(token).then(() => {
 			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_ag', 'Channel');
 		});
 	});
-
-	cron.schedule("30 55 3 * * *", async function() {
-		queue.enqueue(async () => {
-			await commands.NewLeaderboard.newlb(client.channels.cache.get('728402518014689333'), 'hypixel_ag', 'Channel');
-		});
-	});
 });
 
 // Returns a list of the players in a given run.
