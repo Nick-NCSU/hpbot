@@ -5,7 +5,7 @@ const PastebinAPI = require('pastebin-ts');
 const { MessageEmbed } = require('discord.js');
 
 exports.newlb = async function newlb(param, game, type) {
-    if(game.toLowerCase() == "seterra") {
+    if(game.toString().toLowerCase() == "seterra") {
         return channel.send('<@' + message.author.id + '>\n' + `Blacklisted game: **${game}**.`);
     }
     // From rsp via https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
