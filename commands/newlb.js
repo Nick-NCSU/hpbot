@@ -162,7 +162,7 @@ exports.newlb = async function newlb(param, game, type) {
     // }
     let place = 1;
     let iterator = 0;
-    let count = 0;
+    let countPlayer = 0;
     embed = new MessageEmbed()
         .setColor('118855')
         .setTitle('Leaderboard for ' + game + ':')
@@ -174,11 +174,11 @@ exports.newlb = async function newlb(param, game, type) {
                 player[0] = temp.data.names.international;
             }
             embed.addField('#' + place + ' ' + player[0], `WRs:${player[1]}`, true)
-            count++;
+            countPlayer++;
             if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {
                 place++;
             }
-            if(count > 30) {
+            if(countPlayer > 30) {
                 break;
             }
             iterator++;
