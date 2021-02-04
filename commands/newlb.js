@@ -5,6 +5,9 @@ const PastebinAPI = require('pastebin-ts');
 const { MessageEmbed } = require('discord.js');
 
 exports.newlb = async function newlb(param, game, type) {
+    if(game.toLowerCase() == "seterra") {
+        return channel.send('<@' + message.author.id + '>\n' + `Blacklisted game: **${game}**.`);
+    }
     // From rsp via https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
     const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
     const pastebin = new PastebinAPI({
@@ -159,6 +162,7 @@ exports.newlb = async function newlb(param, game, type) {
     // }
     let place = 1;
     let iterator = 0;
+    let count = 0;
     embed = new MessageEmbed()
         .setColor('118855')
         .setTitle('Leaderboard for ' + game + ':')
@@ -170,8 +174,12 @@ exports.newlb = async function newlb(param, game, type) {
                 player[0] = temp.data.names.international;
             }
             embed.addField('#' + place + ' ' + player[0], `WRs:${player[1]}`, true)
+            count++;
             if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {
                 place++;
+            }
+            if(count > 30) {
+                break;
             }
             iterator++;
         }

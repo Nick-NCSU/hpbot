@@ -44,7 +44,7 @@ client.once('ready', () => {
 client.on('message', async message => {
 	// Checks if message starts with the given prefix
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
-
+	console.log(message.content);
 	// Removes prefix from the message
 	const args = message.content.slice(prefix.length).split(/ +/);
 	// Sets the command to the next text after the prefix
