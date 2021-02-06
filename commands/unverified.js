@@ -16,9 +16,15 @@ exports.unverified = async function unverified(message, args) {
     const num = data.pagination.offset + data.pagination.size;
     const firstPage = await commands.New.getUnexamine(id, 0);
     const embed = new MessageEmbed()
-        .setColor('118855')
-        .setTitle('Result for: ' + args)
-        .addField('Number of unverified runs: ', num)
-        .addField('Oldest unverified run: ', firstPage.data[0].date)
+    if(firstPage.data.length > 0) {
+        embed.setColor('118855')
+        embed.setTitle('Result for: ' + args)
+        embed.addField('Number of unverified runs: ', num)
+        embed.addField('Oldest unverified run: ', firstPage.data[0].date)
+    } else {
+        embed.setColor('118855')
+        embed.setTitle('Result for: ' + args)
+        embed.addField('Number of unverified runs: ', num)
+    }
     message.channel.send('<@' + message.author.id + '>\n', embed);
 }
