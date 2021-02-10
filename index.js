@@ -37,7 +37,7 @@ const client = new Client();
 
 // Sets bot activity and announces that bot is ready for use
 client.once('ready', () => {
-	client.user.setActivity('speedrun.com', { type: 'WATCHING' })
+	client.user.setActivity('speedrun.com | src!help', { type: 'WATCHING' })
 	console.log('Ready!');
 });
 
