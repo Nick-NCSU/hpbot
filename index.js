@@ -4,14 +4,11 @@ const commands = require('./commands');
 const api = require('./api');
 const fs = require('fs');
 const cron = require("node-cron"); 
-const {RateLimiterMemory, RateLimiterQueue} = require('rate-limiter-flexible');
+const Limit = require('./Limiter.js');
 const Queue = require('queue-promise');
 
-const limiterFlexible = new RateLimiterMemory({
-  points: 49,
-  duration: 60, // minute
-});
-const limiter = new RateLimiterQueue(limiterFlexible);
+const limiter = new Limit(95);
+
 
 const queue = new Queue({
 	concurrent: 1,
@@ -102,35 +99,11 @@ client.login(token).then(() => {
 	cron.schedule("30 0 4 * * *", async function() {
 		queue.enqueue(async () => {
 			await commands.NewLeaderboard.newlb(client.channels.cache.get('792473904391651369'), 'hypixel_sb', 'Channel');
-		});
-	});
-	cron.schedule("30 5 4 * * *", async function() {
-		queue.enqueue(async () => {
 			await commands.NewLeaderboard.newlb(client.channels.cache.get('792473904391651369'), 'hypixel_sbce', 'Channel');
-		});
-	});
-	cron.schedule("30 10 4 * * *", async function() {
-		queue.enqueue(async () => {
 			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_ce', 'Channel');
-		});
-	});
-	cron.schedule("30 15 4 * * *", async function() {
-		queue.enqueue(async () => {
 			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_bw', 'Channel');
-		});
-	});
-	cron.schedule("30 20 4 * * *", async function() {
-		queue.enqueue(async () => {
 			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_sw', 'Channel');
-		});
-	});
-	cron.schedule("30 25 4 * * *", async function() {
-		queue.enqueue(async () => {
 			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_ag', 'Channel');
-		});
-	});
-	cron.schedule("30 30 4 * * *", async function() {
-		queue.enqueue(async () => {
 			await commands.NewLeaderboard.newlb(client.channels.cache.get('782073727881183304'), 'hypixel_cg', 'Channel');
 		});
 	});

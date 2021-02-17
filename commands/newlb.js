@@ -17,7 +17,7 @@ exports.newlb = async function newlb(param, game, type) {
         channel = param.channel;
         message = param;
     }
-    if(game.toString().toLowerCase() == "seterra") {
+    if(game.toString().toLowerCase() == "setevrra") {
         return channel.send('<@' + message.author.id + '>\n' + `Blacklisted game: **${game}**.`);
     }
     const {data} = await commands.NewLB.getSubcategories(game);

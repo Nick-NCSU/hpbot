@@ -9,8 +9,8 @@ exports.dream = async function dream(message, args) {
     }
     const embed = new MessageEmbed()
         .setColor('118855')
-        .setTitle('Number of pearls: ' + num + '/262')
-        .setFooter('Number of pearls (Dream): 42/262')
+        .setTitle('Number of pearl trades: ' + num + '/262')
+        .setFooter('Number of pearl trades (Dream): 42/262')
 
     num = 0;
     for(let i = 0; i < 306; i++) {
