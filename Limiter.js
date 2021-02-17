@@ -55,7 +55,6 @@ class Limit {
      * @param {*} num number of points to remove
      */
     removePoints(num) {
-        console.log(this.points);
         // Promise that resolves when num points can be removed
         return new Promise((resolve) => {
             let self = this;
