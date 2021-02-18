@@ -15,11 +15,6 @@ exports.newlb = async function newlb(param, game, type) {
         message = param;
     }
 
-    // Blacklist for seterra
-    if(game.toString().toLowerCase() == "seterra") {
-        return channel.send('<@' + message.author.id + '>\n' + `Blacklisted game: **${game}**.`);
-    }
-
     // Retrieves all subcategories for the full game and ILs
     const {data} = await commands.NewLB.getSubcategories(game);
     // If nothing is returned
@@ -78,6 +73,9 @@ exports.newlb = async function newlb(param, game, type) {
         } else {
             count2 += c[1][2].length;
         }
+    }
+    if(count + count2 > 500) {
+        return channel.send('<@' + message.author.id + '>\n' + `Game ${game} has too many categories. Number of categories: ${count + count2}.`);
     }
     let date = new Date().toISOString().slice(0, 10);
     let embed = new MessageEmbed()
