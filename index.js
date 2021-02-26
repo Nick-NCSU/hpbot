@@ -83,6 +83,9 @@ client.on('message', async message => {
 				case 'lb':
 					await commands.NewLeaderboard.newlb(message, args, 'Message');
 					break;
+				case 'ping':
+					await commands.Ping.ping(client, message);
+					break;
 			}
 		} catch(err) {
 			message.channel.send("An unexpected error occurred.");
