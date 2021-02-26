@@ -19,14 +19,11 @@ const queue = new Queue({
 const prefix = 'src!';
 // Determines the token for bot
 let token = '';
-let pasteapi = '';
 if (fs.existsSync('./token.json')) {
 	const tokenFile = require('./token.json');
 	token = tokenFile.token;
-	pasteapi = tokenFile.pasteAPI;
 } else {
 	token = process.env.token;
-	pasteapi = process.env.pasteapi;
 }
 
 // Creates new Client
@@ -183,8 +180,7 @@ exports.searchVariables = async function searchVariables(game, category, variabl
 
 exports.tokens = function getTokens() {
 	return {
-		token: token,
-		pasteapi: pasteapi
+		token: token
 	}
 }
 
