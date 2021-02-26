@@ -1,2 +1,2 @@
 # hpbot
-No adam
+Prefix: src!
