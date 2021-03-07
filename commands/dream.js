@@ -7,21 +7,19 @@ exports.dream = async function dream(message, args) {
             num++;
         }
     }
-    const embed = new MessageEmbed()
-        .setColor('118855')
-        .setTitle('Number of pearl trades: ' + num + '/262')
-        .setFooter('Number of pearl trades (Dream): 42/262')
-
-    num = 0;
+    let num2 = 0;
     for(let i = 0; i < 306; i++) {
         if(Math.random() * 100 <= 50) {
-            num++;
+            num2++;
         }
     }
-    const embed2 = new MessageEmbed()
+    const difference = num >= 42 ? '+' + num - 42 : num - 42;
+    const difference2 = num2 >= 211 ? '+' + num2 - 211 : num2 - 211;
+    const embed = new MessageEmbed()
         .setColor('118855')
-        .setTitle('Number of rods: ' + num + '/305')
-        .setFooter('Number of rods (Dream): 211/305')
+        .setTitle('Your Results:')
+        .addField('Number of pearl trades: ' + num + '/262', 'Number of pearl trades (Dream): 42/262')
+        .addField('Number of rods: ' + num2 + '/305', 'Number of rods (Dream): 211/305')
+        .setFooter('Difference: ' + difference + '/' + difference2)
     message.channel.send('<@' + message.author.id + '>\n', embed);
-    message.channel.send(embed2);
 }

@@ -181,11 +181,7 @@ exports.searchVariables = async function searchVariables(game, category, variabl
 	}
 }
 
-exports.tokens = function getTokens() {
-	return {
-		token: token
-	}
-}
+exports.tokens = token;
 
 exports.limit = function getLimit() {
 	return limiter;
