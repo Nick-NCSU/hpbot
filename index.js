@@ -11,8 +11,7 @@ const limiter = new Limit(95);
 
 
 const queue = new Queue({
-	concurrent: 1,
-	interval: 2000
+	concurrent: 1
 });
 
 // Prefix to call the bot
