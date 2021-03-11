@@ -10,17 +10,17 @@ exports.unverified = async function unverified(message, args) {
     }
     const id = gameData.data.id;
     let data = await commands.New.getUnexamine(id, 0);
+    const firstPage = data.data[0];
     while (data.pagination.size == 200){
         data = await commands.New.getUnexamine(id, data.pagination.offset + 200);
     }
     const num = data.pagination.offset + data.pagination.size;
-    const firstPage = await commands.New.getUnexamine(id, 0);
     const embed = new MessageEmbed()
-    if(firstPage.data.length > 0) {
+    if(firstPage) {
         embed.setColor('118855')
         embed.setTitle('Result for: ' + args)
         embed.addField('Number of unverified runs: ', num)
-        embed.addField('Oldest unverified run: ', firstPage.data[0].date)
+        embed.addField('Oldest unverified run: ', firstPage.submitted.substring(0,10))
     } else {
         embed.setColor('118855')
         embed.setTitle('Result for: ' + args)
