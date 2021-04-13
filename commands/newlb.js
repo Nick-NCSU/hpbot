@@ -267,7 +267,7 @@ exports.newlb = async function newlb(param, game, type) {
                 let temp = await commands.Player.getPlayer(player[0]);
                 player[0] = temp.data.names.international;
             }
-            embed.addField('#' + place + ' ' + player[0], `WRs:${player[1]}`, true)
+            embed.addField('#' + place + ' ' + player[0].replace(/[*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
             countPlayer++;
             if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {
                 place++;
