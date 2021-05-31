@@ -95,7 +95,7 @@ client.on('message', async message => {
 });
 client.login(token).then(() => {
 	// Schedules the automatic daily leaderboards (Time in GMT)
-	cron.schedule("15 39 0 * * *", async function() {
+	cron.schedule("15 0 4 * * *", async function() {
 		const daily = [
 			['792473904391651369', 'hypixel_sb'],
 			['792473904391651369', 'hypixel_sbce'],
@@ -104,7 +104,13 @@ client.login(token).then(() => {
 			['782073727881183304', 'hypixel_sw'],
 			['782073727881183304', 'hypixel_ag'],
 			['782073727881183304', 'hypixel_cg'],
-			['782073727881183304', 'tkr']
+			['782073727881183304', 'tkr'],
+			['782073727881183304', 'mcm_za'],
+			['782073727881183304', 'mcm_wotf'],
+			['782073727881183304', 'mcm_hr'],
+			['782073727881183304', 'mcm_sw'],
+			['782073727881183304', 'mcm_hm'],
+			['782073727881183304', 'mcm_cd']
 		];
 		for(lb of daily) {
 			await dailyLB(lb[0], lb[1]);
