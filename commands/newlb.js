@@ -25,10 +25,6 @@ exports.newlb = async function newlb(param, game, type) {
     let levels = [];
     let sublevels = [];
 
-    for(level of data.levels.data) {
-        levels.push([level.id]);
-    }
-
     /**
      * Provides an array containing all subcategories for full game
      * Format: [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]
@@ -50,8 +46,21 @@ exports.newlb = async function newlb(param, game, type) {
         if(category.type == "per-game") {
             subcategories.push([category.id, idArr, combinations]);
         } else if(category.type == "per-level") {
-            for(level of levels) {
-                sublevels.push([level, [category.id, idArr, combinations]]);
+            for(level of data.levels.data) {
+                subArr = [];
+                idArr = [];
+                for(sub of level.variables.data) {
+                    if(sub["is-subcategory"]){
+                        const options = Object.keys(sub.values.values);
+                        subArr.push(options);
+                        idArr.push(sub.id);
+                    }
+                }
+                let combinations = [];
+                if(subArr.length != 0) {
+                    combinations = cartesian(...subArr);
+                }
+                sublevels.push([level.id, [category.id, idArr, combinations]]);
             }
         }
     }
