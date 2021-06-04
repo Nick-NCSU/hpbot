@@ -30,27 +30,34 @@ exports.newlb = async function newlb(param, game, type) {
      * Format: [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]
      */
     for(category of data.categories.data) {
-        let subArr = [];
-        let idArr = [];
-        for(sub of category.variables.data) {
-            if(sub["is-subcategory"]){
-                const options = Object.keys(sub.values.values);
-                subArr.push(options);
-                idArr.push(sub.id);
-            }
-        }
-        let combinations = [];
-        if(subArr.length != 0) {
-            combinations = cartesian(...subArr);
-        }
         if(category.type == "per-game") {
+            let subArr = [];
+            let idArr = [];
+            for(sub of category.variables.data) {
+                if(sub["is-subcategory"]){
+                    const options = Object.keys(sub.values.values);
+                    subArr.push(options);
+                    idArr.push(sub.id);
+                }
+            }
+            let combinations = [];
+            if(subArr.length != 0) {
+                combinations = cartesian(...subArr);
+            }
             subcategories.push([category.id, idArr, combinations]);
-        } else if(category.type == "per-level") {
-            for(level of data.levels.data) {
-                subArr = [];
-                idArr = [];
+        }
+    }
+    /**
+     * Provides an array containing all subcategories for individual levels
+     * Format: [levelID, [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]]
+     */
+    for(level of data.levels.data) {
+        for(category of data.categories.data) {
+            if(category.type == "per-level") {
+                let subArr = [];
+                let idArr = [];
                 for(sub of level.variables.data) {
-                    if(sub["is-subcategory"]){
+                    if(sub["is-subcategory"] && (!sub.category || sub.category == category.id)) {
                         const options = Object.keys(sub.values.values);
                         subArr.push(options);
                         idArr.push(sub.id);
