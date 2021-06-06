@@ -22,7 +22,6 @@ exports.newlb = async function newlb(param, game, type) {
         return channel.send('<@' + message.author.id + '>\n' + `No results found for **${game}**.`);
     }
     let subcategories = [];
-    let levels = [];
     let sublevels = [];
 
     /**
@@ -279,10 +278,6 @@ exports.newlb = async function newlb(param, game, type) {
         .setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
         .setFooter(date)
         for(player of playerList) {
-            if(player[2] == "user") {
-                let temp = await commands.Player.getPlayer(player[0]);
-                player[0] = temp.data.names.international;
-            }
             embed.addField('#' + place + ' ' + player[0].replace(/[*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
             countPlayer++;
             if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {
@@ -295,6 +290,7 @@ exports.newlb = async function newlb(param, game, type) {
         }
     if(type == 'Channel') {
         await msg.edit(embed);
+        return playerList;
     } else {
         await msg.edit('<@' + message.author.id + `>\n`, embed);
     }
