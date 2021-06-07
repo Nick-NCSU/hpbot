@@ -102,7 +102,7 @@ client.on('message', async message => {
 });
 client.login(token).then(() => {
 	// Schedules the automatic daily leaderboards (Time in GMT)
-	cron.schedule("15 0 4 * * *", async function() {
+	cron.schedule("15 0 5 * * *", async function() {
 		const daily = [
 			'hypixel_sb',
 			'hypixel_sbce'
@@ -121,8 +121,8 @@ client.login(token).then(() => {
 			'mcm_hm',
 			'mcm_cd'
 		];
-		await commands.NewLeaderboard.grouplb(client.channels.cache.get('792473904391651369'), daily);
-		await commands.NewLeaderboard.grouplb(client.channels.cache.get('782073727881183304'), daily2);
+		await grouplb(client.channels.cache.get('792473904391651369'), daily);
+		await grouplb(client.channels.cache.get('782073727881183304'), daily2);
 	});
 
 	grouplb = async function grouplb(channel, games) {
