@@ -55,7 +55,7 @@ const rest = new REST({ version: '9' }).setToken(token);
 
 // Sets bot activity and announces that bot is ready for use
 client.once('ready', async () => {
-	client.user.setActivity('speedrun.com | src!help', { type: 'WATCHING' })
+	client.user.setActivity('speedrun.com | /help', { type: 'WATCHING' })
 	console.log('Ready!');
 });
 
