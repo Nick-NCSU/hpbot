@@ -111,7 +111,7 @@ module.exports = {
                     case 'Maps':
                         options = [
                             {
-                                label: 'Support Hub',
+                                label: 'Zombie Apocalypse',
                                 value: 'Zombie Apocalypse',
                             },
                             {
