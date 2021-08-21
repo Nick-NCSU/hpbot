@@ -15,7 +15,7 @@ module.exports = {
             .addField('/search <keyword> (page)', 'Searches for games containing the keyword(s).')
             .addField('/leaderboard <game>', 'Provides a leaderboard for the given game.')
             .addField('/verified <user>', 'Provides the number of runs verified by the given user.')
-            .addField('/unverified <game>', 'Provides the number of unverified runs for the given game.')
+            .addField('/queuelength <game>', 'Provides the number of unverified runs for the given game.')
             .addField('/dream', 'Simulates Dream\'s pearl and blaze rod odds.')
             .addField('/ping', 'Provides bot response time.')
         await interaction.editReply('Sending you help!');
