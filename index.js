@@ -37,7 +37,7 @@ for (const file of commandFiles) {
 }
 
 const rest = new REST({ version: '9' }).setToken(token);
-
+/**
 (async () => {
 	try {
 		console.log('Started refreshing application (/) commands.');
@@ -52,7 +52,7 @@ const rest = new REST({ version: '9' }).setToken(token);
 		console.error(error);
 	}
 })();
-
+*/
 // Sets bot activity and announces that bot is ready for use
 client.once('ready', async () => {
 	client.user.setActivity('speedrun.com | /help', { type: 'WATCHING' })
