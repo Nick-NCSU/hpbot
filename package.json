@@ -1,6 +1,6 @@
 {
   "name": "src-bot",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "src bot",
   "main": "index.js",
   "scripts": {
@@ -18,5 +18,9 @@
     "pastebin-ts": "^1.2.0",
     "perf_hooks": "0.0.1",
     "queue-promise": "^2.2.1"
+  },
+  "engines": { 
+    "node": "16.6.1",
+    "npm": "7.20.3"
   }
 }
