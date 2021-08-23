@@ -6,7 +6,7 @@ module.exports = {
 	async execute(interaction) {
         const embed = new MessageEmbed()
             .setColor('118855')
-            .setThumbnail('https://www.speedrun.com/themes/Default/1st.png')
+            .setThumbnail('https://www.speedrun.com/images/1st.png')
             .setTitle(`Ping: ${Date.now() - interaction.createdTimestamp}ms`)
         await interaction.editReply({ embeds: [embed] });
 	},

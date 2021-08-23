@@ -7,7 +7,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setColor('118855')
             .setTitle('Help')
-            .setThumbnail('https://www.speedrun.com/themes/Default/1st.png')
+            .setThumbnail('https://www.speedrun.com/images/1st.png')
             .addField('/help', 'Shows this help message.')
             .addField('/hypixel', 'Provides helpful links for Hypixel Speedruns')
             .addField('/link <game>', 'Sends a link to the provided game.')

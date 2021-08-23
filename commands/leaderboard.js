@@ -112,7 +112,7 @@ module.exports = {
         let embed = new MessageEmbed()
             .setColor('118855')
             .setTitle('Leaderboard for ' + game + ':')
-            .setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+            .setThumbnail(data.assets["cover-large"].uri)
             .setFooter(date)
             .addField('Full Game Progress:', `${progress}/${count}`)
             .addField('Individual Levels Progress:', `${progress2}/${count2}`)
@@ -120,11 +120,11 @@ module.exports = {
         let playerList = [];
 
         for(const c of subcategories) {
-            let data;
+            let data2;
             // If category has no sub categories
             if(c[2].length == 0) {
-                await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?top=1&embed=players`).then(response => response.json()));
-                for(const run of data.data.runs) {
+                await tokens.limit().removeTokens(1).then(data2 = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?top=1&embed=players`).then(response => response.json()));
+                for(const run of data2.data.runs) {
                     b:
                     for(const player of run.run.players) {
                         for(const item of playerList) {
@@ -134,7 +134,7 @@ module.exports = {
                             }
                         }
                         if(player.rel == "user") {
-                            for(const user of data.data.players.data) {
+                            for(const user of data2.data.players.data) {
                                 if(player.id == user.id) {
                                     playerList.push([user.names.international, 1, user.id]);
                                     continue b;
@@ -157,13 +157,13 @@ module.exports = {
                     } else {
                         varString += `&var-${c[1][0]}=${o}`;
                     }
-                    await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players').then(response => response.json()));
-                    if(!data.data) {
+                    await tokens.limit().removeTokens(1).then(data2 = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players').then(response => response.json()));
+                    if(!data2.data) {
                         console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players');
-                        console.log(data);
+                        console.log(data2);
                         continue;
                     }
-                    for(const run of data.data.runs) {
+                    for(const run of data2.data.runs) {
                         b:
                         for(const player of run.run.players) {
                             for(const item of playerList) {
@@ -173,7 +173,7 @@ module.exports = {
                                 }
                             }
                             if(player.rel == "user") {
-                                for(const user of data.data.players.data) {
+                                for(const user of data2.data.players.data) {
                                     if(player.id == user.id) {
                                         playerList.push([user.names.international, 1, user.id]);
                                         continue b;
@@ -192,7 +192,7 @@ module.exports = {
                 embed = new MessageEmbed()
                     .setColor('118855')
                     .setTitle('Leaderboard for ' + game + ':')
-                    .setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+                    .setThumbnail(data.assets["cover-large"].uri)
                     .setFooter(date)
                     .addField('Full Game Progress:', `${progress}/${count}`)
                     .addField('Individual Levels Progress:', `${progress2}/${count2}`)
@@ -202,10 +202,10 @@ module.exports = {
         }
 
         for(const c of sublevels) {
-            let data;
+            let data3;
             if(c[1][2].length == 0) {
-                await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?top=1&embed=players`).then(response => response.json()));
-                for(const run of data.data.runs) {
+                await tokens.limit().removeTokens(1).then(data3 = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?top=1&embed=players`).then(response => response.json()));
+                for(const run of data3.data.runs) {
                     b:
                     for(const player of run.run.players) {
                         for(const item of playerList) {
@@ -215,7 +215,7 @@ module.exports = {
                             }
                         }
                         if(player.rel == "user") {
-                            for(const user of data.data.players.data) {
+                            for(const user of data3.data.players.data) {
                                 if(player.id == user.id) {
                                     playerList.push([user.names.international, 1, user.id]);
                                     continue b;
@@ -238,13 +238,13 @@ module.exports = {
                     } else {
                         varString += `&var-${c[1][1][0]}=${o}`;
                     }
-                    await tokens.limit().removeTokens(1).then(data = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + '&top=1&embed=players').then(response => response.json()));
-                    if(!data.data) {
+                    await tokens.limit().removeTokens(1).then(data3 = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + '&top=1&embed=players').then(response => response.json()));
+                    if(!data3.data) {
                         console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + '&top=1&embed=players');
-                        console.log(data);
+                        console.log(data3);
                         continue;
                     }
-                    for(const run of data.data.runs) {
+                    for(const run of data3.data.runs) {
                         b:
                         for(const player of run.run.players) {
                             for(const item of playerList) {
@@ -254,7 +254,7 @@ module.exports = {
                                 }
                             }
                             if(player.rel == "user") {
-                                for(const user of data.data.players.data) {
+                                for(const user of data3.data.players.data) {
                                     if(player.id == user.id) {
                                         playerList.push([user.names.international, 1, user.id]);
                                         continue b;
@@ -273,7 +273,7 @@ module.exports = {
                 embed = new MessageEmbed()
                     .setColor('118855')
                     .setTitle('Leaderboard for ' + game + ':')
-                    .setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+                    .setThumbnail(data.assets["cover-large"].uri)
                     .setFooter(date)
                     .addField('Full Game Progress:', `${progress}/${count}`)
                     .addField('Individual Levels Progress:', `${progress2}/${count2}`)
@@ -295,7 +295,7 @@ module.exports = {
         embed = new MessageEmbed()
             .setColor('118855')
             .setTitle('Leaderboard for ' + game + ':')
-            .setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+            .setThumbnail(data.assets["cover-large"].uri)
             .setFooter(date)
         for(const player of playerList) {
             embed.addField('#' + place + ' ' + player[0].replace(/[*_~]/g, "\\$&"), `WRs:${player[1]}`, true)

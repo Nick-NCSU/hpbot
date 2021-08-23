@@ -28,14 +28,13 @@ module.exports = {
         }
         const num = data.pagination.offset + data.pagination.size;
         const embed = new MessageEmbed()
+            .setColor('118855')
+            .setTitle('Result for: ' + game)
+            .setThumbnail(gameData.data.assets["cover-large"].uri)
         if(firstPage) {
-            embed.setColor('118855')
-            embed.setTitle('Result for: ' + game)
             embed.addField('Number of unverified runs: ', String(num))
-            embed.addField('Oldest unverified run: ', firstPage.submitted.substring(0,10))
+                .addField('Oldest unverified run: ', firstPage.submitted.substring(0,10))
         } else {
-            embed.setColor('118855')
-            embed.setTitle('Result for: ' + game)
             embed.addField('Number of unverified runs: ', String(num))
         }
         await interaction.editReply({ embeds: [embed] });

@@ -28,7 +28,7 @@ module.exports = {
             .setColor('118855')
             .setTitle(dataArr.names.international)
             .setURL(dataArr.weblink)
-            .setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+            .setThumbnail(dataArr.assets["cover-large"].uri)
         // Iterates through all the categories for the game
         for (const category of dataArr.categories.data) {
             let variables = '';

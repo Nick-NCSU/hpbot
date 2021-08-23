@@ -36,6 +36,7 @@ module.exports = {
             .setColor('118855')
             .setTitle('Result for: ' + user)
             .addField('Number of runs verified: ', num >= 10000 ? '>= 10k' : String(num))
+            .setThumbnail(playerData.data.assets.image.uri)
         return await interaction.editReply({ embeds: [embed] });
 	},
 };

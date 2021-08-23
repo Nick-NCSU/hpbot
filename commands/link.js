@@ -27,7 +27,7 @@ module.exports = {
             .setColor('118855')
             .setTitle(answer.names.international)
             .setURL(answer.weblink)
-            .setThumbnail(`https://www.speedrun.com/themes/${game}/cover-256.png`)
+            .setThumbnail(answer.assets["cover-large"].uri)
         await interaction.editReply({ embeds: [embed] });
 	},
 };

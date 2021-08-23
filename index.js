@@ -3,7 +3,7 @@ const { Client, Intents, Collection } = require('discord.js');
 const fs = require('fs');
 const Limit = require('./Limiter.js');
 const Queue = require('queue-promise');
-const limiter = new Limit(95);
+const limiter = new Limit(49);
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 
@@ -43,8 +43,8 @@ const rest = new REST({ version: '9' }).setToken(token);
 		console.log('Started refreshing application (/) commands.');
 
 		await rest.put(
-			Routes.applicationCommands('728401850033897574'),
-			{ body: commands },
+			Routes.applicationGuildCommands("728401850033897574", "430074563703996417"),
+			{ body: [] },
 		);
 
 		console.log('Successfully reloaded application (/) commands.');

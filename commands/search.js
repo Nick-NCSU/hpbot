@@ -36,7 +36,7 @@ module.exports = {
         const embed = new MessageEmbed()
             .setColor('118855')
             .setTitle('Results (Count: ' + answer.length + ', Page: ' + page + ')')
-            .setThumbnail('https://www.speedrun.com/themes/Default/1st.png')
+            .setThumbnail('https://www.speedrun.com/images/1st.png')
         answer.forEach(entry => {
             embed.addField(entry[0], entry[1]);
         });
