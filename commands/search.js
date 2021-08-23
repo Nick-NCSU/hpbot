@@ -31,7 +31,7 @@ module.exports = {
         for (let i = 0; i < data.length; i++) {
             answer[i] = [];
             answer[i][0] = data[i].names.international;
-            answer[i][1] = data[i].abbreviation;
+            answer[i][1] = data[i].abbreviation + '\n' + data[i].weblink;
         }
         const embed = new MessageEmbed()
             .setColor('118855')
