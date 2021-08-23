@@ -7,8 +7,7 @@ module.exports = {
         .setDescription('Simulates Dream\'s pearl and blaze rod odds.')
         .addIntegerOption(option =>
             option.setName('simulations')
-                .setDescription('Number of simulations to run (Max 1,000,000')
-                .setRequired(true)
+                .setDescription('Number of simulations to run (Max 100,000')
         ),
 	async execute(interaction) {
         let sim = interaction.options.get('simulations');
@@ -17,7 +16,7 @@ module.exports = {
         } else {
             sim = sim.value;
         }
-        if(sim > 1000000) {
+        if(sim > 100000) {
             return await interaction.editReply('Too many simulations (' + sim + ')');
         }
         let pMax = 0;

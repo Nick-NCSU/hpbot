@@ -16,7 +16,7 @@ module.exports = {
             .addField('/leaderboard <game>', 'Provides a leaderboard for the given game.')
             .addField('/verified <user>', 'Provides the number of runs verified by the given user.')
             .addField('/queuelength <game>', 'Provides the number of unverified runs for the given game.')
-            .addField('/dream', 'Simulates Dream\'s pearl and blaze rod odds.')
+            .addField('/dream (simulations)', 'Simulates Dream\'s pearl and blaze rod odds.')
             .addField('/ping', 'Provides bot response time.')
         await interaction.editReply('Sending you help!');
         await interaction.followUp({ embeds: [embed], ephemeral: true });
