@@ -1,6 +1,6 @@
-const commands = require('../api');
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const tokens = require('../index.js')
 
 /**
  * Function to provide a link to the given game
@@ -16,15 +16,15 @@ module.exports = {
         ),
 	async execute(interaction) {
         const game = interaction.options.get('game').value.toLowerCase();
-        const gameData = await commands.Game.getGame(game);
+        const gameData = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}`);
         if(!gameData.data) {
             return await interaction.editReply('Game does not exist.');
         }
         const id = gameData.data.id;
-        let data = await commands.New.getUnexamine(id);
+        let data = await tokens.fetch(`https://www.speedrun.com/api/v1/runs?game=${id}&status=new&max=200&orderby=submitted&direction=asc`);
         const firstPage = data.data[0];
         while (data.pagination.size == 200){
-            data = await commands.New.getUnexamine(id, data.pagination.offset + 200);
+            data = await tokens.fetch(`https://www.speedrun.com/api/v1/runs?game=${id}&status=new&max=200&orderby=submitted&direction=asc&offset=${data.pagination.offset + 200}`);
         }
         const num = data.pagination.offset + data.pagination.size;
         const embed = new MessageEmbed()

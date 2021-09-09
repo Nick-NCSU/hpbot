@@ -1,6 +1,4 @@
-const commands = require('../api');
 const tokens = require('../index.js');
-const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
@@ -21,7 +19,7 @@ module.exports = {
         const game = interaction.options.get('game').value.toLowerCase();
 
         // Retrieves all subcategories for the full game and ILs
-        const {data} = await commands.NewLB.getSubcategories(game);
+        const {data} = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}?embed=categories.variables,levels.variables`);
         // If nothing is returned
         if (!data) {
             return await interaction.editReply(`No results found for **${game}**.`);
@@ -123,7 +121,7 @@ module.exports = {
             let data2;
             // If category has no sub categories
             if(c[2].length == 0) {
-                await tokens.limit().removeTokens(1).then(data2 = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?top=1&embed=players`).then(response => response.json()));
+                data2 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?top=1&embed=players`);
                 for(const run of data2.data.runs) {
                     b:
                     for(const player of run.run.players) {
@@ -157,7 +155,7 @@ module.exports = {
                     } else {
                         varString += `&var-${c[1][0]}=${o}`;
                     }
-                    await tokens.limit().removeTokens(1).then(data2 = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players').then(response => response.json()));
+                    data2 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players');
                     if(!data2.data) {
                         console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players');
                         console.log(data2);
@@ -204,7 +202,7 @@ module.exports = {
         for(const c of sublevels) {
             let data3;
             if(c[1][2].length == 0) {
-                await tokens.limit().removeTokens(1).then(data3 = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?top=1&embed=players`).then(response => response.json()));
+                data3 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?top=1&embed=players`);
                 for(const run of data3.data.runs) {
                     b:
                     for(const player of run.run.players) {
@@ -238,7 +236,7 @@ module.exports = {
                     } else {
                         varString += `&var-${c[1][1][0]}=${o}`;
                     }
-                    await tokens.limit().removeTokens(1).then(data3 = await fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + '&top=1&embed=players').then(response => response.json()));
+                    data3 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + '&top=1&embed=players');
                     if(!data3.data) {
                         console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + '&top=1&embed=players');
                         console.log(data3);

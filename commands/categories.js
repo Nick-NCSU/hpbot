@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const commands = require('../api');
+const tokens = require('../index.js')
 
 /**
  * Function to provide a list of categories for the given game
@@ -18,7 +18,7 @@ module.exports = {
         ),
 	async execute(interaction) {
         const game = interaction.options.get('game').value.toLowerCase();
-        const { data } = await commands.Categories.getCategories(game);
+        const { data } = await tokens.fetch(`https://www.speedrun.com/api/v1/games?abbreviation=${game}&embed=categories.variables`);
         // Checks if game exists
         if (!data.length) {
             return await interaction.editReply(`No results found for **${game}**.`);
@@ -30,6 +30,7 @@ module.exports = {
             .setURL(dataArr.weblink)
             .setThumbnail(dataArr.assets["cover-large"].uri)
         // Iterates through all the categories for the game
+        let size = 0;
         for (const category of dataArr.categories.data) {
             let variables = '';
             if (category.variables.data[0]) {
@@ -42,7 +43,13 @@ module.exports = {
             } else {
                 variables = 'None';
             }
-            embed.addField('**Category:** ' + category.name + '** - id:** ' + category.id, ' **Variables:** ' + variables + '\n');
+            const string = '**Category:** ' + category.name + '** - id:** ' + category.id
+            const string2 = ' **Variables:** ' + variables + '\n';
+            size += string.length + string2.length;
+            if(size > 6000) {
+                break;
+            }
+            embed.addField(string, string2);
         }
         return await interaction.editReply({ embeds: [embed] });
 	},

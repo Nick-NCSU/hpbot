@@ -1,6 +1,6 @@
-const commands = require('../api');
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const tokens = require('../index.js')
 
 /**
  * Function to provide a link to the given game
@@ -16,7 +16,7 @@ module.exports = {
         ),
 	async execute(interaction) {
         const game = interaction.options.get('game').value.toLowerCase();
-        const {data} = await commands.Link.getLink(game);
+        const {data} = await tokens.fetch(`https://www.speedrun.com/api/v1/games?abbreviation=${game}`);
         [answer] = data;
         // Checks if game exists
         if (!answer || answer.length == 0) {

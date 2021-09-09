@@ -1,6 +1,6 @@
-const commands = require('../api');
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const tokens = require('../index.js')
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -23,7 +23,8 @@ module.exports = {
         } else {
             page = page.value;
         }
-        const { data } = await commands.Search.getSearch(search, page);
+        let offset = (page - 1) * 20;
+        const { data } = await tokens.fetch(`https://www.speedrun.com/api/v1/games?name=${search}&offset=${offset}`);
         if (!data.length) {
             return interaction.editReply(`No results found for **${search}**.`)
         }

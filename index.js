@@ -3,9 +3,10 @@ const { Client, Intents, Collection } = require('discord.js');
 const fs = require('fs');
 const Limit = require('./Limiter.js');
 const Queue = require('queue-promise');
-const limiter = new Limit(49);
+const limiter = new Limit(95);
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
+const fetch = require('node-fetch');
 
 // Creates a rate limiting queue
 const queue = new Queue({
@@ -91,4 +92,22 @@ exports.limit = function getLimit() {
 
 exports.queue = function getQueue() {
 	return queue;
+}
+
+exports.fetch = async function limitFetch(text) {
+	let data;
+	while(1) {
+		console.log(limiter.points);
+		await limiter.removePoints(1).then(data = await fetch(text).then(response => response.json()));
+		if(data.status != 420) {
+			return data;
+		}
+		sleep(2000);
+	}
+}
+
+function sleep(ms) {
+	return new Promise((resolve) => {
+	  setTimeout(resolve, ms);
+	});
 }

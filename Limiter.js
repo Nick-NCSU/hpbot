@@ -60,9 +60,9 @@ class Limit {
             let self = this;
             // Repeats checking until there are enough points
             (function wait() {
-                if(self.getPoints() - num >= 0) { // If there is room to remove the points
-                    self.setPoints(self.getPoints() - num); // Remove the points
-                    setTimeout(() => self.addPoints(num), 65000); // Add the points back 65 seconds after
+                if(self.points - num >= 0) { // If there is room to remove the points
+                    self.points = self.points - num; // Remove the points
+                    setTimeout(() => self.addPoints(num), 70000); // Add the points back 65 seconds after
                     return resolve();
                 } else {
                     setTimeout(wait, 1000); // Else try again after 1 second
@@ -85,14 +85,6 @@ class Limit {
             this.points += num;
         }
         return this.points;
-    }
-
-    /**
-     * Alias for removePoints(num)
-     * @param {*} num number of points to remove
-     */
-    removeTokens(num) {
-        return this.removePoints(num);
     }
 }
 module.exports = Limit;
