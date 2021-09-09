@@ -97,7 +97,6 @@ exports.queue = function getQueue() {
 exports.fetch = async function limitFetch(text) {
 	let data;
 	while(1) {
-		console.log(limiter.points);
 		await limiter.removePoints(1).then(data = await fetch(text).then(response => response.json()));
 		if(data.status != 420) {
 			return data;
