@@ -17,16 +17,20 @@ const queue = new Queue({
 const prefix = 'src!';
 // Determines the token for bot
 let token = '';
+let hypixel = '';
 if (fs.existsSync('./token.json')) {
 	const tokenFile = require('./token.json');
 	token = tokenFile.token;
+	hypixel = tokenFile.hypixel;
 } else {
 	token = process.env.token;
+	hypixel = process.env.hypixel;
 }
 
 // Creates new Client
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 client.commands = new Collection();
+client.msgCommands = new Collection();
 
 const commands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
@@ -35,6 +39,14 @@ for (const file of commandFiles) {
 	const command = require(`./commands/${file}`);
 	commands.push(command.data.toJSON());
 	client.commands.set(command.data.name, command);
+}
+
+const msgCommands = [];
+const msgCommandFiles = fs.readdirSync('./messagecommands').filter(file => file.endsWith('.js'));
+
+for (const file of msgCommandFiles) {
+	const command = require(`./messagecommands/${file}`);
+	client.msgCommands.set(command.data.name, command);
 }
 
 const rest = new REST({ version: '9' }).setToken(token);
@@ -64,7 +76,13 @@ client.on('messageCreate', async message => {
 	// Checks if message starts with the given prefix
 	if (!message.content.toLowerCase().startsWith(prefix) || message.author.bot) return;
 	console.log(message.content);
-	//await message.reply("Please use the slash commands instead of the src! prefix.");
+	const command = message.content.toLowerCase().slice(4).split(' ');
+	if (!client.msgCommands.has(command[0])) return;
+	try {
+		await client.msgCommands.get(command[0]).execute(command, message);
+	} catch (error) {
+		console.error(error);
+	}
 });
 
 client.on('interactionCreate', async interaction => {
@@ -85,6 +103,7 @@ client.on('interactionCreate', async interaction => {
 client.login(token);
 
 exports.tokens = token;
+exports.hypixel = hypixel;
 
 exports.limit = function getLimit() {
 	return limiter;
