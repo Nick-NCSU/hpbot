@@ -22,19 +22,29 @@ const token = require('../index.js');
         let result = '';
         for(const player of players) {
             const friends = await fetch(`https://api.hypixel.net/friends?uuid=${player.id}&key=${token.hypixel}`).then(response => response.json());
+            const guild = await fetch(`https://api.hypixel.net/guild?player=${player.id}&key=${token.hypixel}`).then(response => response.json())
             result += player.name + ':\n';
             for(const friend of friends.records) {
                 if(friend.uuidSender != player.id) {
                     for(const player2 of players) {
                         if(player2.id == friend.uuidSender) {
-                            result += '\t' + player2.name + '\n';
+                            result += '\t' + player2.name + ' (Friend)\n';
                         }
                     }
                 }
                 if(friend.uuidReceiver != player.id) {
                     for(const player2 of players) {
                         if(player2.id == friend.uuidReceiver) {
-                            result += '\t' + player2.name + '\n';
+                            result += '\t' + player2.name + ' (Friend)\n';
+                        }
+                    }
+                }
+            }
+            if(guild.guild) {
+                for(const gm of guild.guild.members) {
+                    for(const player2 of players) {
+                        if(player2.id != player.id && gm.uuid == player2.id) {
+                            result += '\t' + player2.name + ' (Guild)\n';
                         }
                     }
                 }
