@@ -10,11 +10,14 @@ const token = require('../index.js');
         name: 'check'
     },
 	async execute(command, message) {
-        if(message.channel != '795130167696556093') return;
+        if(message.channel != '795130167696556093' && message.channel != '728402518014689333') return;
         const igns = command.slice(1);
         const players = [];
         for(const ign of igns) {
-            players.push(await fetch(`https://api.mojang.com/users/profiles/minecraft/${ign}`).then(response => response.json()))
+            const player = await fetch(`https://api.mojang.com/users/profiles/minecraft/${ign}`).then(response => response.json()).catch( reason => {});
+            if(player) {
+                players.push(player);
+            }
         }
         let result = '';
         for(const player of players) {
