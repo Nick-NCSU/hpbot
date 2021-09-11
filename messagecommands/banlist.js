@@ -24,6 +24,8 @@ const token = require('../index.js');
             case 'search':
                 await search(command[2], message);
                 break;
+            default:
+                message.reply('src!banlist list\nsrc!banlist add (player)\nsrc!banlist remove (player)\nsrc!banlist search (player)')
         }
 	},
 };
