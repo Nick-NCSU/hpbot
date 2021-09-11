@@ -1,9 +1,8 @@
-const { MessageEmbed } = require('discord.js');
 const fetch = require('node-fetch');
 const token = require('../index.js');
 
 /**
- * Returns the number of runs verified by the user
+ * Checks a list of players for friends/guild members
  */
  module.exports = {
     data: {
@@ -48,6 +47,13 @@ const token = require('../index.js');
                         }
                     }
                 }
+            }
+            const query = { id: player.id };
+            await token.db.connect();
+            const searchResult = await token.db.db('banned_runners').collection('mc').findOne(query);
+            await token.db.close();
+            if(searchResult) {
+                result += '\t' + player.name + ' (**Banlist**)\n';
             }
         }
         await message.channel.send(result);

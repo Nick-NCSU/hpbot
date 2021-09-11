@@ -7,6 +7,8 @@ const limiter = new Limit(95);
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fetch = require('node-fetch');
+const { MongoClient } = require("mongodb");
+
 
 // Creates a rate limiting queue
 const queue = new Queue({
@@ -18,13 +20,16 @@ const prefix = 'src!';
 // Determines the token for bot
 let token = '';
 let hypixel = '';
+let mongopw = '';
 if (fs.existsSync('./token.json')) {
 	const tokenFile = require('./token.json');
 	token = tokenFile.token;
 	hypixel = tokenFile.hypixel;
+	mongopw = tokenFile.mongopw;
 } else {
 	token = process.env.token;
 	hypixel = process.env.hypixel;
+	mongopw = process.env.mongopw;
 }
 
 // Creates new Client
@@ -129,3 +134,8 @@ function sleep(ms) {
 	  setTimeout(resolve, ms);
 	});
 }
+
+const uri =
+  `mongodb+srv://penguin9541:${mongopw}@cluster0.hyvwb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const dbclient = new MongoClient(uri);
+exports.db = dbclient;
