@@ -74,7 +74,7 @@ async function list(message) {
         const player2 = await fetch(`https://api.mojang.com/user/profiles/${player.id}/names`).then(response => response.json()).catch( reason => {});
         str += 'IGN: ' + player2[player2.length - 1].name + '\n';
     }
-    return await message.reply(str);
+    return await message.reply(str.replace(/[*_~]/g, "\\$&"));
 }
 
 async function search(id, message) {

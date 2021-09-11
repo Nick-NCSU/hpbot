@@ -12,7 +12,7 @@ const token = require('../index.js');
         if(message.channel != '795130167696556093' && message.channel != '728402518014689333') return;
         const igns = command.slice(1);
         const players = [];
-        let result = '';
+        let result = '```\n';
         for(const ign of igns) {
             const player = await fetch(`https://api.mojang.com/users/profiles/minecraft/${ign}`).then(response => response.json()).catch( reason => {});
             if(player) {
@@ -58,6 +58,6 @@ const token = require('../index.js');
                 result += '\t' + player.name + ' (**Banlist**)\n';
             }
         }
-        await message.channel.send(result);
+        await message.channel.send(result + '```');
 	},
 };
