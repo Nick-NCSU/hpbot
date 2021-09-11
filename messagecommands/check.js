@@ -12,13 +12,15 @@ const token = require('../index.js');
         if(message.channel != '795130167696556093' && message.channel != '728402518014689333') return;
         const igns = command.slice(1);
         const players = [];
+        let result = '';
         for(const ign of igns) {
             const player = await fetch(`https://api.mojang.com/users/profiles/minecraft/${ign}`).then(response => response.json()).catch( reason => {});
             if(player) {
                 players.push(player);
+            } else {
+                result += ign + ' does not exist.\n';
             }
         }
-        let result = '';
         for(const player of players) {
             const friends = await fetch(`https://api.hypixel.net/friends?uuid=${player.id}&key=${token.hypixel}`).then(response => response.json());
             const guild = await fetch(`https://api.hypixel.net/guild?player=${player.id}&key=${token.hypixel}`).then(response => response.json())
