@@ -36,6 +36,9 @@ async function add(id, message) {
     if(!player) {
         return await message.reply('Player does not exist');
     }
+    if(!player.id) {
+        return await message.reply('Error getting UUID');
+    }
     const doc = {
         id: player.id,
         owner: message.author.id,
