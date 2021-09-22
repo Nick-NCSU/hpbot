@@ -8,6 +8,7 @@ const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fetch = require('node-fetch');
 const { MongoClient } = require("mongodb");
+var cron = require('node-cron');
 
 
 // Creates a rate limiting queue
@@ -71,6 +72,16 @@ const rest = new REST({ version: '9' }).setToken(token);
 	}
 })();
 */
+
+const scheduledCommandFiles = fs.readdirSync('./scheduledcommands').filter(file => file.endsWith('.js'));
+
+for (const file of scheduledCommandFiles) {
+	const command = require(`./scheduledcommands/${file}`);
+	cron.schedule(command.data.interval, () => {
+		command.execute(client);
+	});
+}
+
 // Sets bot activity and announces that bot is ready for use
 client.once('ready', async () => {
 	client.user.setActivity('speedrun.com | /help', { type: 'WATCHING' })
@@ -125,7 +136,7 @@ exports.fetch = async function limitFetch(text) {
 		if(data.status != 420) {
 			return data;
 		}
-		sleep(2000);
+		await sleep(2000);
 	}
 }
 
