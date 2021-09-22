@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 
 module.exports = {
     data: {
-        interval: "0 14 * * * *"
+        interval: "0 0 5 * * *"
     },
 	async execute(client) {
         console.log("ran");
