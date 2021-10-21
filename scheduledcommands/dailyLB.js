@@ -17,6 +17,7 @@ module.exports = {
 			'hypixel_sw',
 			'hypixel_ag',
 			'hypixel_cg',
+			'hypixel_sg',
 			'tkr',
 			'mcm_za',
 			'mcm_wotf',
