@@ -20,7 +20,6 @@ const queue = new Queue({
 const prefix = 'src!';
 // Determines the token for bot
 let token = process.env.token;
-console.log(token)
 let hypixel = process.env.hypixel;
 let mongopw = process.env.mongopw;
 
