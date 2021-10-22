@@ -9,7 +9,7 @@ const { Routes } = require('discord-api-types/v9');
 const fetch = require('node-fetch');
 const { MongoClient } = require("mongodb");
 var cron = require('node-cron');
-
+require('dotenv').config();
 
 // Creates a rate limiting queue
 const queue = new Queue({
@@ -19,19 +19,10 @@ const queue = new Queue({
 // Prefix to call the bot
 const prefix = 'src!';
 // Determines the token for bot
-let token = '';
-let hypixel = '';
-let mongopw = '';
-if (fs.existsSync('./token.json')) {
-	const tokenFile = require('./token.json');
-	token = tokenFile.token;
-	hypixel = tokenFile.hypixel;
-	mongopw = tokenFile.mongopw;
-} else {
-	token = process.env.token;
-	hypixel = process.env.hypixel;
-	mongopw = process.env.mongopw;
-}
+let token = process.env.token;
+console.log(token)
+let hypixel = process.env.hypixel;
+let mongopw = process.env.mongopw;
 
 // Creates new Client
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
