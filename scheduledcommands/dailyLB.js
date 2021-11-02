@@ -19,6 +19,7 @@ module.exports = {
 			'hypixel_cg',
 			'hypixel_sg',
 			'hypixel_duels',
+			'hypixel_tp',
 			'tkr',
 			'mcm_za',
 			'mcm_wotf',
