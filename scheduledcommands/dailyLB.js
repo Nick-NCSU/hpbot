@@ -21,12 +21,6 @@ module.exports = {
 			'hypixel_duels',
 			'hypixel_tp',
 			'tkr',
-			'mcm_za',
-			'mcm_wotf',
-			'mcm_hr',
-			'mcm_sw',
-			'mcm_hm',
-			'mcm_cd'
 		];
         await runDaily(daily, await client.channels.cache.get('792473904391651369'));
         await sleep(10000);
