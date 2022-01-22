@@ -296,7 +296,7 @@ module.exports = {
             .setThumbnail(data.assets["cover-large"].uri)
             .setFooter(date)
         for(const player of playerList) {
-            embed.addField('#' + place + ' ' + player[0].replace(/[*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
+            embed.addField('#' + place + ' ' + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
             countPlayer++;
             // Increment only if next WR count is not equal to this count
             if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {

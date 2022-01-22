@@ -1,5 +1,5 @@
 const { MessageEmbed } = require('discord.js');
-const fetch = require('node-fetch');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const token = require('../index.js');
 
 /**
@@ -72,12 +72,12 @@ async function list(message) {
     const cursor = token.db.db('banned_runners').collection('mc').find();
     let results = await cursor.toArray();
     await token.db.close();
-    let str = '';
+    let str = '```';
     for(const player of results) {
         const player2 = await fetch(`https://api.mojang.com/user/profiles/${player.id}/names`).then(response => response.json()).catch( reason => {});
         str += 'IGN: ' + player2[player2.length - 1].name + '\n';
     }
-    return await message.reply(str.replace(/[*_~]/g, "\\$&"));
+    return await message.reply(str + '```');
 }
 
 async function search(id, message) {
