@@ -57,7 +57,7 @@ async function runDaily(games, channel) {
         .setTitle('Top Players for Group:')
         .setFooter(date)
         for(player of topPlayers) {
-            embed.addField(player.replace(/[*_~]/g, "\\$&"), '\u200b', true);
+            embed.addField(player.replace(/[\\*_~]/g, "\\$&"), '\u200b', true);
         }
     await channel.send({ embeds: [embed] });
     embed = new MessageEmbed()
@@ -71,7 +71,7 @@ async function runDaily(games, channel) {
         let iterator = 0;
         let countPlayer = 0;
         for(player of totalScores) {
-            embed.addField('#' + place + ' ' + player[0].replace(/[*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
+            embed.addField('#' + place + ' ' + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
             countPlayer++;
             if(totalScores[iterator + 1] && totalScores[iterator + 1][1] != totalScores[iterator][1]) {
                 place++;
@@ -366,7 +366,7 @@ async function generateBoard(game, channel) {
         .setThumbnail(data.assets["cover-large"].uri)
         .setFooter(date)
     for(const player of playerList) {
-        embed.addField('#' + place + ' ' + player[0].replace(/[*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
+        embed.addField('#' + place + ' ' + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
         countPlayer++;
         // Increment only if next WR count is not equal to this count
         if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {
