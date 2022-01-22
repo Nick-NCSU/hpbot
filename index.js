@@ -6,7 +6,7 @@ const Queue = require('queue-promise');
 const limiter = new Limit(95);
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
-const fetch = require('node-fetch');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const { MongoClient } = require("mongodb");
 var cron = require('node-cron');
 require('dotenv').config();
