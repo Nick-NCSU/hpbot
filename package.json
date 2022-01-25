@@ -16,7 +16,7 @@
     "eslint": "^8.7.0",
     "mongodb": "^4.3.1",
     "node-cron": "^3.0.0",
-    "node-fetch": "^3.1.1",
+    "node-fetch": "^3.2.0",
     "perf_hooks": "0.0.1",
     "queue-promise": "^2.2.1"
   },
