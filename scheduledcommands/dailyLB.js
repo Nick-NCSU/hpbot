@@ -1,12 +1,14 @@
 const tokens = require('../index.js');
 const { MessageEmbed } = require('discord.js');
 
+/**
+ * Modified version of leaderboard.js to perform daily leaderboard updates and combine data
+ */
 module.exports = {
     data: {
         interval: "0 0 5 * * *"
     },
 	async execute(client) {
-        console.log("ran");
         const daily = [
 			'hypixel_sb',
 			'hypixel_sbce'
@@ -28,18 +30,28 @@ module.exports = {
 	},
 };
 
+/**
+ * Runs the daily leaderboard
+ * @param {*} games array of games to get leaderboard of
+ * @param {*} channel channel to send leaderboards
+ */
 async function runDaily(games, channel) {
+    // List of users with #1 spot
     let topPlayers = [];
+    // Total combined WRs
     let totalScores = [];
     let scores;
+    // Iterates through each game
     for(const game of games) {
         await generateBoard(game, channel).then(function(data) {
             scores = data;
         });
+        // If top player is not already in array then add them
         if(topPlayers.indexOf(scores[0][0]) == -1) {
             topPlayers.push(scores[0][0]);
         }
         k:
+        // Add all player's scores
         for(const player of scores) {
             for(const score of totalScores) {
                 if(player[0] == score[0]) {
@@ -186,15 +198,18 @@ async function generateBoard(game, channel) {
         .addField('Individual Levels Progress:', `${progress2}/${count2}`)
     let message = await channel.send({ embeds: [embed] });
     let playerList = [];
-
+    // Iterates through each category
     for(const c of subcategories) {
         let data2;
         // If category has no sub categories
         if(c[2].length == 0) {
             data2 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?top=1&embed=players`);
+            // Gets each WR run
             for(const run of data2.data.runs) {
                 b:
+                // Gets each player of the run
                 for(const player of run.run.players) {
+                    // If player is in playerList then increment their WRs
                     for(const item of playerList) {
                         if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0] == player.name) {
                             item[1] = item[1] + 1;
@@ -202,6 +217,7 @@ async function generateBoard(game, channel) {
                         }
                     }
                     if(player.rel == "user") {
+                        // If player is a user then find user.id
                         for(const user of data2.data.players.data) {
                             if(player.id == user.id) {
                                 playerList.push([user.names.international, 1, user.id]);
@@ -216,7 +232,9 @@ async function generateBoard(game, channel) {
             }
             progress++;
         } else {
+            // Runs for each combination of subcategories
             for(const o of c[2]) {
+                // Builds string of variables
                 let varString = "";
                 if(Array.isArray(o)) {
                     for(let i = 0; i < o.length; i++) {
@@ -231,9 +249,12 @@ async function generateBoard(game, channel) {
                     console.log(data2);
                     continue;
                 }
+                // Gets each WR run
                 for(const run of data2.data.runs) {
                     b:
+                    // Gets each player of the run
                     for(const player of run.run.players) {
+                        // If player is in playerList then increment their WRs
                         for(const item of playerList) {
                             if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0].toLowerCase() == player.name.toLowerCase()) {
                                 item[1] = item[1] + 1;
@@ -241,6 +262,7 @@ async function generateBoard(game, channel) {
                             }
                         }
                         if(player.rel == "user") {
+                            // If player is a user then find user.id
                             for(const user of data2.data.players.data) {
                                 if(player.id == user.id) {
                                     playerList.push([user.names.international, 1, user.id]);
@@ -256,6 +278,7 @@ async function generateBoard(game, channel) {
                 progress++;
             }
         }
+        // Update embed if enough progress has been made
         if(Math.floor(progress/10) > lastEmbed) {
             embed = new MessageEmbed()
                 .setColor('118855')
@@ -269,13 +292,18 @@ async function generateBoard(game, channel) {
         }
     }
 
+    // Iterates through each level
     for(const c of sublevels) {
         let data3;
+        // If level has no sub categories
         if(c[1][2].length == 0) {
             data3 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?top=1&embed=players`);
+            // Gets each WR run
             for(const run of data3.data.runs) {
                 b:
+                // Gets each player of the run
                 for(const player of run.run.players) {
+                    // If player is in playerList then increment their WRs
                     for(const item of playerList) {
                         if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0] == player.name) {
                             item[1] = item[1] + 1;
@@ -283,6 +311,7 @@ async function generateBoard(game, channel) {
                         }
                     }
                     if(player.rel == "user") {
+                        // If player is a user then find user.id
                         for(const user of data3.data.players.data) {
                             if(player.id == user.id) {
                                 playerList.push([user.names.international, 1, user.id]);
@@ -297,7 +326,9 @@ async function generateBoard(game, channel) {
             }
             progress2++;
         } else {
+            // Runs for each combination of sublevels
             for(const o of c[1][2]) {
+                // Builds string of variables
                 let varString = "";
                 if(Array.isArray(o)) {
                     for(let i = 0; i < o.length; i++) {
@@ -312,9 +343,12 @@ async function generateBoard(game, channel) {
                     console.log(data3);
                     continue;
                 }
+                // Gets each WR run
                 for(const run of data3.data.runs) {
                     b:
+                    // Gets each player of the run
                     for(const player of run.run.players) {
+                        // If player is in playerList then increment their WRs
                         for(const item of playerList) {
                             if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0].toLowerCase() == player.name.toLowerCase()) {
                                 item[1] = item[1] + 1;
@@ -322,6 +356,7 @@ async function generateBoard(game, channel) {
                             }
                         }
                         if(player.rel == "user") {
+                            // If player is a user then find user.id
                             for(const user of data3.data.players.data) {
                                 if(player.id == user.id) {
                                     playerList.push([user.names.international, 1, user.id]);
@@ -337,6 +372,7 @@ async function generateBoard(game, channel) {
                 progress2++;
             }
         }
+        // Update embed if enough progress has been made
         if(Math.floor(progress2/10) > lastEmbed) {
             embed = new MessageEmbed()
                 .setColor('118855')

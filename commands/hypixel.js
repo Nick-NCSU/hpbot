@@ -2,13 +2,17 @@ const { MessageActionRow, MessageSelectMenu, MessageButton } = require('discord.
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
 /**
- * Function to provide a link to the given game
+ * Function to provide a link to a requested site
  */
 module.exports = {
+    /**
+     * Builds /hypixel
+     */
     data: new SlashCommandBuilder()
         .setName('hypixel')
         .setDescription('Provides helpful links for Hypixel Speedruns'),
 	async execute(interaction) {
+        // Initial running of the command
         if(interaction.isCommand()) {
             const row = new MessageActionRow()
                 .addComponents(
@@ -40,6 +44,7 @@ module.exports = {
                 );         
             return await interaction.editReply({ content: 'Please select a category!', components: [row] });
         } else if (interaction.isSelectMenu()) {
+            // Second menu
             if(interaction.customId == 'type') {
                 let options = '';
                 switch(interaction.values[0]) {
@@ -175,6 +180,7 @@ module.exports = {
                     );         
                 return await interaction.update({ content: 'Please select a link!', components: [row] });
             } else if(interaction.customId == 'link') {
+                // Third menu
                 let url;
                 switch(interaction.values[0]) {
                     case 'Hypixel Speedruns Discord':

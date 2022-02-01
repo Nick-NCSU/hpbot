@@ -6,6 +6,9 @@ const tokens = require('../index.js')
  * Function to provide a link to the given game
  */
 module.exports = {
+    /**
+     * Builds /link [string:game]
+     */
     data: new SlashCommandBuilder()
         .setName('link')
         .setDescription('Sends a link to the provided game.')
@@ -16,6 +19,7 @@ module.exports = {
         ),
 	async execute(interaction) {
         const game = interaction.options.get('game').value.toLowerCase();
+        // Gets the requested game
         const {data} = await tokens.fetch(`https://www.speedrun.com/api/v1/games?abbreviation=${game}`);
         [answer] = data;
         // Checks if game exists

@@ -1,20 +1,21 @@
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const token = require('../index.js');
 
 /**
- * Checks a list of players for friends/guild members
+ * Checks a list of players for friends/guild members and the banlist
  */
  module.exports = {
     data: {
         name: 'check'
     },
 	async execute(command, message) {
+        // Command only works in certain channels (staff-commands and my testing server)
         if(message.channel != '795130167696556093' && message.channel != '728402518014689333') return;
         const igns = command.slice(1);
         const players = [];
         let result = '```\n';
+        // Gets uuid of each ign
         for(const ign of igns) {
-            const player = await fetch(`https://api.mojang.com/users/profiles/minecraft/${ign}`).then(response => response.json()).catch( reason => {});
+            const player = await token.fetchMojang(`https://api.mojang.com/users/profiles/minecraft/${ign}`);
             if(player) {
                 players.push(player);
             } else {
@@ -22,9 +23,12 @@ const token = require('../index.js');
             }
         }
         for(const player of players) {
-            const friends = await fetch(`https://api.hypixel.net/friends?uuid=${player.id}&key=${token.hypixel}`).then(response => response.json());
-            const guild = await fetch(`https://api.hypixel.net/guild?player=${player.id}&key=${token.hypixel}`).then(response => response.json())
+            // Gets friends list of player
+            const friends = await token.fetchHypixel(`https://api.hypixel.net/friends?uuid=${player.id}&key=${token.hypixel}`);
+            // Gets guild list of player
+            const guild = await token.fetchHypixel(`https://api.hypixel.net/guild?player=${player.id}&key=${token.hypixel}`);
             result += player.name + ':\n';
+            // Checks if player is friends with other players
             for(const friend of friends.records) {
                 if(friend.uuidSender != player.id) {
                     for(const player2 of players) {
@@ -41,6 +45,7 @@ const token = require('../index.js');
                     }
                 }
             }
+            // Checks if player is in guild with other players
             if(guild.guild) {
                 for(const gm of guild.guild.members) {
                     for(const player2 of players) {
@@ -50,6 +55,7 @@ const token = require('../index.js');
                     }
                 }
             }
+            // Checks if player is in banlist
             const query = { id: player.id };
             await token.db.connect();
             const searchResult = await token.db.db('banned_runners').collection('mc').findOne(query);

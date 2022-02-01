@@ -2,7 +2,13 @@ const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const tokens = require('../index.js')
 
+/**
+ * Function to search for a specified game
+ */
 module.exports = {
+    /**
+     * Builds /search [string:query] (integer:page)
+     */
     data: new SlashCommandBuilder()
         .setName('search')
         .setDescription('Searches for games containing the keyword(s).')
@@ -18,17 +24,20 @@ module.exports = {
 	async execute(interaction) {
         const search = interaction.options.get('query').value.toLowerCase();
         let page = interaction.options.get('page');
+        // If page is not specified default to 1
         if(!page) {
             page = 1;
         } else {
             page = page.value;
         }
         let offset = (page - 1) * 20;
+        // Fetch games at the given page
         const { data } = await tokens.fetch(`https://www.speedrun.com/api/v1/games?name=${search}&offset=${offset}`);
         if (!data.length) {
             return interaction.editReply(`No results found for **${search}**.`)
         }
         const answer = [];
+        // Iterates through each game and gets the name and url
         for (let i = 0; i < data.length; i++) {
             answer[i] = [];
             answer[i][0] = data[i].names.international;

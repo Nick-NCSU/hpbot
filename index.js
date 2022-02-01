@@ -3,7 +3,9 @@ const { Client, Intents, Collection } = require('discord.js');
 const fs = require('fs');
 const Limit = require('./Limiter.js');
 const Queue = require('queue-promise');
-const limiter = new Limit(95);
+const limiter = new Limit(95, 70000);
+const mojangLimiter = new Limit(600, 600000);
+const hypixelLimiter = new Limit(120, 60000);
 const { REST } = require('@discordjs/rest');
 const { Routes } = require('discord-api-types/v9');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
@@ -21,7 +23,7 @@ const prefix = 'src!';
 // Determines the token for bot
 let token = process.env.token;
 let hypixel = process.env.hypixel;
-let mongopw = process.env.mongopw;
+let mongourl = process.env.mongourl;
 
 // Creates new Client
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
@@ -45,8 +47,8 @@ for (const file of msgCommandFiles) {
 	client.msgCommands.set(command.data.name, command);
 }
 
-const rest = new REST({ version: '9' }).setToken(token);
 /**
+const rest = new REST({ version: '9' }).setToken(token);
 (async () => {
 	try {
 		console.log('Started refreshing application (/) commands.');
@@ -62,6 +64,7 @@ const rest = new REST({ version: '9' }).setToken(token);
 	}
 })();
 */
+
 
 const scheduledCommandFiles = fs.readdirSync('./scheduledcommands').filter(file => file.endsWith('.js'));
 
@@ -130,13 +133,24 @@ exports.fetch = async function limitFetch(text) {
 	}
 }
 
+exports.fetchMojang = async function limitMojangFetch(text) {
+	let data;
+	await mojangLimiter.removePoints(1).then(data = await fetch(text).then(response => response.json())).catch( reason => {});
+	return data;
+}
+
+exports.fetchHypixel = async function limitHypixelFetch(text) {
+	let data;
+	await hypixelLimiter.removePoints(1).then(data = await fetch(text).then(response => response.json()));
+	return data;
+}
+
 function sleep(ms) {
 	return new Promise((resolve) => {
 	  setTimeout(resolve, ms);
 	});
 }
 
-const uri =
-  `mongodb+srv://penguin9541:${mongopw}@cluster0.hyvwb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = mongourl;
 const dbclient = new MongoClient(uri);
 exports.db = dbclient;

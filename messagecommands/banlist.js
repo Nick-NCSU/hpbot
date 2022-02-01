@@ -1,5 +1,4 @@
 const { MessageEmbed } = require('discord.js');
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const token = require('../index.js');
 
 /**
@@ -10,6 +9,7 @@ const token = require('../index.js');
         name: 'banlist'
     },
 	async execute(command, message) {
+        // Command only works in certain channels (staff-commands and my testing server)
         if(message.channel != '795130167696556093' && message.channel != '728402518014689333') return;
         switch(command[1]) {
             case 'add':
@@ -30,9 +30,16 @@ const token = require('../index.js');
 	},
 };
 
+/**
+ * Adds an account to the banlist
+ * @param {*} id username/uuid of the user
+ * @param {*} message message to reply to
+ * @returns message reply
+ */
 async function add(id, message) {
     const date = new Date().toISOString();
-    const player = await fetch(`https://api.mojang.com/users/profiles/minecraft/${id}`).then(response => response.json()).catch( reason => {});
+    // Gets player from mojang api
+    const player = await token.fetchMojang(`https://api.mojang.com/users/profiles/minecraft/${id}`);
     if(!player) {
         return await message.reply('Player does not exist');
     }
@@ -50,8 +57,15 @@ async function add(id, message) {
     return await message.reply('Player added to banlist');
 }
 
+/**
+ * Deletes user from the banlist
+ * @param {*} id username/uuid of the user
+ * @param {*} message message to reply to
+ * @returns message reply
+ */
 async function del(id, message) {
-    const player = await fetch(`https://api.mojang.com/users/profiles/minecraft/${id}`).then(response => response.json()).catch( reason => {});
+    // Gets player from mojang api
+    const player = await token.fetchMojang(`https://api.mojang.com/users/profiles/minecraft/${id}`);
     if(!player) {
         return await message.reply('Player does not exist');
     }
@@ -67,6 +81,11 @@ async function del(id, message) {
     }
 }
 
+/**
+ * Lists the banned runners
+ * @param {*} message message to reply to
+ * @returns message reply
+ */
 async function list(message) {
     await token.db.connect();
     const cursor = token.db.db('banned_runners').collection('mc').find();
@@ -74,14 +93,21 @@ async function list(message) {
     await token.db.close();
     let str = '```';
     for(const player of results) {
-        const player2 = await fetch(`https://api.mojang.com/user/profiles/${player.id}/names`).then(response => response.json()).catch( reason => {});
+        const player2 = await token.fetchMojang(`https://api.mojang.com/user/profiles/${player.id}/names`);
         str += 'IGN: ' + player2[player2.length - 1].name + '\n';
     }
     return await message.reply(str + '```');
 }
 
+/**
+ * Searches for a banned runner in the database and returns their reason for ban
+ * @param {*} id username/uuid of the user
+ * @param {*} message message to reply to
+ * @returns message reply
+ */
 async function search(id, message) {
-    const player = await fetch(`https://api.mojang.com/users/profiles/minecraft/${id}`).then(response => response.json()).catch( reason => {});
+    // Gets player from mojang api
+    const player = await token.fetchMojang(`https://api.mojang.com/users/profiles/minecraft/${id}`);
     if(!player) {
         return await message.reply('Player does not exist');
     }

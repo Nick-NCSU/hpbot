@@ -2,7 +2,13 @@ const tokens = require('../index.js');
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
+/**
+ * Function to provide a leaderboard of WRs to a certain game
+ */
 module.exports = {
+    /**
+     * Builds /leaderboard [string:game]
+     */
     data: new SlashCommandBuilder()
         .setName('leaderboard')
         .setDescription('Provides a leaderboard for the given game.')
@@ -116,22 +122,26 @@ module.exports = {
             .addField('Individual Levels Progress:', `${progress2}/${count2}`)
         await interaction.editReply({ embeds: [embed] });
         let playerList = [];
-
+        // Iterates through each category
         for(const c of subcategories) {
             let data2;
             // If category has no sub categories
             if(c[2].length == 0) {
                 data2 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?top=1&embed=players`);
+                // Gets each WR run
                 for(const run of data2.data.runs) {
                     b:
+                    // Gets each player of the run
                     for(const player of run.run.players) {
+                        // If player is in playerList then increment their WRs
                         for(const item of playerList) {
                             if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0] == player.name) {
                                 item[1] = item[1] + 1;
                                 continue b;
                             }
                         }
-                        if(player.rel == "user") {
+                        if(player.rel == "user") {  
+                            // If player is a user then find user.id
                             for(const user of data2.data.players.data) {
                                 if(player.id == user.id) {
                                     playerList.push([user.names.international, 1, user.id]);
@@ -146,7 +156,9 @@ module.exports = {
                 }
                 progress++;
             } else {
+                // Runs for each combination of subcategories
                 for(const o of c[2]) {
+                    // Builds string of variables
                     let varString = "";
                     if(Array.isArray(o)) {
                         for(let i = 0; i < o.length; i++) {
@@ -161,9 +173,12 @@ module.exports = {
                         console.log(data2);
                         continue;
                     }
+                    // Gets each WR run
                     for(const run of data2.data.runs) {
                         b:
+                        // Gets each player of the run
                         for(const player of run.run.players) {
+                            // If player is in playerList then increment their WRs
                             for(const item of playerList) {
                                 if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0].toLowerCase() == player.name.toLowerCase()) {
                                     item[1] = item[1] + 1;
@@ -171,6 +186,7 @@ module.exports = {
                                 }
                             }
                             if(player.rel == "user") {
+                                // If player is a user then find user.id
                                 for(const user of data2.data.players.data) {
                                     if(player.id == user.id) {
                                         playerList.push([user.names.international, 1, user.id]);
@@ -186,6 +202,7 @@ module.exports = {
                     progress++;
                 }
             }
+            // Update embed if enough progress has been made
             if(Math.floor(progress/10) > lastEmbed) {
                 embed = new MessageEmbed()
                     .setColor('118855')
@@ -198,14 +215,19 @@ module.exports = {
                 lastEmbed = Math.floor(progress/10);
             }
         }
-
+        
+        // Iterates through each level
         for(const c of sublevels) {
             let data3;
+            // If level has no sub categories
             if(c[1][2].length == 0) {
                 data3 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?top=1&embed=players`);
+                // Gets each WR run
                 for(const run of data3.data.runs) {
                     b:
+                    // Gets each player of the run
                     for(const player of run.run.players) {
+                        // If player is in playerList then increment their WRs
                         for(const item of playerList) {
                             if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0] == player.name) {
                                 item[1] = item[1] + 1;
@@ -213,6 +235,7 @@ module.exports = {
                             }
                         }
                         if(player.rel == "user") {
+                            // If player is a user then find user.id
                             for(const user of data3.data.players.data) {
                                 if(player.id == user.id) {
                                     playerList.push([user.names.international, 1, user.id]);
@@ -227,7 +250,9 @@ module.exports = {
                 }
                 progress2++;
             } else {
+                // Runs for each combination of sublevels
                 for(const o of c[1][2]) {
+                    // Builds string of variables
                     let varString = "";
                     if(Array.isArray(o)) {
                         for(let i = 0; i < o.length; i++) {
@@ -242,9 +267,12 @@ module.exports = {
                         console.log(data3);
                         continue;
                     }
+                    // Gets each WR run
                     for(const run of data3.data.runs) {
                         b:
+                        // Gets each player of the run
                         for(const player of run.run.players) {
+                            // If player is in playerList then increment their WRs
                             for(const item of playerList) {
                                 if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0].toLowerCase() == player.name.toLowerCase()) {
                                     item[1] = item[1] + 1;
@@ -252,6 +280,7 @@ module.exports = {
                                 }
                             }
                             if(player.rel == "user") {
+                                // If player is a user then find user.id
                                 for(const user of data3.data.players.data) {
                                     if(player.id == user.id) {
                                         playerList.push([user.names.international, 1, user.id]);
@@ -267,6 +296,7 @@ module.exports = {
                     progress2++;
                 }
             }
+            // Update embed if enough progress has been made
             if(Math.floor(progress2/10) > lastEmbed) {
                 embed = new MessageEmbed()
                     .setColor('118855')

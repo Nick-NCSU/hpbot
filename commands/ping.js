@@ -1,8 +1,16 @@
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
+/**
+ * Function to provide the bot's ping
+ */
 module.exports = {
-    data: new SlashCommandBuilder().setName('ping').setDescription('Provides bot response time.'),
+    /**
+     * Builds /ping
+     */
+    data: new SlashCommandBuilder()
+        .setName('ping')
+        .setDescription('Provides bot response time.'),
 	async execute(interaction) {
         const embed = new MessageEmbed()
             .setColor('118855')

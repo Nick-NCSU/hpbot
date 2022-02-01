@@ -1,7 +1,13 @@
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
+/**
+ * Function to provide a simulation of Dream's pearl/blaze rod odds.
+ */
 module.exports = {
+    /**
+     * Builds /categories (integer:simulations)
+     */
     data: new SlashCommandBuilder()
         .setName('dream')
         .setDescription('Simulates Dream\'s pearl and blaze rod odds.')
@@ -11,6 +17,7 @@ module.exports = {
         ),
 	async execute(interaction) {
         let sim = interaction.options.get('simulations');
+        // If the number of simulations was not specified then set sim to 1
         if(!sim) {
             sim = 1;
         } else {
@@ -19,18 +26,25 @@ module.exports = {
         if(sim > 100000) {
             return await interaction.editReply('Too many simulations (' + sim + ')');
         }
+        // Max pearls
         let pMax = 0;
+        // Max rods
         let rMax = 0;
+        // Total pearls
         let pTotal = 0;
+        // Total rods
         let rTotal = 0;
+        // Runs the simulations
         for(let count = 0; count < sim; count++) {
             let pCount = 0;
+            // Increments the number of pearls with 20/423 odds
             for(let i = 0; i < 263; i++) {
                 if(Math.random() <= (20/423)) {
                     pCount++;
                 }
             }
             let rCount = 0;
+            // Increments the number of rods with 1/2 odds
             for(let i = 0; i < 306; i++) {
                 if(Math.random() * 100 <= 50) {
                     rCount++;
@@ -41,7 +55,9 @@ module.exports = {
             pTotal += pCount;
             rTotal += rCount;
         }
+        // Compares pearls to Dream
         const difference = pMax >= 42 ? '+' + pMax - 42 : pMax - 42;
+        // Compares rods to Dream
         const difference2 = rMax >= 211 ? '+' + rMax - 211 : rMax - 211;
         const embed = new MessageEmbed()
             .setColor('118855')

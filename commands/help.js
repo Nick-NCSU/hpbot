@@ -1,8 +1,16 @@
 const { MessageEmbed } = require('discord.js');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 
+/**
+ * Function to provide help for slash commands.
+ */
 module.exports = {
-    data: new SlashCommandBuilder().setName('help').setDescription('Provides a list of commands and descriptions.'),
+    /**
+     * Builds /help
+     */
+    data: new SlashCommandBuilder()
+        .setName('help')
+        .setDescription('Provides a list of commands and descriptions.'),
 	async execute(interaction) {
         const embed = new MessageEmbed()
             .setColor('118855')

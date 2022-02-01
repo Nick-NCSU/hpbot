@@ -5,10 +5,12 @@ class Limit {
     /**
      * Sets the current points as well as the maximum points
      * @param {*} points the points to use
+     * @param {*} timeout timeout in ms for points to be added back
      */
-    constructor(points) {
+    constructor(points, timeout) {
         this.MAX_POINTS = points;
         this.points = points;
+        this.TIMEOUT = timeout;
     }
 
     /**
@@ -62,7 +64,7 @@ class Limit {
             (function wait() {
                 if(self.points - num >= 0) { // If there is room to remove the points
                     self.points = self.points - num; // Remove the points
-                    setTimeout(() => self.addPoints(num), 70000); // Add the points back 65 seconds after
+                    setTimeout(() => self.addPoints(num), self.timeout); // Add the points back timeout ms after
                     return resolve();
                 } else {
                     setTimeout(wait, 1000); // Else try again after 1 second
@@ -79,8 +81,8 @@ class Limit {
      * @param {*} num number of points to add
      */
     addPoints(num) {
-        if(num + this.points > this.maxPoints) {
-            this.points = this.maxPoints;
+        if(num + this.points > this.MAX_POINTS) {
+            this.points = this.MAX_POINTS;
         } else {
             this.points += num;
         }
