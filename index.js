@@ -135,7 +135,7 @@ exports.fetch = async function limitFetch(text) {
 
 exports.fetchMojang = async function limitMojangFetch(text) {
 	let data;
-	await mojangLimiter.removePoints(1).then(data = await fetch(text).then(response => response.json())).catch( reason => {});
+	await mojangLimiter.removePoints(1).then(data = await fetch(text).then(response => response.json()).catch( reason => {}));
 	return data;
 }
 
