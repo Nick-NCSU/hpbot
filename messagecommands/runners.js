@@ -10,7 +10,7 @@ const token = require('../index.js');
     },
 	async execute(command, message) {
         // Command only works in certain channels (staff-commands and my testing server)
-        if(message.channel != '795130167696556093' && message.channel != '728402518014689333') return;
+        if(command[1] != 'list' && command[1] != 'search' && message.channel != '795130167696556093' && message.channel != '728402518014689333') return;
         switch(command[1]) {
             case 'add':
                 await add(command[2], command[3], message);
@@ -107,7 +107,7 @@ async function list(message) {
     let str = '```';
     for(const player of results) {
         const player2 = await token.fetchMojang(`https://api.mojang.com/user/profiles/${player.id}/names`);
-        str += 'IGN: ' + player2[player2.length - 1].name + '\n';
+        str += player2[player2.length - 1].name + ': ' + `https://speedrun.com/user/${player.account}\n`;
     }
     return await message.reply(str + '```');
 }
