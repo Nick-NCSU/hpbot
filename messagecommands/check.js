@@ -13,6 +13,7 @@ const token = require('../index.js');
         const igns = command.slice(1);
         const players = [];
         let result = '```\n';
+        let runners = '```\n';
         // Gets uuid of each ign
         for(const ign of igns) {
             const player = await token.fetchMojang(`https://api.mojang.com/users/profiles/minecraft/${ign}`);
@@ -55,15 +56,22 @@ const token = require('../index.js');
                     }
                 }
             }
-            // Checks if player is in banlist
+            // Checks if player is in banlist or known runners
             const query = { id: player.id };
             await token.db.connect();
             const searchResult = await token.db.db('banned_runners').collection('mc').findOne(query);
+            const searchResult2 = await token.db.db('known_runners').collection('mc').findOne(query);
             await token.db.close();
             if(searchResult) {
                 result += '\t' + player.name + ' (**Banlist**)\n';
             }
+            if(searchResult2) {
+                runners += player.name + ': ' + `https://speedrun.com/user/${searchResult2.account}\n`;
+            }
         }
         await message.channel.send(result + '```');
+        if(runners.length > 4) {
+            await message.channel.send(runners + '```');
+        }
 	},
 };
