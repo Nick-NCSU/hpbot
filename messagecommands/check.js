@@ -66,7 +66,7 @@ const token = require('../index.js');
                 result += '\t' + player.name + ' (**Banlist**)\n';
             }
             if(searchResult2) {
-                const account = token.fetch(`https://www.speedrun.com/api/v1/users/${searchResult2.account}`)
+                const account = await token.fetch(`https://www.speedrun.com/api/v1/users/${searchResult2.account}`)
                 runners += player.name + ': ' + `https://speedrun.com/user/${account.data.names.international}\n`;
             }
         }
