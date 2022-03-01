@@ -46,4 +46,4 @@ Command|Description
 src!check (...account)|Checks a list of accounts for Hypixel friends/guild lists, banlist, and known runners list.
 
 ## Credits
-* [Nick-NCSU](https://github.com/Nick-NCSU) Developer and designer
+* [Nick-NCSU](https://github.com/Nick-NCSU) Developer
