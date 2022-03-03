@@ -16,6 +16,7 @@ module.exports = {
 		const daily2 = [
 			'hypixel_ce',
 			'hypixel_bw',
+			'hypixel_bwce',
 			'hypixel_sw',
 			'hypixel_ag',
 			'hypixel_cg',
