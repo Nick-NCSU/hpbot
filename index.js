@@ -24,6 +24,7 @@ const prefix = 'src!';
 let token = process.env.token;
 let hypixel = process.env.hypixel;
 let mongourl = process.env.mongourl;
+let src = process.env.srcapi;
 
 // Creates new Client
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
@@ -113,6 +114,7 @@ client.login(token);
 
 exports.tokens = token;
 exports.hypixel = hypixel;
+exports.src = src;
 
 exports.limit = function getLimit() {
 	return limiter;
@@ -126,6 +128,17 @@ exports.fetch = async function limitFetch(text) {
 	let data;
 	while(1) {
 		await limiter.removePoints(1).then(data = await fetch(text).then(response => response.json()));
+		if(data.status != 420) {
+			return data;
+		}
+		await sleep(2000);
+	}
+}
+
+exports.post = async function limitPost(text, params) {
+	let data;
+	while(1) {
+		await limiter.removePoints(1).then(data = await fetch(text, params).then(response => response.json()));
 		if(data.status != 420) {
 			return data;
 		}
