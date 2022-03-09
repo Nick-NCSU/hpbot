@@ -1,6 +1,6 @@
-const tokens = require('../index.js');
-const { MessageEmbed } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const tokens = require("../index.js");
+const { MessageEmbed } = require("discord.js");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
 /**
  * Function to provide a leaderboard of WRs to a certain game
@@ -10,19 +10,19 @@ module.exports = {
      * Builds /leaderboard [string:game]
      */
     data: new SlashCommandBuilder()
-        .setName('leaderboard')
-        .setDescription('Provides a leaderboard for the given game.')
+        .setName("leaderboard")
+        .setDescription("Provides a leaderboard for the given game.")
         .addStringOption(option =>
-            option.setName('game')
-                .setDescription('Game to get leaderboard')
+            option.setName("game")
+                .setDescription("Game to get leaderboard")
                 .setRequired(true)
         ),
-	async execute(interaction) {
+    async execute(interaction) {
         // From rsp via https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
         // Provides cartesian product of arrays
         const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
 
-        const game = interaction.options.get('game').value.toLowerCase();
+        const game = interaction.options.get("game").value.toLowerCase();
 
         // Retrieves all subcategories for the full game and ILs
         const {data} = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}?embed=categories.variables,levels.variables`);
@@ -41,7 +41,7 @@ module.exports = {
             if(category.type == "per-game") {
                 let subArr = [];
                 let idArr = [];
-                for(sub of category.variables.data) {
+                for(const sub of category.variables.data) {
                     if(sub["is-subcategory"]){
                         const options = Object.keys(sub.values.values);
                         subArr.push(options);
@@ -114,12 +114,12 @@ module.exports = {
 
         let date = new Date().toISOString().slice(0, 10);
         let embed = new MessageEmbed()
-            .setColor('118855')
-            .setTitle('Leaderboard for ' + game + ':')
+            .setColor("118855")
+            .setTitle("Leaderboard for " + game + ":")
             .setThumbnail(data.assets["cover-large"].uri)
-            .setFooter(date)
-            .addField('Full Game Progress:', `${progress}/${count}`)
-            .addField('Individual Levels Progress:', `${progress2}/${count2}`)
+            .setFooter({ text: date })
+            .addField("Full Game Progress:", `${progress}/${count}`)
+            .addField("Individual Levels Progress:", `${progress2}/${count2}`);
         await interaction.editReply({ embeds: [embed] });
         let playerList = [];
         // Iterates through each category
@@ -167,9 +167,9 @@ module.exports = {
                     } else {
                         varString += `&var-${c[1][0]}=${o}`;
                     }
-                    data2 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players');
+                    data2 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + "&top=1&embed=players");
                     if(!data2.data) {
-                        console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players');
+                        console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + "&top=1&embed=players");
                         console.log(data2);
                         continue;
                     }
@@ -205,12 +205,12 @@ module.exports = {
             // Update embed if enough progress has been made
             if(Math.floor(progress/10) > lastEmbed) {
                 embed = new MessageEmbed()
-                    .setColor('118855')
-                    .setTitle('Leaderboard for ' + game + ':')
+                    .setColor("118855")
+                    .setTitle("Leaderboard for " + game + ":")
                     .setThumbnail(data.assets["cover-large"].uri)
-                    .setFooter(date)
-                    .addField('Full Game Progress:', `${progress}/${count}`)
-                    .addField('Individual Levels Progress:', `${progress2}/${count2}`)
+                    .setFooter({ text: date })
+                    .addField("Full Game Progress:", `${progress}/${count}`)
+                    .addField("Individual Levels Progress:", `${progress2}/${count2}`);
                 await interaction.editReply({ embeds: [embed] });
                 lastEmbed = Math.floor(progress/10);
             }
@@ -261,9 +261,9 @@ module.exports = {
                     } else {
                         varString += `&var-${c[1][1][0]}=${o}`;
                     }
-                    data3 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + '&top=1&embed=players');
+                    data3 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + "&top=1&embed=players");
                     if(!data3.data) {
-                        console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + '&top=1&embed=players');
+                        console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + "&top=1&embed=players");
                         console.log(data3);
                         continue;
                     }
@@ -299,12 +299,12 @@ module.exports = {
             // Update embed if enough progress has been made
             if(Math.floor(progress2/10) > lastEmbed) {
                 embed = new MessageEmbed()
-                    .setColor('118855')
-                    .setTitle('Leaderboard for ' + game + ':')
+                    .setColor("118855")
+                    .setTitle("Leaderboard for " + game + ":")
                     .setThumbnail(data.assets["cover-large"].uri)
-                    .setFooter(date)
-                    .addField('Full Game Progress:', `${progress}/${count}`)
-                    .addField('Individual Levels Progress:', `${progress2}/${count2}`)
+                    .setFooter({ text: date })
+                    .addField("Full Game Progress:", `${progress}/${count}`)
+                    .addField("Individual Levels Progress:", `${progress2}/${count2}`);
                 await interaction.editReply({ embeds: [embed] });
                 lastEmbed = Math.floor(progress2/10);
             }
@@ -315,18 +315,18 @@ module.exports = {
             return b[1] - a[1];
         });
         // Remove N/A
-        playerList = playerList.filter(word => word[0].toLowerCase() !== 'n/a');
+        playerList = playerList.filter(word => word[0].toLowerCase() !== "n/a");
         // Which place to display
         let place = 1;
         let iterator = 0;
         let countPlayer = 0;
         embed = new MessageEmbed()
-            .setColor('118855')
-            .setTitle('Leaderboard for ' + game + ':')
+            .setColor("118855")
+            .setTitle("Leaderboard for " + game + ":")
             .setThumbnail(data.assets["cover-large"].uri)
-            .setFooter(date)
+            .setFooter({ text: date });
         for(const player of playerList) {
-            embed.addField('#' + place + ' ' + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
+            embed.addField("#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true);
             countPlayer++;
             // Increment only if next WR count is not equal to this count
             if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {
@@ -338,5 +338,5 @@ module.exports = {
             iterator++;
         }
         await interaction.editReply({ embeds: [embed] });
-	},
+    },
 };

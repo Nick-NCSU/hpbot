@@ -1,6 +1,6 @@
-const { MessageEmbed } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const tokens = require('../index.js')
+const { MessageEmbed } = require("discord.js");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const tokens = require("../index.js");
 
 /**
  * Returns the number of runs verified by the user
@@ -10,20 +10,20 @@ module.exports = {
      * Builds /verified [string:user]
      */
     data: new SlashCommandBuilder()
-        .setName('verified')
-        .setDescription('Provides the number of runs verified by the given user.')
+        .setName("verified")
+        .setDescription("Provides the number of runs verified by the given user.")
         .addStringOption(option =>
-            option.setName('user')
-                .setDescription('User to search')
+            option.setName("user")
+                .setDescription("User to search")
                 .setRequired(true)
         ),
-	async execute(interaction) {
-        const user = interaction.options.get('user').value.toLowerCase();
+    async execute(interaction) {
+        const user = interaction.options.get("user").value.toLowerCase();
         // Search for user on speedrun.com
         const playerData = await tokens.fetch(`https://www.speedrun.com/api/v1/users/${user}`);
         // If player doesn't exist
         if(!playerData.data) {
-            return await interaction.editReply('User does not exist.');
+            return await interaction.editReply("User does not exist.");
         }
         // Retrieve runs for game
         const id = playerData.data.id;
@@ -36,10 +36,10 @@ module.exports = {
         const num = data.pagination.offset + data.pagination.size;
         // Creates embed
         const embed = new MessageEmbed()
-            .setColor('118855')
-            .setTitle('Result for: ' + user)
-            .addField('Number of runs verified: ', num >= 10000 ? '>= 10k' : String(num))
-            .setThumbnail(playerData.data.assets.image.uri)
+            .setColor("118855")
+            .setTitle("Result for: " + user)
+            .addField("Number of runs verified: ", num >= 10000 ? ">= 10k" : String(num))
+            .setThumbnail(playerData.data.assets.image.uri);
         return await interaction.editReply({ embeds: [embed] });
-	},
+    },
 };

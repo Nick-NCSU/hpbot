@@ -1,5 +1,5 @@
-const { MessageEmbed } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed } = require("discord.js");
+const { SlashCommandBuilder } = require("@discordjs/builders");
 
 /**
  * Function to provide a simulation of Dream's pearl/blaze rod odds.
@@ -9,14 +9,14 @@ module.exports = {
      * Builds /categories (integer:simulations)
      */
     data: new SlashCommandBuilder()
-        .setName('dream')
-        .setDescription('Simulates Dream\'s pearl and blaze rod odds.')
+        .setName("dream")
+        .setDescription("Simulates Dream's pearl and blaze rod odds.")
         .addIntegerOption(option =>
-            option.setName('simulations')
-                .setDescription('Number of simulations to run (Max 100,000')
+            option.setName("simulations")
+                .setDescription("Number of simulations to run (Max 100,000")
         ),
-	async execute(interaction) {
-        let sim = interaction.options.get('simulations');
+    async execute(interaction) {
+        let sim = interaction.options.get("simulations");
         // If the number of simulations was not specified then set sim to 1
         if(!sim) {
             sim = 1;
@@ -24,7 +24,7 @@ module.exports = {
             sim = sim.value;
         }
         if(sim > 100000) {
-            return await interaction.editReply('Too many simulations (' + sim + ')');
+            return await interaction.editReply("Too many simulations (" + sim + ")");
         }
         // Max pearls
         let pMax = 0;
@@ -56,18 +56,18 @@ module.exports = {
             rTotal += rCount;
         }
         // Compares pearls to Dream
-        const difference = pMax >= 42 ? '+' + pMax - 42 : pMax - 42;
+        const difference = pMax >= 42 ? "+" + pMax - 42 : pMax - 42;
         // Compares rods to Dream
-        const difference2 = rMax >= 211 ? '+' + rMax - 211 : rMax - 211;
+        const difference2 = rMax >= 211 ? "+" + rMax - 211 : rMax - 211;
         const embed = new MessageEmbed()
-            .setColor('118855')
-            .setTitle('Your Results:')
-            .addField('Number of simulations: ', String(sim))
-            .addField('Average number of pearl trades: ', String(pTotal / sim))
-            .addField('Average number of rods: ', String(rTotal / sim))
-            .addField('Max number of pearl trades: ' + pMax + '/262', 'Number of pearl trades (Dream): 42/262')
-            .addField('Max number of rods: ' + rMax + '/305', 'Number of rods (Dream): 211/305')
-            .setFooter('Difference: ' + difference + '/' + difference2)
+            .setColor("118855")
+            .setTitle("Your Results:")
+            .addField("Number of simulations: ", String(sim))
+            .addField("Average number of pearl trades: ", String(pTotal / sim))
+            .addField("Average number of rods: ", String(rTotal / sim))
+            .addField("Max number of pearl trades: " + pMax + "/262", "Number of pearl trades (Dream): 42/262")
+            .addField("Max number of rods: " + rMax + "/305", "Number of rods (Dream): 211/305")
+            .setFooter({ text: "Difference: " + difference + "/" + difference2 });
         await interaction.editReply({ embeds: [embed] });
-	},
+    },
 };

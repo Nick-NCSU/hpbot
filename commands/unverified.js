@@ -1,6 +1,6 @@
-const { MessageEmbed } = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
-const tokens = require('../index.js')
+const { MessageEmbed } = require("discord.js");
+const { SlashCommandBuilder } = require("@discordjs/builders");
+const tokens = require("../index.js");
 
 /**
  * Function to provide a list of unverified runs in the queue for a game
@@ -10,19 +10,19 @@ module.exports = {
      * Builds /queuelength [string:game]
      */
     data: new SlashCommandBuilder()
-        .setName('queuelength')
-        .setDescription('Provides the number of unverified runs for the given game.')
+        .setName("queuelength")
+        .setDescription("Provides the number of unverified runs for the given game.")
         .addStringOption(option =>
-            option.setName('game')
-                .setDescription('Game to search')
+            option.setName("game")
+                .setDescription("Game to search")
                 .setRequired(true)
         ),
-	async execute(interaction) {
-        const game = interaction.options.get('game').value.toLowerCase();
+    async execute(interaction) {
+        const game = interaction.options.get("game").value.toLowerCase();
         // Gets the game for the id
         const gameData = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}`);
         if(!gameData.data) {
-            return await interaction.editReply('Game does not exist.');
+            return await interaction.editReply("Game does not exist.");
         }
         // Gets the first page of unverified runs
         const id = gameData.data.id;
@@ -34,15 +34,15 @@ module.exports = {
         }
         const num = data.pagination.offset + data.pagination.size;
         const embed = new MessageEmbed()
-            .setColor('118855')
-            .setTitle('Result for: ' + game)
-            .setThumbnail(gameData.data.assets["cover-large"].uri)
+            .setColor("118855")
+            .setTitle("Result for: " + game)
+            .setThumbnail(gameData.data.assets["cover-large"].uri);
         if(firstPage) {
-            embed.addField('Number of unverified runs: ', String(num))
-                .addField('Oldest unverified run: ', firstPage.submitted.substring(0,10))
+            embed.addField("Number of unverified runs: ", String(num))
+                .addField("Oldest unverified run: ", firstPage.submitted.substring(0,10));
         } else {
-            embed.addField('Number of unverified runs: ', String(num))
+            embed.addField("Number of unverified runs: ", String(num));
         }
         await interaction.editReply({ embeds: [embed] });
-	},
+    },
 };

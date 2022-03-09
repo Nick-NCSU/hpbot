@@ -1,4 +1,4 @@
-const tokens = require('../index.js');
+const tokens = require("../index.js");
 
 /**
  * Modified version of leaderboard.js to perform daily leaderboard updates and combine data
@@ -7,14 +7,14 @@ module.exports = {
     data: {
         interval: "0 0 6 * * *"
     },
-	async execute(client) {
+    async execute(client) {
         await findPlayers("824m59e2", "Solo");
         await findPlayers("wkpmj40k", "Doubles");
         await findPlayers("wdmlzyxk", "3v3v3v3");
         await findPlayers("vdom0912", "4v4v4v4");
         await findPlayers("wkpm70jk", "4v4");
         await updateRuns("zd3q41ek");
-	},
+    },
 };
 
 let players = [];
@@ -36,7 +36,7 @@ async function findPlayers(category, mode) {
                                 record[mode] = {
                                     time: run.run.times.primary_t,
                                     link: run.run.weblink
-                                }
+                                };
                             } else if(run.run.times.primary_t < record[mode]) {
                                 record[mode].time = run.run.times.primary_t;
                                 record[mode].link = run.run.weblink;
@@ -51,8 +51,8 @@ async function findPlayers(category, mode) {
                             time: run.run.times.primary_t,
                             link: run.run.weblink
                         }
-                    }
-                    players.push(p)
+                    };
+                    players.push(p);
                 }
             }
         }
@@ -63,9 +63,11 @@ async function updateRuns(category) {
     const data = await tokens.fetch(`https://www.speedrun.com/api/v1/categories/${category}/records?top=100`);
     // Filters out only the players with a time in every category
     players = players.filter(function(player) {
-        return player.hasOwnProperty("Solo") && player.hasOwnProperty("Doubles") 
-        && player.hasOwnProperty("3v3v3v3") && player.hasOwnProperty("4v4v4v4") 
-        && player.hasOwnProperty("4v4");
+        return Object.prototype.hasOwnProperty.call(player, "Solo") && 
+        Object.prototype.hasOwnProperty.call(player, "Doubles") &&
+        Object.prototype.hasOwnProperty.call(player, "3v3v3v3") &&
+        Object.prototype.hasOwnProperty.call(player, "4v4v4v4") &&
+        Object.prototype.hasOwnProperty.call(player, "4v4");
     });
     next:
     // Iterates through each player
@@ -99,12 +101,12 @@ async function updateRuns(category) {
                 emulated: false,
                 comment: `Solo: ${player["Solo"].link}\nDoubles: ${player["Doubles"].link}\n3v3v3v3: ${player["3v3v3v3"].link}\n4v4v4v4: ${player["4v4v4v4"].link}\n4v4: ${player["4v4"].link}`
             }
-        }
+        };
         // Submits the run
         await tokens.post("https://www.speedrun.com/api/v1/runs", {
-            method: 'post',
+            method: "post",
             body: JSON.stringify(run),
-            headers: {'Content-Type': 'application/json', 'X-API-Key': tokens.src}
+            headers: {"Content-Type": "application/json", "X-API-Key": tokens.src}
         });
     }
 }

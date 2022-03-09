@@ -1,5 +1,5 @@
-const tokens = require('../index.js');
-const { MessageEmbed } = require('discord.js');
+const tokens = require("../index.js");
+const { MessageEmbed } = require("discord.js");
 
 /**
  * Modified version of leaderboard.js to perform daily leaderboard updates and combine data
@@ -8,27 +8,27 @@ module.exports = {
     data: {
         interval: "0 0 5 * * *"
     },
-	async execute(client) {
+    async execute(client) {
         const daily = [
-			'hypixel_sb',
-			'hypixel_sbce'
-		];
-		const daily2 = [
-			'hypixel_ce',
-			'hypixel_bw',
-			'hypixel_bwce',
-			'hypixel_sw',
-			'hypixel_ag',
-			'hypixel_cg',
-			'hypixel_sg',
-			'hypixel_duels',
-			'hypixel_tp',
-			'tkr',
-		];
-        await runDaily(daily, await client.channels.cache.get('792473904391651369'));
+            "hypixel_sb",
+            "hypixel_sbce"
+        ];
+        const daily2 = [
+            "hypixel_ce",
+            "hypixel_bw",
+            "hypixel_bwce",
+            "hypixel_sw",
+            "hypixel_ag",
+            "hypixel_cg",
+            "hypixel_sg",
+            "hypixel_duels",
+            "hypixel_tp",
+            "tkr",
+        ];
+        await runDaily(daily, await client.channels.cache.get("792473904391651369"));
         await sleep(10000);
-		await runDaily(daily2, await client.channels.cache.get('782073727881183304'));
-	},
+        await runDaily(daily2, await client.channels.cache.get("782073727881183304"));
+    },
 };
 
 /**
@@ -66,34 +66,34 @@ async function runDaily(games, channel) {
     }
     let date = new Date().toISOString().slice(0, 10);
     let embed = new MessageEmbed()
-        .setColor('118855')
-        .setTitle('Top Players for Group:')
-        .setFooter(date)
-        for(player of topPlayers) {
-            embed.addField(player.replace(/[\\*_~]/g, "\\$&"), '\u200b', true);
-        }
+        .setColor("118855")
+        .setTitle("Top Players for Group:")
+        .setFooter({ text: date });
+    for(let player of topPlayers) {
+        embed.addField(player.replace(/[\\*_~]/g, "\\$&"), "\u200b", true);
+    }
     await channel.send({ embeds: [embed] });
     embed = new MessageEmbed()
-        .setColor('118855')
-        .setTitle('Top WRs for Group:')
-        .setFooter(date)
-        totalScores.sort(function(a, b) {
-            return b[1] - a[1];
-        });
-        let place = 1;
-        let iterator = 0;
-        let countPlayer = 0;
-        for(player of totalScores) {
-            embed.addField('#' + place + ' ' + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
-            countPlayer++;
-            if(totalScores[iterator + 1] && totalScores[iterator + 1][1] != totalScores[iterator][1]) {
-                place++;
-            }
-            if(countPlayer > 30) {
-                break;
-            }
-            iterator++;
+        .setColor("118855")
+        .setTitle("Top WRs for Group:")
+        .setFooter({ text: date });
+    totalScores.sort(function(a, b) {
+        return b[1] - a[1];
+    });
+    let place = 1;
+    let iterator = 0;
+    let countPlayer = 0;
+    for(let player of totalScores) {
+        embed.addField("#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true);
+        countPlayer++;
+        if(totalScores[iterator + 1] && totalScores[iterator + 1][1] != totalScores[iterator][1]) {
+            place++;
         }
+        if(countPlayer > 30) {
+            break;
+        }
+        iterator++;
+    }
     await channel.send({ embeds: [embed] });
 }
 async function generateBoard(game, channel) {
@@ -118,7 +118,7 @@ async function generateBoard(game, channel) {
         if(category.type == "per-game") {
             let subArr = [];
             let idArr = [];
-            for(sub of category.variables.data) {
+            for(const sub of category.variables.data) {
                 if(sub["is-subcategory"]){
                     const options = Object.keys(sub.values.values);
                     subArr.push(options);
@@ -191,12 +191,12 @@ async function generateBoard(game, channel) {
 
     let date = new Date().toISOString().slice(0, 10);
     let embed = new MessageEmbed()
-        .setColor('118855')
-        .setTitle('Leaderboard for ' + game + ':')
+        .setColor("118855")
+        .setTitle("Leaderboard for " + game + ":")
         .setThumbnail(data.assets["cover-large"].uri)
-        .setFooter(date)
-        .addField('Full Game Progress:', `${progress}/${count}`)
-        .addField('Individual Levels Progress:', `${progress2}/${count2}`)
+        .setFooter({ text: date })
+        .addField("Full Game Progress:", `${progress}/${count}`)
+        .addField("Individual Levels Progress:", `${progress2}/${count2}`);
     let message = await channel.send({ embeds: [embed] });
     let playerList = [];
     // Iterates through each category
@@ -244,9 +244,9 @@ async function generateBoard(game, channel) {
                 } else {
                     varString += `&var-${c[1][0]}=${o}`;
                 }
-                data2 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players');
+                data2 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + "&top=1&embed=players");
                 if(!data2.data) {
-                    console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + '&top=1&embed=players');
+                    console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${c[0]}?` + varString.substr(1) + "&top=1&embed=players");
                     console.log(data2);
                     continue;
                 }
@@ -282,12 +282,12 @@ async function generateBoard(game, channel) {
         // Update embed if enough progress has been made
         if(Math.floor(progress/10) > lastEmbed) {
             embed = new MessageEmbed()
-                .setColor('118855')
-                .setTitle('Leaderboard for ' + game + ':')
+                .setColor("118855")
+                .setTitle("Leaderboard for " + game + ":")
                 .setThumbnail(data.assets["cover-large"].uri)
-                .setFooter(date)
-                .addField('Full Game Progress:', `${progress}/${count}`)
-                .addField('Individual Levels Progress:', `${progress2}/${count2}`)
+                .setFooter({ text: date })
+                .addField("Full Game Progress:", `${progress}/${count}`)
+                .addField("Individual Levels Progress:", `${progress2}/${count2}`);
             await message.edit({ embeds: [embed] });
             lastEmbed = Math.floor(progress/10);
         }
@@ -338,9 +338,9 @@ async function generateBoard(game, channel) {
                 } else {
                     varString += `&var-${c[1][1][0]}=${o}`;
                 }
-                data3 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + '&top=1&embed=players');
+                data3 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + "&top=1&embed=players");
                 if(!data3.data) {
-                    console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + '&top=1&embed=players');
+                    console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + "&top=1&embed=players");
                     console.log(data3);
                     continue;
                 }
@@ -376,12 +376,12 @@ async function generateBoard(game, channel) {
         // Update embed if enough progress has been made
         if(Math.floor(progress2/10) > lastEmbed) {
             embed = new MessageEmbed()
-                .setColor('118855')
-                .setTitle('Leaderboard for ' + game + ':')
+                .setColor("118855")
+                .setTitle("Leaderboard for " + game + ":")
                 .setThumbnail(data.assets["cover-large"].uri)
-                .setFooter(date)
-                .addField('Full Game Progress:', `${progress}/${count}`)
-                .addField('Individual Levels Progress:', `${progress2}/${count2}`)
+                .setFooter({ text: date })
+                .addField("Full Game Progress:", `${progress}/${count}`)
+                .addField("Individual Levels Progress:", `${progress2}/${count2}`);
             await message.edit({ embeds: [embed] });
             lastEmbed = Math.floor(progress2/10);
         }
@@ -392,18 +392,18 @@ async function generateBoard(game, channel) {
         return b[1] - a[1];
     });
     // Remove N/A
-    playerList = playerList.filter(word => word[0].toLowerCase() !== 'n/a');
+    playerList = playerList.filter(word => word[0].toLowerCase() !== "n/a");
     // Which place to display
     let place = 1;
     let iterator = 0;
     let countPlayer = 0;
     embed = new MessageEmbed()
-        .setColor('118855')
-        .setTitle('Leaderboard for ' + game + ':')
+        .setColor("118855")
+        .setTitle("Leaderboard for " + game + ":")
         .setThumbnail(data.assets["cover-large"].uri)
-        .setFooter(date)
+        .setFooter({ text: date });
     for(const player of playerList) {
-        embed.addField('#' + place + ' ' + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true)
+        embed.addField("#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true);
         countPlayer++;
         // Increment only if next WR count is not equal to this count
         if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {
@@ -419,7 +419,7 @@ async function generateBoard(game, channel) {
 }
 
 function sleep(ms) {
-	return new Promise((resolve) => {
-	  setTimeout(resolve, ms);
-	});
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms);
+    });
 }
