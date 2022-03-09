@@ -13,7 +13,7 @@ module.exports = {
             const status = {
                 "status": {
                     "status": "rejected",
-                    "reason": "This run is managed by a bot. Please do not submit runs here."
+                    "reason": "This category is managed by a bot. Please do not submit runs here."
                 }
             };
             await tokens.post(`https://www.speedrun.com/api/v1/runs/${run.id}/status`, {
