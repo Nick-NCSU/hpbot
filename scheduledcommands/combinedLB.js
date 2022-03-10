@@ -73,12 +73,12 @@ async function updateRuns(category) {
     // Iterates through each player
     for(const player of players) {
         // Adds up their time
-        const total = player["Solo"].time + player["Doubles"].time + player["3v3v3v3"].time + player["4v4v4v4"].time + player["4v4"].time;
+        const total = (player["Solo"].time + player["Doubles"].time + player["3v3v3v3"].time + player["4v4v4v4"].time + player["4v4"].time).toFixed(3);
         // Goes through the runs and if any have a faster or same time then
         // skip this player.
         for(const run of data.data[0].runs) {
             if(run.run.players[0].id == player.id) {
-                if(total - run.run.times.primary_t < 0.01) {
+                if(total - run.run.times.primary_t >= 0) {
                     continue next;
                 } 
             }
@@ -90,7 +90,7 @@ async function updateRuns(category) {
                 platform: "8gej2n93",
                 verified: true,
                 times: {
-                    realtime: total
+                    realtime: parseFloat(total)
                 },
                 players: [
                     {
