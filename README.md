@@ -45,5 +45,15 @@ Command|Description
 :-----:|:-----:
 src!check (...account)|Checks a list of accounts for Hypixel friends/guild lists, banlist, and known runners list.
 
+## Scheduled Actions
+### Daily Leaderboard
+Runs a modified version of /leaderboard which runs for multiple games and combines their world record count to a single embed.
+
+### Combined Leaderboard
+Finds runners with verified runs of certain categories and automatically submits a run containing the combined time of these categories.
+
+### Invalid Check
+Ensures runs submitted to categories managed by a bot are rejected.
+
 ## Credits
 * [Nick-NCSU](https://github.com/Nick-NCSU) Developer
