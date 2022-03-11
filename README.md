@@ -1,4 +1,4 @@
-# hpbot
+# SRC-BOT
 A Discord Bot to connect the Speedrun.com and Hypixel APIs.
 
 Uses MongoDB for a database to store the banlist and known runners.
