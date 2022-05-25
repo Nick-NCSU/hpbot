@@ -10,7 +10,7 @@ module.exports = {
     async execute(command, message) {
         // Command only works in certain channels (staff-commands and my testing server)
         if(message.channel != "795130167696556093" && message.channel != "728402518014689333") return;
-        const igns = command.slice(1);
+        const igns = command.slice(1).filter(ign => !!ign);
         const players = [];
         let result = "```\n";
         let runners = "```\n";
