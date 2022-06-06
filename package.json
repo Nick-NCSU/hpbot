@@ -16,7 +16,7 @@
     "dotenv": "^16.0.1",
     "mongodb": "^4.6.0",
     "node-cron": "^3.0.0",
-    "node-fetch": "^3.2.4",
+    "node-fetch": "^3.2.5",
     "perf_hooks": "0.0.1",
     "queue-promise": "^2.2.1"
   },
