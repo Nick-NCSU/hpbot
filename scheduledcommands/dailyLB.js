@@ -185,10 +185,6 @@ async function generateBoard(game, channel) {
         }
     }
 
-    if(count + count2 > 500) {
-        return await channel.send(`Game ${game} has too many categories. Number of categories: ${count + count2}.`);
-    }
-
     let date = new Date().toISOString().slice(0, 10);
     let embed = new MessageEmbed()
         .setColor("118855")
