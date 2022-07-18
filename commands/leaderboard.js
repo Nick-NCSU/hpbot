@@ -54,6 +54,9 @@ module.exports = {
          */
         if(fullgame) {
             for(const category of data.categories.data) {
+                if(!misc && category.miscellaneous) {
+                    continue;
+                }
                 if(category.type == "per-game") {
                     let subArr = [];
                     let idArr = [];
