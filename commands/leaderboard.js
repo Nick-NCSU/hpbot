@@ -35,9 +35,9 @@ module.exports = {
         const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
 
         const game = interaction.options.get("game").value.toLowerCase();
-        const misc = interaction.options.get("misc").value ?? true;
-        const fullgame = interaction.options.get("fullgame").value ?? true;
-        const ils = interaction.options.get("ils").value ?? true;
+        const misc = interaction.options.get("misc")?.value ?? true;
+        const fullgame = interaction.options.get("fullgame")?.value ?? true;
+        const ils = interaction.options.get("ils")?.value ?? true;
 
         // Retrieves all subcategories for the full game and ILs
         const {data} = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}?embed=categories.variables,levels.variables`);
