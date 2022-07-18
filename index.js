@@ -6,8 +6,8 @@ const Queue = require("queue-promise");
 const limiter = new Limit(95, 70000);
 const mojangLimiter = new Limit(600, 600000);
 const hypixelLimiter = new Limit(120, 60000);
-const { REST } = require("@discordjs/rest");
-const { Routes } = require("discord-api-types/v9");
+// const { REST } = require("@discordjs/rest");
+// const { Routes } = require("discord-api-types/v9");
 const fetch = (...args) => import("node-fetch").then(({default: fetch}) => fetch(...args));
 const { MongoClient } = require("mongodb");
 var cron = require("node-cron");
@@ -47,21 +47,21 @@ for (const file of msgCommandFiles) {
     client.msgCommands.set(command.data.name, command);
 }
 
-const rest = new REST({ version: '9' }).setToken(token);
-(async () => {
-	try {
-		console.log('Started refreshing application (/) commands.');
+// const rest = new REST({ version: '9' }).setToken(token);
+// (async () => {
+// 	try {
+// 		console.log('Started refreshing application (/) commands.');
 
-		await rest.put(
-			Routes.applicationCommands(process.env.id),
-			{ body: commands },
-		);
+// 		await rest.put(
+// 			Routes.applicationCommands(process.env.id),
+// 			{ body: commands },
+// 		);
 
-		console.log('Successfully reloaded application (/) commands.');
-	} catch (error) {
-		console.error(error);
-	}
-})();
+// 		console.log('Successfully reloaded application (/) commands.');
+// 	} catch (error) {
+// 		console.error(error);
+// 	}
+// })();
 
 
 const scheduledCommandFiles = fs.readdirSync("./scheduledcommands").filter(file => file.endsWith(".js"));
