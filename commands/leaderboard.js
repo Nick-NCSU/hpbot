@@ -22,7 +22,7 @@ module.exports = {
             .setDescription("Include misc categories? Default: true")
         )
         .addBooleanOption(option => 
-            option.setName("full game")
+            option.setName("fullgame")
             .setDescription("Include Full Game Categories? Default: true")
         )
         .addBooleanOption(option => 
@@ -36,7 +36,7 @@ module.exports = {
 
         const game = interaction.options.get("game").value.toLowerCase();
         const misc = interaction.options.get("misc").value ?? true;
-        const fullgame = interaction.options.get("full game").value ?? true;
+        const fullgame = interaction.options.get("fullgame").value ?? true;
         const ils = interaction.options.get("ils").value ?? true;
 
         // Retrieves all subcategories for the full game and ILs
