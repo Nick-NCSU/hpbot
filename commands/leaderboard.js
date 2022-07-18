@@ -18,15 +18,15 @@ module.exports = {
                 .setRequired(true)
         )
         .addBooleanOption(option => 
-            option.setName("Misc")
+            option.setName("misc")
             .setDescription("Include misc categories? Default: true")
         )
         .addBooleanOption(option => 
-            option.setName("Full Game")
+            option.setName("full game")
             .setDescription("Include Full Game Categories? Default: true")
         )
         .addBooleanOption(option => 
-            option.setName("ILs")
+            option.setName("ils")
             .setDescription("Include Individual Levels? Default: true")
         ),
     async execute(interaction) {
@@ -35,9 +35,9 @@ module.exports = {
         const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
 
         const game = interaction.options.get("game").value.toLowerCase();
-        const misc = interaction.options.get("Misc").value ?? true;
-        const fullgame = interaction.options.get("Misc").value ?? true;
-        const ils = interaction.options.get("Misc").value ?? true;
+        const misc = interaction.options.get("misc").value ?? true;
+        const fullgame = interaction.options.get("full game").value ?? true;
+        const ils = interaction.options.get("ils").value ?? true;
 
         // Retrieves all subcategories for the full game and ILs
         const {data} = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}?embed=categories.variables,levels.variables`);
