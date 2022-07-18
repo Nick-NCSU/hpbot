@@ -16,6 +16,18 @@ module.exports = {
             option.setName("game")
                 .setDescription("Game to get leaderboard")
                 .setRequired(true)
+        )
+        .addBooleanOption(option => 
+            option.setName("Misc")
+            .setDescription("Include misc categories? Default: true")
+        )
+        .addBooleanOption(option => 
+            option.setName("Full Game")
+            .setDescription("Include Full Game Categories? Default: true")
+        )
+        .addBooleanOption(option => 
+            option.setName("ILs")
+            .setDescription("Include Individual Levels? Default: true")
         ),
     async execute(interaction) {
         // From rsp via https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
@@ -23,6 +35,9 @@ module.exports = {
         const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
 
         const game = interaction.options.get("game").value.toLowerCase();
+        const misc = interaction.options.get("Misc").value ?? true;
+        const fullgame = interaction.options.get("Misc").value ?? true;
+        const ils = interaction.options.get("Misc").value ?? true;
 
         // Retrieves all subcategories for the full game and ILs
         const {data} = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}?embed=categories.variables,levels.variables`);
@@ -37,37 +52,17 @@ module.exports = {
          * Provides an array containing all subcategories for full game
          * Format: [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]
          */
-        for(const category of data.categories.data) {
-            if(category.type == "per-game") {
-                let subArr = [];
-                let idArr = [];
-                for(const sub of category.variables.data) {
-                    if(sub["is-subcategory"]){
-                        const options = Object.keys(sub.values.values);
-                        subArr.push(options);
-                        idArr.push(sub.id);
-                    }
-                }
-                let combinations = [];
-                if(subArr.length != 0) {
-                    combinations = cartesian(...subArr);
-                }
-                subcategories.push([category.id, idArr, combinations]);
-            }
-        }
-
-        /**
-         * Provides an array containing all subcategories for individual levels
-         * Format: [levelID, [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]]
-         */
-        for(const level of data.levels.data) {
+        if(fullgame) {
             for(const category of data.categories.data) {
-                if(category.type == "per-level") {
+                if(category.type == "per-game") {
                     let subArr = [];
                     let idArr = [];
-                    for(const sub of level.variables.data) {
-                        if(sub["is-subcategory"] && (!sub.category || sub.category == category.id)) {
-                            const options = Object.keys(sub.values.values);
+                    for(const sub of category.variables.data) {
+                        if(sub["is-subcategory"]){
+                            let options = Object.keys(sub.values.values);
+                            if(!misc) {
+                                options = options.filter(option => sub.values[option].flags.miscellaneous !== true);
+                            }
                             subArr.push(options);
                             idArr.push(sub.id);
                         }
@@ -76,7 +71,36 @@ module.exports = {
                     if(subArr.length != 0) {
                         combinations = cartesian(...subArr);
                     }
-                    sublevels.push([level.id, [category.id, idArr, combinations]]);
+                    subcategories.push([category.id, idArr, combinations]);
+                }
+            }
+        }
+        /**
+         * Provides an array containing all subcategories for individual levels
+         * Format: [levelID, [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]]
+         */
+        if(ils) {
+            for(const level of data.levels.data) {
+                for(const category of data.categories.data) {
+                    if(category.type == "per-level") {
+                        let subArr = [];
+                        let idArr = [];
+                        for(const sub of level.variables.data) {
+                            if(sub["is-subcategory"] && (!sub.category || sub.category == category.id)) {
+                                let options = Object.keys(sub.values.values);
+                                if(!misc) {
+                                    options = options.filter(option => sub.values[option].flags.miscellaneous !== true);
+                                }
+                                subArr.push(options);
+                                idArr.push(sub.id);
+                            }
+                        }
+                        let combinations = [];
+                        if(subArr.length != 0) {
+                            combinations = cartesian(...subArr);
+                        }
+                        sublevels.push([level.id, [category.id, idArr, combinations]]);
+                    }
                 }
             }
         }

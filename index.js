@@ -47,7 +47,6 @@ for (const file of msgCommandFiles) {
     client.msgCommands.set(command.data.name, command);
 }
 
-/**
 const rest = new REST({ version: '9' }).setToken(token);
 (async () => {
 	try {
@@ -63,7 +62,6 @@ const rest = new REST({ version: '9' }).setToken(token);
 		console.error(error);
 	}
 })();
-*/
 
 
 const scheduledCommandFiles = fs.readdirSync("./scheduledcommands").filter(file => file.endsWith(".js"));
