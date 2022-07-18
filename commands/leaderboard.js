@@ -61,7 +61,7 @@ module.exports = {
                         if(sub["is-subcategory"]){
                             let options = Object.keys(sub.values.values);
                             if(!misc) {
-                                options = options.filter(option => sub.values[option].flags.miscellaneous !== true);
+                                options = options.filter(option => sub.values.values[option].flags.miscellaneous !== true);
                             }
                             subArr.push(options);
                             idArr.push(sub.id);
