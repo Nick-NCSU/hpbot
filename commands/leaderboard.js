@@ -108,7 +108,7 @@ module.exports = {
             }
         }
 
-        if(count + count2 > 500) {
+        if(!game.startsWith('hypixel_') && count + count2 > 500) {
             return await interaction.editReply(`Game ${game} has too many categories. Number of categories: ${count + count2}.`);
         }
 
