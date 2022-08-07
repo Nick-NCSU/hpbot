@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const tokens = require("../index.js");
 
@@ -35,10 +35,12 @@ module.exports = {
         // Number of runs = the total offset + the current size
         const num = data.pagination.offset + data.pagination.size;
         // Creates embed
-        const embed = new MessageEmbed()
-            .setColor("118855")
+        const embed = new EmbedBuilder()
+            .setColor(118855)
             .setTitle("Result for: " + user)
-            .addField("Number of runs verified: ", num >= 10000 ? ">= 10k" : String(num))
+            .addFields([
+                {name: "Number of runs verified: ", value: num >= 10000 ? ">= 10k" : String(num) }
+            ])
             .setThumbnail(playerData.data.assets.image.uri);
         return await interaction.editReply({ embeds: [embed] });
     },

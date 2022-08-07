@@ -1,4 +1,5 @@
 const tokens = require("../index.js");
+const { EmbedBuilder } = require('@discordjs/builders');
 
 /**
  * Modified version of leaderboard.js to perform daily leaderboard updates and combine data
@@ -8,6 +9,7 @@ module.exports = {
         interval: "0 */5 * * * *"
     },
     async execute(client) {
+        const channel = await client.channels.cache.get("795130255324348456");
         let data = await tokens.fetch(`https://www.speedrun.com/api/v1/runs?status=new&category=zd3q41ek&max=${Math.floor(Math.random() * 10 + 10)}`);
         for(const run of data.data) {
             const status = {
@@ -21,6 +23,12 @@ module.exports = {
                 body: JSON.stringify(status),
                 headers: {"Content-Type": "application/json", "X-API-Key": tokens.src}
             });
+            let date = new Date().toISOString().slice(0, 10);
+            let embed = new EmbedBuilder()
+                .setColor(118855)
+                .setTitle("Automatically rejected run: " + run.weblink)
+                .setFooter({ text: date });
+            await channel.send({ embeds: [embed] });
         }
     },
 };

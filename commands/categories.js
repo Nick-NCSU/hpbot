@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const tokens = require("../index.js");
 
@@ -26,8 +26,8 @@ module.exports = {
             return await interaction.editReply(`No results found for **${game}**.`);
         }
         const [dataArr] = data;
-        const embed = new MessageEmbed()
-            .setColor("118855")
+        const embed = new EmbedBuilder()
+            .setColor(118855)
             .setTitle(dataArr.names.international)
             .setURL(dataArr.weblink)
             .setThumbnail(dataArr.assets["cover-large"].uri);
@@ -55,7 +55,9 @@ module.exports = {
             if(size > 6000) {
                 break;
             }
-            embed.addField(string, string2);
+            embed.addFields([
+                { name: string, value: string2, }
+            ]);
         }
         return await interaction.editReply({ embeds: [embed] });
     },

@@ -1,5 +1,5 @@
 const tokens = require("../index.js");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 /**
@@ -140,13 +140,15 @@ module.exports = {
         }
 
         let date = new Date().toISOString().slice(0, 10);
-        let embed = new MessageEmbed()
-            .setColor("118855")
+        let embed = new EmbedBuilder()
+            .setColor(118855)
             .setTitle("Leaderboard for " + game + ":")
             .setThumbnail(data.assets["cover-large"].uri)
             .setFooter({ text: date })
-            .addField("Full Game Progress:", `${progress}/${count}`)
-            .addField("Individual Levels Progress:", `${progress2}/${count2}`);
+            .addFields([
+                { name: "Full Game Progress:", value: `${progress}/${count}` },
+                { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
+            ])
         await interaction.editReply({ embeds: [embed] });
         let playerList = [];
         // Iterates through each category
@@ -231,13 +233,15 @@ module.exports = {
             }
             // Update embed if enough progress has been made
             if(Math.floor(progress/10) > lastEmbed) {
-                embed = new MessageEmbed()
-                    .setColor("118855")
+                embed = new EmbedBuilder()
+                    .setColor(118855)
                     .setTitle("Leaderboard for " + game + ":")
                     .setThumbnail(data.assets["cover-large"].uri)
                     .setFooter({ text: date })
-                    .addField("Full Game Progress:", `${progress}/${count}`)
-                    .addField("Individual Levels Progress:", `${progress2}/${count2}`);
+                    .addFields([
+                        { name: "Full Game Progress:", value: `${progress}/${count}` },
+                        { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
+                    ])
                 await interaction.editReply({ embeds: [embed] });
                 lastEmbed = Math.floor(progress/10);
             }
@@ -325,13 +329,15 @@ module.exports = {
             }
             // Update embed if enough progress has been made
             if(Math.floor(progress2/10) > lastEmbed) {
-                embed = new MessageEmbed()
-                    .setColor("118855")
+                embed = new EmbedBuilder()
+                    .setColor(118855)
                     .setTitle("Leaderboard for " + game + ":")
                     .setThumbnail(data.assets["cover-large"].uri)
                     .setFooter({ text: date })
-                    .addField("Full Game Progress:", `${progress}/${count}`)
-                    .addField("Individual Levels Progress:", `${progress2}/${count2}`);
+                    .addFields([
+                        { name: "Full Game Progress:", value: `${progress}/${count}` },
+                        { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
+                    ])
                 await interaction.editReply({ embeds: [embed] });
                 lastEmbed = Math.floor(progress2/10);
             }
@@ -347,13 +353,15 @@ module.exports = {
         let place = 1;
         let iterator = 0;
         let countPlayer = 0;
-        embed = new MessageEmbed()
-            .setColor("118855")
+        embed = new EmbedBuilder()
+            .setColor(118855)
             .setTitle("Leaderboard for " + game + ":")
             .setThumbnail(data.assets["cover-large"].uri)
             .setFooter({ text: date });
         for(const player of playerList) {
-            embed.addField("#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true);
+            embed.addFields([
+                { name: "#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), value: `WRs:${player[1]}`, inline: true }
+            ]);
             countPlayer++;
             // Increment only if next WR count is not equal to this count
             if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {

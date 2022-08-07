@@ -62,8 +62,8 @@ async function findPlayers(category, mode) {
 async function updateRuns(category) {
     const channel = await client.channels.cache.get("795130255324348456");
     let date = new Date().toISOString().slice(0, 10);
-    let embed = new MessageEmbed()
-        .setColor("118855")
+    let embed = new EmbedBuilder()
+        .setColor(118855)
         .setTitle("Generating combined leaderboard for " + players.length + " players")
         .setFooter({ text: date });
     await channel.send({ embeds: [embed] });
@@ -78,8 +78,8 @@ async function updateRuns(category) {
         Object.prototype.hasOwnProperty.call(player, "4v4");
     });
 
-    embed = new MessageEmbed()
-        .setColor("118855")
+    embed = new EmbedBuilder()
+        .setColor(118855)
         .setTitle("Found " + players.length + " players with runs in all categories")
         .setFooter({ text: date });
     await channel.send({ embeds: [embed] });
@@ -126,8 +126,8 @@ async function updateRuns(category) {
         });
         weblinks.push(submittedRun.weblink);
     }
-    embed = new MessageEmbed()
-        .setColor("118855")
+    embed = new EmbedBuilder()
+        .setColor(118855)
         .setTitle(weblinks.length + " runs found to update/create.")
         .setFooter({ text: date });
     await channel.send({ embeds: [embed] });

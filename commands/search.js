@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const tokens = require("../index.js");
 
@@ -43,12 +43,14 @@ module.exports = {
             answer[i][0] = data[i].names.international;
             answer[i][1] = data[i].abbreviation + "\n" + data[i].weblink;
         }
-        const embed = new MessageEmbed()
-            .setColor("118855")
+        const embed = new EmbedBuilder()
+            .setColor(118855)
             .setTitle("Results (Count: " + answer.length + ", Page: " + page + ")")
             .setThumbnail("https://www.speedrun.com/images/1st.png");
         answer.forEach(entry => {
-            embed.addField(entry[0], entry[1]);
+            embed.addFields([
+                {name: entry[0], value: entry[1] }
+            ])
         });
         if (answer.length == 20) {
             embed.setFooter({ text: "There may be more pages. Use /search <game> <page>" });
