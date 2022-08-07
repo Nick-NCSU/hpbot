@@ -11,8 +11,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("ping")
         .setDescription("Provides bot response time."),
-        async execute(params) {
-            const { interaction } = params;
+    async execute(params) {
+        const { interaction } = params;
         const embed = new EmbedBuilder()
             .setColor("#118855")
             .setThumbnail("https://www.speedrun.com/images/1st.png")

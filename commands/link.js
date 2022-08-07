@@ -17,8 +17,8 @@ module.exports = {
                 .setDescription("Game to link")
                 .setRequired(true)
         ),
-        async execute(params) {
-            const { interaction } = params;
+    async execute(params) {
+        const { interaction } = params;
         const game = interaction.options.get("game").value.toLowerCase();
         // Gets the requested game
         const {data} = await tokens.fetch(`https://www.speedrun.com/api/v1/games?abbreviation=${game}`);

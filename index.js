@@ -50,7 +50,7 @@ function getCommands(dir, callback) {
     }
 }
 
-const rest = new REST({ version: '10' }).setToken(token);
+const rest = new REST({ version: "10" }).setToken(token);
 
 // Sets bot activity and announces that bot is ready for use
 client.once("ready", async () => {
@@ -58,12 +58,12 @@ client.once("ready", async () => {
     console.log("Ready!");
 
     try {
-		console.log('Started refreshing application (/) commands.');
+        console.log("Started refreshing application (/) commands.");
 
         await rest.put(
-			Routes.applicationGuildCommands(process.env.id, process.env.guildid),
-			{ body: client.guildCommands.map(command => command.data.toJSON()) },
-		);
+            Routes.applicationGuildCommands(process.env.id, process.env.guildid),
+            { body: client.guildCommands.map(command => command.data.toJSON()) },
+        );
 
         const commandValues = new Set((await client.application.commands.fetch()).map(command => command.name));
         const commands = new Set(client.commands.map(command => command.data.name));
@@ -72,14 +72,14 @@ client.once("ready", async () => {
                 Routes.applicationCommands(process.env.id),
                 { body: client.commands.map(command => command.data.toJSON()) },
             );
-            console.log('Successfully reloaded application (/) commands.');
+            console.log("Successfully reloaded application (/) commands.");
             return;
         }
 
-		console.log('No (/) commands to reload.');
-	} catch (error) {
-		console.error(error);
-	}
+        console.log("No (/) commands to reload.");
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 client.on("messageCreate", async message => {

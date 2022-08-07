@@ -11,8 +11,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("hypixel")
         .setDescription("Provides helpful links for Hypixel Speedruns"),
-        async execute(params) {
-            const { interaction } = params;
+    async execute(params) {
+        const { interaction } = params;
         // Initial running of the command
         if(interaction.type === InteractionType.ApplicationCommand) {
             const row = new ActionRowBuilder()

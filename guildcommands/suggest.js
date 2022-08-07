@@ -1,6 +1,5 @@
 const { EmbedBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
-const tokens = require("../index.js");
 
 /**
  * Function to provide a list of categories for the given game
@@ -35,17 +34,17 @@ module.exports = {
             .setFooter({ text: `${date}` })
             .setDescription(description.slice(0, 4096))
             .addFields([
-                { name: 'Submitted by:', value: `<@${interaction.user.id}>`}
+                { name: "Submitted by:", value: `<@${interaction.user.id}>`}
             ]);
         let message = await channel.send({ embeds: [embed] });
-        message.react('👍');
-        message.react('👎');
-        const thread = message.startThread({
+        message.react("👍");
+        message.react("👎");
+        message.startThread({
             name: title.slice(0, 64),
         });
         await interaction.editReply({
-            content: 'Suggestion has been created: ' + message.url,
+            content: "Suggestion has been created: " + message.url,
             ephemeral: true,
-        })
+        });
     },
 };

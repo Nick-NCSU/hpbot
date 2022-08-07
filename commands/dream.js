@@ -15,8 +15,8 @@ module.exports = {
             option.setName("simulations")
                 .setDescription("Number of simulations to run (Max 100,000")
         ),
-        async execute(params) {
-            const { interaction } = params;
+    async execute(params) {
+        const { interaction } = params;
         let sim = interaction.options.get("simulations");
         // If the number of simulations was not specified then set sim to 1
         if(!sim) {

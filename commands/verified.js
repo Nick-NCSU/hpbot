@@ -17,8 +17,8 @@ module.exports = {
                 .setDescription("User to search")
                 .setRequired(true)
         ),
-        async execute(params) {
-            const { interaction } = params;
+    async execute(params) {
+        const { interaction } = params;
         const user = interaction.options.get("user").value.toLowerCase();
         // Search for user on speedrun.com
         const playerData = await tokens.fetch(`https://www.speedrun.com/api/v1/users/${user}`);
