@@ -1,4 +1,4 @@
-const { ActionRowBuilder, SelectMenuBuilder, ButtonBuilder, InteractionType } = require("discord.js");
+const { ActionRowBuilder, SelectMenuBuilder, ButtonBuilder, InteractionType, ButtonStyle } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 /**
@@ -260,7 +260,7 @@ module.exports = {
                     .addComponents(
                         new ButtonBuilder()
                             .setLabel(interaction.values[0])
-                            .setStyle("LINK")
+                            .setStyle(ButtonStyle.Link)
                             .setURL(url),
                     );
                 await interaction.update({ content: interaction.values[0] + " Link:", components: [row] });

@@ -143,7 +143,7 @@ async function search(id, message) {
     }
     const src = await token.fetch(`https://www.speedrun.com/api/v1/users/${result.account}`);
     const embed = new EmbedBuilder()
-        .setColor(118855)
+        .setColor("#118855")
         .setTitle(`Name: ${id}`)
         .setURL(`https://sk1er.club/s/${id}`)
         .addFields([
@@ -179,7 +179,7 @@ async function searchSRC(id, message) {
     const accounts = await result.toArray();
     await token.db.close();
     const embed = new EmbedBuilder()
-        .setColor(118855)
+        .setColor("#118855")
         .setTitle(`Name: ${src.data.names.international}`)
         .setURL(src.data.weblink);
     for(const account of accounts) {

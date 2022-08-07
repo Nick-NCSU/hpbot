@@ -25,7 +25,7 @@ module.exports = {
             });
             let date = new Date().toISOString().slice(0, 10);
             let embed = new EmbedBuilder()
-                .setColor(118855)
+                .setColor("#118855")
                 .setTitle("Automatically rejected run: " + run.weblink)
                 .setFooter({ text: date });
             await channel.send({ embeds: [embed] });

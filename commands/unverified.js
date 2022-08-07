@@ -34,7 +34,7 @@ module.exports = {
         }
         const num = data.pagination.offset + data.pagination.size;
         const embed = new EmbedBuilder()
-            .setColor(118855)
+            .setColor("#118855")
             .setTitle("Result for: " + game)
             .setThumbnail(gameData.data.assets["cover-large"].uri);
         if(firstPage) {

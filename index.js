@@ -27,7 +27,7 @@ let mongourl = process.env.mongourl;
 let src = process.env.srcapi;
 
 // Creates new Client
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 client.commands = new Collection();
 client.msgCommands = new Collection();
 

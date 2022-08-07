@@ -27,13 +27,13 @@ module.exports = {
         }
         const [dataArr] = data;
         const embed = new EmbedBuilder()
-            .setColor(118855)
+            .setColor("#118855")
             .setTitle(dataArr.names.international)
             .setURL(dataArr.weblink)
             .setThumbnail(dataArr.assets["cover-large"].uri);
         // Iterates through all the categories for the game
         let size = 0;
-        for (const category of dataArr.categories.data) {
+        for (const category of dataArr.categories.data.slice(0, 25)) {
             let variables = "";
             // Checks if variables exist
             if (category.variables.data[0]) {

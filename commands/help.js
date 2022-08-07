@@ -13,7 +13,7 @@ module.exports = {
         .setDescription("Provides a list of commands and descriptions."),
     async execute(interaction) {
         const embed = new EmbedBuilder()
-            .setColor(118855)
+            .setColor("#118855")
             .setTitle("Help")
             .setThumbnail("https://www.speedrun.com/images/1st.png")
             .addFields([

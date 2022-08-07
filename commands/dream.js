@@ -60,14 +60,14 @@ module.exports = {
         // Compares rods to Dream
         const difference2 = rMax >= 211 ? "+" + rMax - 211 : rMax - 211;
         const embed = new EmbedBuilder()
-            .setColor(118855)
+            .setColor("#118855")
             .setTitle("Your Results:")
             .addFields([
                 { name: "Number of simulations: ", value: String(sim) },
                 { name: "Average number of pearl trades: ", value: String(pTotal / sim ) },
                 { name: "Average number of rods: ", value: String(rTotal / sim ) },
                 { name: "Max number of pearl trades: " + pMax + "/262", value: "Number of pearl trades (Dream) 42/262" },
-                { name: "Max number of rods: " + rMax + "/305", value: "Number of rods (Dream }]) 211/305" }
+                { name: "Max number of rods: " + rMax + "/305", value: "Number of rods (Dream) 211/305" }
             ])
             .setFooter({ text: "Difference: " + difference + "/" + difference2 });
         await interaction.editReply({ embeds: [embed] });

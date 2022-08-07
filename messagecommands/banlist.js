@@ -119,10 +119,12 @@ async function search(id, message) {
         return await message.reply("Player is not in banlist");
     }
     const embed = new EmbedBuilder()
-        .setColor(118855)
+        .setColor("#118855")
         .setTitle(`Name: ${id}`)
-        .addField("UUID", result.id)
-        .addField("Added by", "<@" + result.owner + ">")
-        ..addFields([{name: "Date", value: result.time.substr(0, 10 }]);
+        .addFields([
+            { name: "UUID", value: result.id },
+            { name: "Added by", value: "<@" + result.owner + ">" },
+            { name: "Date", value: result.time.substr(0, 10) }
+        ]);
     return await message.reply({ embeds: [embed] });
 }

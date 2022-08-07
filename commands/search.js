@@ -44,7 +44,7 @@ module.exports = {
             answer[i][1] = data[i].abbreviation + "\n" + data[i].weblink;
         }
         const embed = new EmbedBuilder()
-            .setColor(118855)
+            .setColor("#118855")
             .setTitle("Results (Count: " + answer.length + ", Page: " + page + ")")
             .setThumbnail("https://www.speedrun.com/images/1st.png");
         answer.forEach(entry => {

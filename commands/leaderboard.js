@@ -141,7 +141,7 @@ module.exports = {
 
         let date = new Date().toISOString().slice(0, 10);
         let embed = new EmbedBuilder()
-            .setColor(118855)
+            .setColor("#118855")
             .setTitle("Leaderboard for " + game + ":")
             .setThumbnail(data.assets["cover-large"].uri)
             .setFooter({ text: date })
@@ -234,7 +234,7 @@ module.exports = {
             // Update embed if enough progress has been made
             if(Math.floor(progress/10) > lastEmbed) {
                 embed = new EmbedBuilder()
-                    .setColor(118855)
+                    .setColor("#118855")
                     .setTitle("Leaderboard for " + game + ":")
                     .setThumbnail(data.assets["cover-large"].uri)
                     .setFooter({ text: date })
@@ -330,7 +330,7 @@ module.exports = {
             // Update embed if enough progress has been made
             if(Math.floor(progress2/10) > lastEmbed) {
                 embed = new EmbedBuilder()
-                    .setColor(118855)
+                    .setColor("#118855")
                     .setTitle("Leaderboard for " + game + ":")
                     .setThumbnail(data.assets["cover-large"].uri)
                     .setFooter({ text: date })
@@ -351,26 +351,20 @@ module.exports = {
         playerList = playerList.filter(word => word[0].toLowerCase() !== "n/a");
         // Which place to display
         let place = 1;
-        let iterator = 0;
-        let countPlayer = 0;
         embed = new EmbedBuilder()
-            .setColor(118855)
+            .setColor("#118855")
             .setTitle("Leaderboard for " + game + ":")
             .setThumbnail(data.assets["cover-large"].uri)
             .setFooter({ text: date });
-        for(const player of playerList) {
+        for(let i = 0; i < 25; i++) {
+            const player = playerList[i];
             embed.addFields([
                 { name: "#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), value: `WRs:${player[1]}`, inline: true }
             ]);
-            countPlayer++;
             // Increment only if next WR count is not equal to this count
-            if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {
+            if(playerList[i + 1] && playerList[i + 1][1] != playerList[i][1]) {
                 place++;
             }
-            if(countPlayer > 30) {
-                break;
-            }
-            iterator++;
         }
         await interaction.editReply({ embeds: [embed] });
     },

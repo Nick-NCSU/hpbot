@@ -36,7 +36,7 @@ module.exports = {
         const num = data.pagination.offset + data.pagination.size;
         // Creates embed
         const embed = new EmbedBuilder()
-            .setColor(118855)
+            .setColor("#118855")
             .setTitle("Result for: " + user)
             .addFields([
                 {name: "Number of runs verified: ", value: num >= 10000 ? ">= 10k" : String(num) }

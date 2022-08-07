@@ -28,7 +28,7 @@ module.exports = {
         }
         // Embed to return
         const embed = new EmbedBuilder()
-            .setColor(118855)
+            .setColor("#118855")
             .setTitle(answer.names.international)
             .setURL(answer.weblink)
             .setThumbnail(answer.assets["cover-large"].uri);
