@@ -198,7 +198,7 @@ async function generateBoard(game, channel) {
         .addFields([
             { name: "Full Game Progress:", value: `${progress}/${count}` },
             { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
-        ])
+        ]);
     let message = await channel.send({ embeds: [embed] });
     let playerList = [];
     // Iterates through each category
@@ -291,7 +291,7 @@ async function generateBoard(game, channel) {
                 .addFields([
                     { name: "Full Game Progress:", value: `${progress}/${count}` },
                     { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
-                ])
+                ]);
             await message.edit({ embeds: [embed] });
             lastEmbed = Math.floor(progress/10);
         }
@@ -387,7 +387,7 @@ async function generateBoard(game, channel) {
                 .addFields([
                     { name: "Full Game Progress:", value: `${progress}/${count}` },
                     { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
-                ])
+                ]);
             await message.edit({ embeds: [embed] });
             lastEmbed = Math.floor(progress2/10);
         }

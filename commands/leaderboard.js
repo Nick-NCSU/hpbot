@@ -19,15 +19,15 @@ module.exports = {
         )
         .addBooleanOption(option => 
             option.setName("misc")
-            .setDescription("Include misc categories? Default: true")
+                .setDescription("Include misc categories? Default: true")
         )
         .addBooleanOption(option => 
             option.setName("fullgame")
-            .setDescription("Include Full Game Categories? Default: true")
+                .setDescription("Include Full Game Categories? Default: true")
         )
         .addBooleanOption(option => 
             option.setName("ils")
-            .setDescription("Include Individual Levels? Default: true")
+                .setDescription("Include Individual Levels? Default: true")
         ),
     async execute(interaction) {
         // From rsp via https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
@@ -135,7 +135,7 @@ module.exports = {
             }
         }
 
-        if(!game.startsWith('hypixel_') && count + count2 > 500) {
+        if(!game.startsWith("hypixel_") && count + count2 > 500) {
             return await interaction.editReply(`Game ${game} has too many categories. Number of categories: ${count + count2}.`);
         }
 
@@ -148,7 +148,7 @@ module.exports = {
             .addFields([
                 { name: "Full Game Progress:", value: `${progress}/${count}` },
                 { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
-            ])
+            ]);
         await interaction.editReply({ embeds: [embed] });
         let playerList = [];
         // Iterates through each category
@@ -241,7 +241,7 @@ module.exports = {
                     .addFields([
                         { name: "Full Game Progress:", value: `${progress}/${count}` },
                         { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
-                    ])
+                    ]);
                 await interaction.editReply({ embeds: [embed] });
                 lastEmbed = Math.floor(progress/10);
             }
@@ -337,7 +337,7 @@ module.exports = {
                     .addFields([
                         { name: "Full Game Progress:", value: `${progress}/${count}` },
                         { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
-                    ])
+                    ]);
                 await interaction.editReply({ embeds: [embed] });
                 lastEmbed = Math.floor(progress2/10);
             }

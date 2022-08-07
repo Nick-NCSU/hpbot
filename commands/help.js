@@ -27,7 +27,7 @@ module.exports = {
                 { name: "/queuelength <game>", value: "Provides the number of unverified runs for the given game." },
                 { name: "/dream (simulations)", value: "Simulates Dream's pearl and blaze rod odds." },
                 { name: "/ping", value: "Provides bot response time." }
-            ])
+            ]);
         await interaction.editReply("Sending you help!");
         await interaction.followUp({ embeds: [embed], ephemeral: true });
     },

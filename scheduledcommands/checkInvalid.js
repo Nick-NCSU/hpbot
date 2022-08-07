@@ -1,5 +1,5 @@
+const { EmbedBuilder } = require("@discordjs/builders");
 const tokens = require("../index.js");
-const { EmbedBuilder } = require('@discordjs/builders');
 
 /**
  * Modified version of leaderboard.js to perform daily leaderboard updates and combine data

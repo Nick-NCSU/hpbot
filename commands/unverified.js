@@ -41,11 +41,11 @@ module.exports = {
             embed.addFields([
                 { name: "Number of unverified runs: ", value: String(num) },
                 { name: "Oldest unverified run: ", value: firstPage.submitted.substring(0,10) }
-            ])
+            ]);
         } else {
             embed.addFields([
                 {name: "Number of unverified runs: ", value: String(num) }
-                ]);
+            ]);
         }
         await interaction.editReply({ embeds: [embed] });
     },

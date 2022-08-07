@@ -50,7 +50,7 @@ module.exports = {
         answer.forEach(entry => {
             embed.addFields([
                 {name: entry[0], value: entry[1] }
-            ])
+            ]);
         });
         if (answer.length == 20) {
             embed.setFooter({ text: "There may be more pages. Use /search <game> <page>" });
