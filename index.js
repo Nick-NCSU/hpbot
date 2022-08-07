@@ -1,5 +1,5 @@
 // Imports
-const { Client, Intents, Collection } = require("discord.js");
+const { Client, GatewayIntentBits, Collection, InteractionType } = require("discord.js");
 const fs = require("fs");
 const Limit = require("./Limiter.js");
 const Queue = require("queue-promise");
@@ -27,7 +27,7 @@ let mongourl = process.env.mongourl;
 let src = process.env.srcapi;
 
 // Creates new Client
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 client.commands = new Collection();
 client.msgCommands = new Collection();
 
@@ -93,7 +93,7 @@ client.on("messageCreate", async message => {
 });
 
 client.on("interactionCreate", async interaction => {
-    if(interaction.isCommand()) {
+    if(interaction.type === InteractionType.ApplicationCommand) {
         if (!client.commands.has(interaction.commandName)) return;
         await interaction.deferReply();
         try {

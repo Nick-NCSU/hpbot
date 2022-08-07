@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const tokens = require("../index.js");
 
@@ -33,15 +33,19 @@ module.exports = {
             data = await tokens.fetch(`https://www.speedrun.com/api/v1/runs?game=${id}&status=new&max=200&orderby=submitted&direction=asc&offset=${data.pagination.offset + 200}`);
         }
         const num = data.pagination.offset + data.pagination.size;
-        const embed = new MessageEmbed()
-            .setColor("118855")
+        const embed = new EmbedBuilder()
+            .setColor("#118855")
             .setTitle("Result for: " + game)
             .setThumbnail(gameData.data.assets["cover-large"].uri);
         if(firstPage) {
-            embed.addField("Number of unverified runs: ", String(num))
-                .addField("Oldest unverified run: ", firstPage.submitted.substring(0,10));
+            embed.addFields([
+                { name: "Number of unverified runs: ", value: String(num) },
+                { name: "Oldest unverified run: ", value: firstPage.submitted.substring(0,10) }
+            ]);
         } else {
-            embed.addField("Number of unverified runs: ", String(num));
+            embed.addFields([
+                {name: "Number of unverified runs: ", value: String(num) }
+            ]);
         }
         await interaction.editReply({ embeds: [embed] });
     },
