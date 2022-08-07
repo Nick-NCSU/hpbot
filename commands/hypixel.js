@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageSelectMenu, MessageButton } = require("discord.js");
+const { ActionRowBuilder, SelectMenuBuilder, ButtonBuilder, InteractionType, ButtonStyle } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 /**
@@ -13,10 +13,10 @@ module.exports = {
         .setDescription("Provides helpful links for Hypixel Speedruns"),
     async execute(interaction) {
         // Initial running of the command
-        if(interaction.isCommand()) {
-            const row = new MessageActionRow()
+        if(interaction.type === InteractionType.ApplicationCommand) {
+            const row = new ActionRowBuilder()
                 .addComponents(
-                    new MessageSelectMenu()
+                    new SelectMenuBuilder()
                         .setCustomId("type")
                         .setPlaceholder("Nothing selected")
                         .addOptions([
@@ -171,9 +171,9 @@ module.exports = {
                     ];
                     break;
                 }
-                const row = new MessageActionRow()
+                const row = new ActionRowBuilder()
                     .addComponents(
-                        new MessageSelectMenu()
+                        new SelectMenuBuilder()
                             .setCustomId("link")
                             .setPlaceholder("Nothing selected")
                             .addOptions(options),
@@ -256,11 +256,11 @@ module.exports = {
                     url = "https://twitter.com/speedruncom";
                     break;
                 }
-                const row = new MessageActionRow()
+                const row = new ActionRowBuilder()
                     .addComponents(
-                        new MessageButton()
+                        new ButtonBuilder()
                             .setLabel(interaction.values[0])
-                            .setStyle("LINK")
+                            .setStyle(ButtonStyle.Link)
                             .setURL(url),
                     );
                 await interaction.update({ content: interaction.values[0] + " Link:", components: [row] });

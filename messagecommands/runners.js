@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const token = require("../index.js");
 
 /**
@@ -142,14 +142,16 @@ async function search(id, message) {
         return await message.reply("Player is not in known runners");
     }
     const src = await token.fetch(`https://www.speedrun.com/api/v1/users/${result.account}`);
-    const embed = new MessageEmbed()
-        .setColor("118855")
+    const embed = new EmbedBuilder()
+        .setColor("#118855")
         .setTitle(`Name: ${id}`)
         .setURL(`https://sk1er.club/s/${id}`)
-        .addField("Speedrun.com", src.data.weblink)
-        .addField("UUID", result.id)
-        .addField("Added by", "<@" + result.owner + ">")
-        .addField("Date", result.time.substr(0, 10));
+        .addFields([
+            { name: "Speedrun.com", value: src.data.weblink },
+            { name: "UUID", value: result.id },
+            { name: "Added by", value: "<@" + result.owner + ">" },
+            { name: "Date", value: result.time.substr(0, 10) }
+        ]);
     return await message.reply({ embeds: [embed] });
 }
 
@@ -176,14 +178,16 @@ async function searchSRC(id, message) {
     }
     const accounts = await result.toArray();
     await token.db.close();
-    const embed = new MessageEmbed()
-        .setColor("118855")
+    const embed = new EmbedBuilder()
+        .setColor("#118855")
         .setTitle(`Name: ${src.data.names.international}`)
         .setURL(src.data.weblink);
     for(const account of accounts) {
         // Gets player from mojang api
         const player = await token.fetchMojang(`https://api.mojang.com/user/profiles/${account.id}/names`);
-        embed.addField(`${player[player.length - 1].name}`, `[Stats](https://sk1er.club/s/${player[player.length - 1].name})`);
+        embed.addFields([
+            { name: `${player[player.length - 1].name}`, value: `[Stats](https://sk1er.club/s/${player[player.length - 1].name})` }
+        ]);
     }
     return await message.reply({ embeds: [embed] });
 }

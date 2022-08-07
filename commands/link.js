@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 const tokens = require("../index.js");
 
@@ -27,8 +27,8 @@ module.exports = {
             return await interaction.editReply(`No results found for **${game}**.`);
         }
         // Embed to return
-        const embed = new MessageEmbed()
-            .setColor("118855")
+        const embed = new EmbedBuilder()
+            .setColor("#118855")
             .setTitle(answer.names.international)
             .setURL(answer.weblink)
             .setThumbnail(answer.assets["cover-large"].uri);

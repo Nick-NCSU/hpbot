@@ -1,5 +1,5 @@
 const tokens = require("../index.js");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 /**
@@ -16,6 +16,18 @@ module.exports = {
             option.setName("game")
                 .setDescription("Game to get leaderboard")
                 .setRequired(true)
+        )
+        .addBooleanOption(option => 
+            option.setName("misc")
+                .setDescription("Include misc categories? Default: true")
+        )
+        .addBooleanOption(option => 
+            option.setName("fullgame")
+                .setDescription("Include Full Game Categories? Default: true")
+        )
+        .addBooleanOption(option => 
+            option.setName("ils")
+                .setDescription("Include Individual Levels? Default: true")
         ),
     async execute(interaction) {
         // From rsp via https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
@@ -23,6 +35,9 @@ module.exports = {
         const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
 
         const game = interaction.options.get("game").value.toLowerCase();
+        const misc = interaction.options.get("misc")?.value ?? true;
+        const fullgame = interaction.options.get("fullgame")?.value ?? true;
+        const ils = interaction.options.get("ils")?.value ?? true;
 
         // Retrieves all subcategories for the full game and ILs
         const {data} = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}?embed=categories.variables,levels.variables`);
@@ -37,37 +52,20 @@ module.exports = {
          * Provides an array containing all subcategories for full game
          * Format: [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]
          */
-        for(const category of data.categories.data) {
-            if(category.type == "per-game") {
-                let subArr = [];
-                let idArr = [];
-                for(const sub of category.variables.data) {
-                    if(sub["is-subcategory"]){
-                        const options = Object.keys(sub.values.values);
-                        subArr.push(options);
-                        idArr.push(sub.id);
-                    }
-                }
-                let combinations = [];
-                if(subArr.length != 0) {
-                    combinations = cartesian(...subArr);
-                }
-                subcategories.push([category.id, idArr, combinations]);
-            }
-        }
-
-        /**
-         * Provides an array containing all subcategories for individual levels
-         * Format: [levelID, [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]]
-         */
-        for(const level of data.levels.data) {
+        if(fullgame) {
             for(const category of data.categories.data) {
-                if(category.type == "per-level") {
+                if(!misc && category.miscellaneous) {
+                    continue;
+                }
+                if(category.type == "per-game") {
                     let subArr = [];
                     let idArr = [];
-                    for(const sub of level.variables.data) {
-                        if(sub["is-subcategory"] && (!sub.category || sub.category == category.id)) {
-                            const options = Object.keys(sub.values.values);
+                    for(const sub of category.variables.data) {
+                        if(sub["is-subcategory"]){
+                            let options = Object.keys(sub.values.values);
+                            if(!misc) {
+                                options = options.filter(option => sub.values.values[option].flags.miscellaneous !== true);
+                            }
                             subArr.push(options);
                             idArr.push(sub.id);
                         }
@@ -76,7 +74,36 @@ module.exports = {
                     if(subArr.length != 0) {
                         combinations = cartesian(...subArr);
                     }
-                    sublevels.push([level.id, [category.id, idArr, combinations]]);
+                    subcategories.push([category.id, idArr, combinations]);
+                }
+            }
+        }
+        /**
+         * Provides an array containing all subcategories for individual levels
+         * Format: [levelID, [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]]
+         */
+        if(ils) {
+            for(const level of data.levels.data) {
+                for(const category of data.categories.data) {
+                    if(category.type == "per-level") {
+                        let subArr = [];
+                        let idArr = [];
+                        for(const sub of level.variables.data) {
+                            if(sub["is-subcategory"] && (!sub.category || sub.category == category.id)) {
+                                let options = Object.keys(sub.values.values);
+                                if(!misc) {
+                                    options = options.filter(option => sub.values[option].flags.miscellaneous !== true);
+                                }
+                                subArr.push(options);
+                                idArr.push(sub.id);
+                            }
+                        }
+                        let combinations = [];
+                        if(subArr.length != 0) {
+                            combinations = cartesian(...subArr);
+                        }
+                        sublevels.push([level.id, [category.id, idArr, combinations]]);
+                    }
                 }
             }
         }
@@ -108,18 +135,20 @@ module.exports = {
             }
         }
 
-        if(count + count2 > 500) {
+        if(!game.startsWith("hypixel_") && count + count2 > 500) {
             return await interaction.editReply(`Game ${game} has too many categories. Number of categories: ${count + count2}.`);
         }
 
         let date = new Date().toISOString().slice(0, 10);
-        let embed = new MessageEmbed()
-            .setColor("118855")
+        let embed = new EmbedBuilder()
+            .setColor("#118855")
             .setTitle("Leaderboard for " + game + ":")
             .setThumbnail(data.assets["cover-large"].uri)
             .setFooter({ text: date })
-            .addField("Full Game Progress:", `${progress}/${count}`)
-            .addField("Individual Levels Progress:", `${progress2}/${count2}`);
+            .addFields([
+                { name: "Full Game Progress:", value: `${progress}/${count}` },
+                { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
+            ]);
         await interaction.editReply({ embeds: [embed] });
         let playerList = [];
         // Iterates through each category
@@ -204,13 +233,15 @@ module.exports = {
             }
             // Update embed if enough progress has been made
             if(Math.floor(progress/10) > lastEmbed) {
-                embed = new MessageEmbed()
-                    .setColor("118855")
+                embed = new EmbedBuilder()
+                    .setColor("#118855")
                     .setTitle("Leaderboard for " + game + ":")
                     .setThumbnail(data.assets["cover-large"].uri)
                     .setFooter({ text: date })
-                    .addField("Full Game Progress:", `${progress}/${count}`)
-                    .addField("Individual Levels Progress:", `${progress2}/${count2}`);
+                    .addFields([
+                        { name: "Full Game Progress:", value: `${progress}/${count}` },
+                        { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
+                    ]);
                 await interaction.editReply({ embeds: [embed] });
                 lastEmbed = Math.floor(progress/10);
             }
@@ -298,13 +329,15 @@ module.exports = {
             }
             // Update embed if enough progress has been made
             if(Math.floor(progress2/10) > lastEmbed) {
-                embed = new MessageEmbed()
-                    .setColor("118855")
+                embed = new EmbedBuilder()
+                    .setColor("#118855")
                     .setTitle("Leaderboard for " + game + ":")
                     .setThumbnail(data.assets["cover-large"].uri)
                     .setFooter({ text: date })
-                    .addField("Full Game Progress:", `${progress}/${count}`)
-                    .addField("Individual Levels Progress:", `${progress2}/${count2}`);
+                    .addFields([
+                        { name: "Full Game Progress:", value: `${progress}/${count}` },
+                        { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
+                    ]);
                 await interaction.editReply({ embeds: [embed] });
                 lastEmbed = Math.floor(progress2/10);
             }
@@ -318,24 +351,20 @@ module.exports = {
         playerList = playerList.filter(word => word[0].toLowerCase() !== "n/a");
         // Which place to display
         let place = 1;
-        let iterator = 0;
-        let countPlayer = 0;
-        embed = new MessageEmbed()
-            .setColor("118855")
+        embed = new EmbedBuilder()
+            .setColor("#118855")
             .setTitle("Leaderboard for " + game + ":")
             .setThumbnail(data.assets["cover-large"].uri)
             .setFooter({ text: date });
-        for(const player of playerList) {
-            embed.addField("#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true);
-            countPlayer++;
+        for(let i = 0; i < 25; i++) {
+            const player = playerList[i];
+            embed.addFields([
+                { name: "#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), value: `WRs:${player[1]}`, inline: true }
+            ]);
             // Increment only if next WR count is not equal to this count
-            if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {
+            if(playerList[i + 1] && playerList[i + 1][1] != playerList[i][1]) {
                 place++;
             }
-            if(countPlayer > 30) {
-                break;
-            }
-            iterator++;
         }
         await interaction.editReply({ embeds: [embed] });
     },

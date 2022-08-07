@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const token = require("../index.js");
 
 /**
@@ -118,11 +118,13 @@ async function search(id, message) {
     if(!result) {
         return await message.reply("Player is not in banlist");
     }
-    const embed = new MessageEmbed()
-        .setColor("118855")
+    const embed = new EmbedBuilder()
+        .setColor("#118855")
         .setTitle(`Name: ${id}`)
-        .addField("UUID", result.id)
-        .addField("Added by", "<@" + result.owner + ">")
-        .addField("Date", result.time.substr(0, 10));
+        .addFields([
+            { name: "UUID", value: result.id },
+            { name: "Added by", value: "<@" + result.owner + ">" },
+            { name: "Date", value: result.time.substr(0, 10) }
+        ]);
     return await message.reply({ embeds: [embed] });
 }

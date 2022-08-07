@@ -1,3 +1,4 @@
+const { EmbedBuilder } = require("@discordjs/builders");
 const tokens = require("../index.js");
 
 /**
@@ -13,7 +14,7 @@ module.exports = {
         await findPlayers("wdmlzyxk", "3v3v3v3");
         await findPlayers("vdom0912", "4v4v4v4");
         await findPlayers("wkpm70jk", "4v4");
-        await updateRuns("zd3q41ek");
+        await updateRuns("zd3q41ek", client);
     },
 };
 
@@ -59,7 +60,15 @@ async function findPlayers(category, mode) {
     }
 }
 
-async function updateRuns(category) {
+async function updateRuns(category, client) {
+    const channel = await client.channels.cache.get("795130255324348456");
+    let date = new Date().toISOString().slice(0, 10);
+    let embed = new EmbedBuilder()
+        .setColor("#118855")
+        .setTitle("Generating combined leaderboard for " + players.length + " players")
+        .setFooter({ text: date });
+    await channel.send({ embeds: [embed] });
+
     const data = await tokens.fetch(`https://www.speedrun.com/api/v1/categories/${category}/records?top=100`);
     // Filters out only the players with a time in every category
     players = players.filter(function(player) {
@@ -69,6 +78,14 @@ async function updateRuns(category) {
         Object.prototype.hasOwnProperty.call(player, "4v4v4v4") &&
         Object.prototype.hasOwnProperty.call(player, "4v4");
     });
+
+    embed = new EmbedBuilder()
+        .setColor("#118855")
+        .setTitle("Found " + players.length + " players with runs in all categories")
+        .setFooter({ text: date });
+    await channel.send({ embeds: [embed] });
+    const weblinks = [];
+
     next:
     // Iterates through each player
     for(const player of players) {
@@ -103,10 +120,20 @@ async function updateRuns(category) {
             }
         };
         // Submits the run
-        await tokens.post("https://www.speedrun.com/api/v1/runs", {
+        const submittedRun = await tokens.post("https://www.speedrun.com/api/v1/runs", {
             method: "post",
             body: JSON.stringify(run),
             headers: {"Content-Type": "application/json", "X-API-Key": tokens.src}
         });
+        weblinks.push(submittedRun.weblink);
+    }
+    embed = new EmbedBuilder()
+        .setColor("#118855")
+        .setTitle(weblinks.length + " runs found to update/create.")
+        .setFooter({ text: date });
+    await channel.send({ embeds: [embed] });
+
+    for(let i = 0; i < weblinks.length; i += 20) {
+        await channel.send("```\n" + weblinks.slice(i, i + 20).join("\n") + "```");
     }
 }

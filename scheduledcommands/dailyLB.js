@@ -1,5 +1,5 @@
 const tokens = require("../index.js");
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 
 /**
  * Modified version of leaderboard.js to perform daily leaderboard updates and combine data
@@ -65,16 +65,18 @@ async function runDaily(games, channel) {
         await sleep(60000);
     }
     let date = new Date().toISOString().slice(0, 10);
-    let embed = new MessageEmbed()
-        .setColor("118855")
+    let embed = new EmbedBuilder()
+        .setColor("#118855")
         .setTitle("Top Players for Group:")
         .setFooter({ text: date });
     for(let player of topPlayers) {
-        embed.addField(player.replace(/[\\*_~]/g, "\\$&"), "\u200b", true);
+        embed.addFields([
+            {name: player.replace(/[\\*_~]/g, "\\$&"), value: "\u200b", inline: true }
+        ]);
     }
     await channel.send({ embeds: [embed] });
-    embed = new MessageEmbed()
-        .setColor("118855")
+    embed = new EmbedBuilder()
+        .setColor("#118855")
         .setTitle("Top WRs for Group:")
         .setFooter({ text: date });
     totalScores.sort(function(a, b) {
@@ -84,7 +86,9 @@ async function runDaily(games, channel) {
     let iterator = 0;
     let countPlayer = 0;
     for(let player of totalScores) {
-        embed.addField("#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true);
+        embed.addFields([
+            { name: "#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), value: `WRs:${player[1]}`, inline: true }
+        ]);
         countPlayer++;
         if(totalScores[iterator + 1] && totalScores[iterator + 1][1] != totalScores[iterator][1]) {
             place++;
@@ -185,18 +189,16 @@ async function generateBoard(game, channel) {
         }
     }
 
-    if(count + count2 > 500) {
-        return await channel.send(`Game ${game} has too many categories. Number of categories: ${count + count2}.`);
-    }
-
     let date = new Date().toISOString().slice(0, 10);
-    let embed = new MessageEmbed()
-        .setColor("118855")
+    let embed = new EmbedBuilder()
+        .setColor("#118855")
         .setTitle("Leaderboard for " + game + ":")
         .setThumbnail(data.assets["cover-large"].uri)
         .setFooter({ text: date })
-        .addField("Full Game Progress:", `${progress}/${count}`)
-        .addField("Individual Levels Progress:", `${progress2}/${count2}`);
+        .addFields([
+            { name: "Full Game Progress:", value: `${progress}/${count}` },
+            { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
+        ]);
     let message = await channel.send({ embeds: [embed] });
     let playerList = [];
     // Iterates through each category
@@ -281,13 +283,15 @@ async function generateBoard(game, channel) {
         }
         // Update embed if enough progress has been made
         if(Math.floor(progress/10) > lastEmbed) {
-            embed = new MessageEmbed()
-                .setColor("118855")
+            embed = new EmbedBuilder()
+                .setColor("#118855")
                 .setTitle("Leaderboard for " + game + ":")
                 .setThumbnail(data.assets["cover-large"].uri)
                 .setFooter({ text: date })
-                .addField("Full Game Progress:", `${progress}/${count}`)
-                .addField("Individual Levels Progress:", `${progress2}/${count2}`);
+                .addFields([
+                    { name: "Full Game Progress:", value: `${progress}/${count}` },
+                    { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
+                ]);
             await message.edit({ embeds: [embed] });
             lastEmbed = Math.floor(progress/10);
         }
@@ -375,13 +379,15 @@ async function generateBoard(game, channel) {
         }
         // Update embed if enough progress has been made
         if(Math.floor(progress2/10) > lastEmbed) {
-            embed = new MessageEmbed()
-                .setColor("118855")
+            embed = new EmbedBuilder()
+                .setColor("#118855")
                 .setTitle("Leaderboard for " + game + ":")
                 .setThumbnail(data.assets["cover-large"].uri)
                 .setFooter({ text: date })
-                .addField("Full Game Progress:", `${progress}/${count}`)
-                .addField("Individual Levels Progress:", `${progress2}/${count2}`);
+                .addFields([
+                    { name: "Full Game Progress:", value: `${progress}/${count}` },
+                    { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
+                ]);
             await message.edit({ embeds: [embed] });
             lastEmbed = Math.floor(progress2/10);
         }
@@ -395,24 +401,20 @@ async function generateBoard(game, channel) {
     playerList = playerList.filter(word => word[0].toLowerCase() !== "n/a");
     // Which place to display
     let place = 1;
-    let iterator = 0;
-    let countPlayer = 0;
-    embed = new MessageEmbed()
-        .setColor("118855")
+    embed = new EmbedBuilder()
+        .setColor("#118855")
         .setTitle("Leaderboard for " + game + ":")
         .setThumbnail(data.assets["cover-large"].uri)
         .setFooter({ text: date });
-    for(const player of playerList) {
-        embed.addField("#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), `WRs:${player[1]}`, true);
-        countPlayer++;
+    for(let i = 0; i < 25; i++) {
+        const player = playerList[i];
+        embed.addFields([
+            { name: "#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), value: `WRs:${player[1]}`, inline: true }
+        ]);
         // Increment only if next WR count is not equal to this count
-        if(playerList[iterator + 1] && playerList[iterator + 1][1] != playerList[iterator][1]) {
+        if(playerList[i + 1] && playerList[i + 1][1] != playerList[i][1]) {
             place++;
         }
-        if(countPlayer > 30) {
-            break;
-        }
-        iterator++;
     }
     await message.edit({ embeds: [embed] });
     return playerList;
