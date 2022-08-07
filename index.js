@@ -24,6 +24,7 @@ const hypixelLimiter = new Limit(120, 60 * 1000);
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 client.commands = new Collection();
 client.msgCommands = new Collection();
+client.guildCommands = new Collection();
 
 getCommands("./commands", (command) => {
     client.commands.set(command.data.name, command);
@@ -61,20 +62,18 @@ client.once("ready", async () => {
 
         await rest.put(
 			Routes.applicationGuildCommands(process.env.id, process.env.guildid),
-			{ body: [...client.guildCommands] },
+			{ body: client.guildCommands.map(command => command.data.toJSON()) },
 		);
 
         const commandValues = new Set((await client.application.commands.fetch()).map(command => command.name));
-
-        for(const command of client.commands.map(command => command.data.name)) {
-            if(!commandValues.has(command)) {
-                await rest.put(
-                    Routes.applicationCommands(process.env.id),
-                    { body: [...client.commands.values()] },
-                );
-                console.log('Successfully reloaded application (/) commands.');
-                return;
-            }
+        const commands = new Set(client.commands.map(command => command.data.name));
+        if(commandValues.size !== commands.size || ![...commandValues].every(command => commands.has(command))) {
+            await rest.put(
+                Routes.applicationCommands(process.env.id),
+                { body: client.commands.map(command => command.data.toJSON()) },
+            );
+            console.log('Successfully reloaded application (/) commands.');
+            return;
         }
 
 		console.log('No (/) commands to reload.');
@@ -98,16 +97,20 @@ client.on("messageCreate", async message => {
 
 client.on("interactionCreate", async interaction => {
     if(interaction.type === InteractionType.ApplicationCommand) {
-        if (!client.commands.has(interaction.commandName)) return;
+        if (!client.commands.has(interaction.commandName) && !client.guildCommands.has(interaction.commandName)) return;
         await interaction.deferReply();
         try {
-            await client.commands.get(interaction.commandName).execute(interaction);
+            if(client.commands.has(interaction.commandName)) {
+                await client.commands.get(interaction.commandName).execute(interaction);
+            } else {
+                await client.guildCommands.get(interaction.commandName).execute(interaction);
+            }
         } catch (error) {
             console.error(error);
             await interaction.editReply({ content: "There was an error while executing this command!", ephemeral: true });
         }
     } else if(interaction.isSelectMenu()) {
-        await client.commands.get("hypixel").execute(interaction);
+        await client.guildCommands.get("hypixel").execute(interaction);
     }
 });
 
