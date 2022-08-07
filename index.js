@@ -1,84 +1,86 @@
 // Imports
-const { Client, Intents, Collection } = require("discord.js");
+const { Client, GatewayIntentBits, Collection, InteractionType, Routes, ActivityType } = require("discord.js");
 const fs = require("fs");
 const Limit = require("./Limiter.js");
-const Queue = require("queue-promise");
-const limiter = new Limit(95, 70000);
-const mojangLimiter = new Limit(600, 600000);
-const hypixelLimiter = new Limit(120, 60000);
-//const { REST } = require("@discordjs/rest");
-//const { Routes } = require("discord-api-types/v9");
+const { REST } = require("@discordjs/rest");
 const fetch = (...args) => import("node-fetch").then(({default: fetch}) => fetch(...args));
 const { MongoClient } = require("mongodb");
 var cron = require("node-cron");
 require("dotenv").config();
 
-// Creates a rate limiting queue
-const queue = new Queue({
-    concurrent: 1
-});
-
 // Prefix to call the bot
 const prefix = "src!";
-// Determines the token for bot
+
 let token = process.env.token;
 let hypixel = process.env.hypixel;
 let mongourl = process.env.mongourl;
 let src = process.env.srcapi;
 
+const limiter = new Limit(95, 70 * 1000);
+const mojangLimiter = new Limit(600, 600 * 1000);
+const hypixelLimiter = new Limit(120, 60 * 1000);
+
 // Creates new Client
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 client.commands = new Collection();
 client.msgCommands = new Collection();
 
-const commands = [];
-const commandFiles = fs.readdirSync("./commands").filter(file => file.endsWith(".js"));
-
-for (const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    commands.push(command.data.toJSON());
+getCommands("./commands", (command) => {
     client.commands.set(command.data.name, command);
-}
-
-const msgCommandFiles = fs.readdirSync("./messagecommands").filter(file => file.endsWith(".js"));
-
-for (const file of msgCommandFiles) {
-    const command = require(`./messagecommands/${file}`);
+});
+getCommands("./messagecommands", (command) => {
     client.msgCommands.set(command.data.name, command);
-}
-
-/**
-const rest = new REST({ version: '9' }).setToken(token);
-(async () => {
-	try {
-		console.log('Started refreshing application (/) commands.');
-
-		await rest.put(
-			Routes.applicationCommands(process.env.id),
-			{ body: commands },
-		);
-
-		console.log('Successfully reloaded application (/) commands.');
-	} catch (error) {
-		console.error(error);
-	}
-})();
-*/
-
-
-const scheduledCommandFiles = fs.readdirSync("./scheduledcommands").filter(file => file.endsWith(".js"));
-
-for (const file of scheduledCommandFiles) {
-    const command = require(`./scheduledcommands/${file}`);
+});
+getCommands("./guildcommands", (command) => {
+    client.guildCommands.set(command.data.name, command);
+});
+getCommands("./scheduledcommands", (command) => {
     cron.schedule(command.data.interval, () => {
         command.execute(client);
     });
+});
+
+function getCommands(dir, callback) {
+    const files = fs.readdirSync(dir).filter(file => file.endsWith(".js"));
+
+    for (const file of files) {
+        const command = require(`${dir}/${file}`);
+        callback(command);
+    }
 }
+
+const rest = new REST({ version: '10' }).setToken(token);
 
 // Sets bot activity and announces that bot is ready for use
 client.once("ready", async () => {
-    client.user.setActivity("speedrun.com | /help", { type: "WATCHING" });
+    client.user.setActivity("speedrun.com | /help", { type: ActivityType.Watching });
     console.log("Ready!");
+
+    try {
+		console.log('Started refreshing application (/) commands.');
+
+        await rest.put(
+			Routes.applicationGuildCommands(process.env.id, process.env.guildid),
+			{ body: [...client.guildCommands] },
+		);
+
+        const commandValues = new Set((await client.application.commands.fetch()).map(command => command.name));
+
+        for(const command of client.commands.map(command => command.data.name)) {
+            if(!commandValues.has(command)) {
+                await rest.put(
+                    Routes.applicationCommands(process.env.id),
+                    { body: [...client.commands.values()] },
+                );
+                console.log('Successfully reloaded application (/) commands.');
+                return;
+            }
+        }
+
+		console.log('No (/) commands to reload.');
+	} catch (error) {
+		console.error(error);
+	}
 });
 
 client.on("messageCreate", async message => {
@@ -95,7 +97,7 @@ client.on("messageCreate", async message => {
 });
 
 client.on("interactionCreate", async interaction => {
-    if(interaction.isCommand()) {
+    if(interaction.type === InteractionType.ApplicationCommand) {
         if (!client.commands.has(interaction.commandName)) return;
         await interaction.deferReply();
         try {
@@ -117,10 +119,6 @@ exports.src = src;
 
 exports.limit = function getLimit() {
     return limiter;
-};
-
-exports.queue = function getQueue() {
-    return queue;
 };
 
 exports.fetch = async function limitFetch(text) {
@@ -163,6 +161,5 @@ function sleep(ms) {
     });
 }
 
-const uri = mongourl;
-const dbclient = new MongoClient(uri);
+const dbclient = new MongoClient(mongourl);
 exports.db = dbclient;
