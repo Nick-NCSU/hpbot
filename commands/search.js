@@ -21,7 +21,8 @@ module.exports = {
             option.setName("page")
                 .setDescription("Which page would you like to view?")
         ),
-    async execute(interaction) {
+    async execute(params) {
+        const { interaction } = params;
         const search = interaction.options.get("query").value.toLowerCase();
         let page = interaction.options.get("page");
         // If page is not specified default to 1

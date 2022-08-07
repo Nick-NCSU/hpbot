@@ -17,7 +17,8 @@ module.exports = {
                 .setDescription("Game to search")
                 .setRequired(true)
         ),
-    async execute(interaction) {
+    async execute(params) {
+        const { interaction } = params;
         const game = interaction.options.get("game").value.toLowerCase();
         // Gets the game for the id
         const gameData = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}`);

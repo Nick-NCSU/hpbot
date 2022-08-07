@@ -17,7 +17,8 @@ module.exports = {
                 .setDescription("Game to show categories")
                 .setRequired(true)
         ),
-    async execute(interaction) {
+    async execute(params) {
+        const { interaction } = params;
         const game = interaction.options.get("game").value.toLowerCase();
         // Fetches the categories
         const { data } = await tokens.fetch(`https://www.speedrun.com/api/v1/games?abbreviation=${game}&embed=categories.variables`);
