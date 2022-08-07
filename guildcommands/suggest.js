@@ -43,8 +43,7 @@ module.exports = {
             name: title.slice(0, 64),
         });
         await interaction.editReply({
-            content: "Suggestion has been created: " + message.url,
-            ephemeral: true,
+            content: "Suggestion has been created: " + message.url
         });
     },
 };
