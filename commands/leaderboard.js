@@ -29,7 +29,8 @@ module.exports = {
             option.setName("ils")
                 .setDescription("Include Individual Levels? Default: true")
         ),
-    async execute(interaction) {
+        async execute(params) {
+            const { interaction } = params;
         // From rsp via https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
         // Provides cartesian product of arrays
         const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));

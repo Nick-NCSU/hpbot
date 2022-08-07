@@ -11,7 +11,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName("help")
         .setDescription("Provides a list of commands and descriptions."),
-    async execute(interaction) {
+        async execute(params) {
+            const { interaction } = params;
         const embed = new EmbedBuilder()
             .setColor("#118855")
             .setTitle("Help")

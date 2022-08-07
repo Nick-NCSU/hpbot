@@ -101,9 +101,15 @@ client.on("interactionCreate", async interaction => {
         await interaction.deferReply();
         try {
             if(client.commands.has(interaction.commandName)) {
-                await client.commands.get(interaction.commandName).execute(interaction);
+                await client.commands.get(interaction.commandName).execute({
+                    interaction,
+                    client
+                });
             } else {
-                await client.guildCommands.get(interaction.commandName).execute(interaction);
+                await client.guildCommands.get(interaction.commandName).execute({
+                    interaction,
+                    client
+                });
             }
         } catch (error) {
             console.error(error);
