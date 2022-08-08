@@ -2,11 +2,11 @@ const { EmbedBuilder } = require("discord.js");
 const { SlashCommandBuilder } = require("@discordjs/builders");
 
 /**
- * Function to provide a list of categories for the given game
+ * Function to create a suggestion
  */
 module.exports = {
     /**
-     * Builds /categories [string:game]
+     * Builds /suggest [title:string] [description:string]
      */
     data: new SlashCommandBuilder()
         .setName("suggest")
