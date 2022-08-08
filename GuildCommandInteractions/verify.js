@@ -19,7 +19,7 @@ module.exports = {
         ),
     async execute(params) {
         const { interaction, client } = params;
-        const channel = await client.channels.cache.get("815040942930919425");
+        const channel = await client.channels.cache.get("1006009193490305095");
         const username = interaction.options.get("username").value;
         const isVerified = !!(await tokens.db.db("accounts").collection("users").findOne({
             discordID: interaction.user.id
