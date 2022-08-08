@@ -1,5 +1,5 @@
 /**
- * Returns options depending on previously selected option
+ * Rejects a speedrun.com Discord connection
  */
 module.exports = {
     data: "reject",
