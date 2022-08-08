@@ -58,10 +58,8 @@ module.exports = {
             }
             // Checks if player is in banlist or known runners
             const query = { id: player.id };
-            await token.db.connect();
             const searchResult = await token.db.db("banned_runners").collection("mc").findOne(query);
             const searchResult2 = await token.db.db("known_runners").collection("mc").findOne(query);
-            await token.db.close();
             if(searchResult) {
                 result += "\t" + player.name + " (**Banlist**)\n";
             }

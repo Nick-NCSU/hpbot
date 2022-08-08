@@ -25,17 +25,25 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
 client.commands = new Collection();
 client.msgCommands = new Collection();
 client.guildCommands = new Collection();
+client.buttonCommands = new Collection();
+client.selectCommands = new Collection();
 
-getCommands("./commands", (command) => {
+getCommands("./CommandInteractions", (command) => {
     client.commands.set(command.data.name, command);
 });
-getCommands("./messagecommands", (command) => {
-    client.msgCommands.set(command.data.name, command);
-});
-getCommands("./guildcommands", (command) => {
+getCommands("./GuildCommandInteractions", (command) => {
     client.guildCommands.set(command.data.name, command);
 });
-getCommands("./scheduledcommands", (command) => {
+getCommands("./ButtonInteractions", (command) => {
+    client.buttonCommands.set(command.data, command);
+});
+getCommands("./SelectMenuInteractions", (command) => {
+    client.selectCommands.set(command.data, command);
+});
+getCommands("./MessageCommands", (command) => {
+    client.msgCommands.set(command.data.name, command);
+});
+getCommands("./ScheduledCommands", (command) => {
     cron.schedule(command.data.interval, () => {
         command.execute(client);
     });
@@ -55,8 +63,8 @@ const rest = new REST({ version: "10" }).setToken(token);
 // Sets bot activity and announces that bot is ready for use
 client.once("ready", async () => {
     client.user.setActivity("speedrun.com | /help", { type: ActivityType.Watching });
-    console.log("Ready!");
-
+    await dbclient.connect();
+    
     try {
         console.log("Started refreshing application (/) commands.");
 
@@ -116,7 +124,18 @@ client.on("interactionCreate", async interaction => {
             await interaction.editReply({ content: "There was an error while executing this command!", ephemeral: true });
         }
     } else if(interaction.isSelectMenu()) {
-        await client.guildCommands.get("hypixel").execute(interaction);
+        if(!client.selectCommands.has(interaction.customId)) return;
+        await client.selectCommands.get(interaction.customId).execute({
+            interaction,
+            client
+        });
+    } else if(interaction.isButton()) {
+        const customId = JSON.parse(interaction.customId).customId;
+        if(!client.buttonCommands.has(customId)) return;
+        await client.buttonCommands.get(customId).execute({
+            interaction,
+            client
+        });
     }
 });
 

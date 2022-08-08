@@ -63,14 +63,11 @@ async function add(id, account, message) {
         account: src.data.id
     };
     const query = { id: player.id };
-    await token.db.connect();
     const result = await token.db.db("known_runners").collection("mc").findOne(query);
     if(!result) {
         await token.db.db("known_runners").collection("mc").insertOne(doc);
-        await token.db.close();
         return await message.reply("Player added to known runners");
     }
-    await token.db.close();
     return await message.reply("Player already known");
 }
 
@@ -90,13 +87,10 @@ async function del(id, message) {
         return await message.reply("Player does not exist");
     }
     const query = { id: player.id };
-    await token.db.connect();
     const result = await token.db.db("known_runners").collection("mc").deleteMany(query);
     if (result.deletedCount >= 1) {
-        await token.db.close();
         return await message.reply("Successfully deleted player.");
     } else {
-        await token.db.close();
         return await message.reply("Player did not exist in known runners");
     }
 }
@@ -107,10 +101,8 @@ async function del(id, message) {
  * @returns message reply
  */
 async function list(message) {
-    await token.db.connect();
     const cursor = token.db.db("known_runners").collection("mc").find();
     let results = await cursor.toArray();
-    await token.db.close();
     let str = "```";
     for(const player of results) {
         const player2 = await token.fetchMojang(`https://api.mojang.com/user/profiles/${player.id}/names`);
@@ -135,9 +127,7 @@ async function search(id, message) {
         return await message.reply("Player does not exist");
     }
     const query = { id: player.id };
-    await token.db.connect();
     const result = await token.db.db("known_runners").collection("mc").findOne(query);
-    await token.db.close();
     if(!result) {
         return await message.reply("Player is not in known runners");
     }
@@ -171,13 +161,11 @@ async function searchSRC(id, message) {
         return await message.reply("SRC user does not exist");
     }
     const query = { account: src.data.id };
-    await token.db.connect();
     const result = await token.db.db("known_runners").collection("mc").find(query);
     if(!result.hasNext) {
         return await message.reply("Player is not in known runners");
     }
     const accounts = await result.toArray();
-    await token.db.close();
     const embed = new EmbedBuilder()
         .setColor("#118855")
         .setTitle(`Name: ${src.data.names.international}`)
