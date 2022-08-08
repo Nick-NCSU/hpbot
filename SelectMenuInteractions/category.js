@@ -1,11 +1,10 @@
 const { ActionRowBuilder, SelectMenuBuilder } = require("discord.js");
-const { SlashCommandBuilder } = require("@discordjs/builders");
 
 /**
  * Returns options depending on previously selected option
  */
 module.exports = {
-    data: 'category',
+    data: "category",
     async execute(params) {
         const { interaction } = params;
         let options = {

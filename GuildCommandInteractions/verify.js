@@ -26,7 +26,7 @@ module.exports = {
         }));
         if(isVerified) {
             await interaction.editReply({
-                content: 'You are already verified. Please contact <@168420049462362112> if this is a mistake or to unverify.'
+                content: "You are already verified. Please contact <@168420049462362112> if this is a mistake or to unverify."
             });
             return;
         }
@@ -41,37 +41,37 @@ module.exports = {
         let date = new Date().toISOString().slice(0, 10);
         let embed = new EmbedBuilder()
             .setColor("#118855")
-            .setTitle('User Requesting Verification')
+            .setTitle("User Requesting Verification")
             .setFooter({ text: `${date}` })
             .setThumbnail(srcAccount.data.assets.image.uri)
             .addFields([
-                { name: 'User:', value: `<@${interaction.user.id}>` },
-                { name: 'Tag:', value: interaction.user.tag },
+                { name: "User:", value: `<@${interaction.user.id}>` },
+                { name: "Tag:", value: interaction.user.tag },
                 { name: "Speedrun.com account:", value: `[${srcAccount.data.names.international}](${srcAccount.data.weblink})`}
             ]);
         const verifyId = JSON.stringify({
             discordID: interaction.user.id,
             srcID: srcAccount.data.id,
-            customId: 'verify',
+            customId: "verify",
         });
         const rejectId = JSON.stringify({
-            customId: 'reject'
+            customId: "reject"
         });
         const row = new ActionRowBuilder()
             .addComponents(
                 new ButtonBuilder()
                     .setCustomId(verifyId)
-                    .setLabel('Accept')
+                    .setLabel("Accept")
                     .setStyle(ButtonStyle.Success),
                 new ButtonBuilder()
                     .setCustomId(rejectId)
-                    .setLabel('Reject')
+                    .setLabel("Reject")
                     .setStyle(ButtonStyle.Danger),
             );
 
         await channel.send({ embeds: [embed], components: [row] });
         await interaction.editReply({
-            content: 'Your request has been submitted. You will receive the verified role when reviewed.'
+            content: "Your request has been submitted. You will receive the verified role when reviewed."
         });
     },
 };
