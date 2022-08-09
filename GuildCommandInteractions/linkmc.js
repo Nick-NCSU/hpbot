@@ -52,7 +52,7 @@ module.exports = {
 
         const hypixelAccount = await tokens.fetchHypixel(`https://api.hypixel.net/player?uuid=${minecraftAccount.id}&key=${tokens.hypixel}`);
         if(hypixelAccount?.player?.socialMedia?.links?.DISCORD.toLowerCase() !== interaction.user.tag.toLowerCase()) {
-            await interaction.editReply("Please link your Discord account to Hypixel.");
+            await interaction.editReply("Please link your Discord account to Hypixel. Type `/profile` in game > Select \"Social Media\" > Select \"Discord\" and add your profile > Log off of Hypixel to update your player. If you are still unable to link your accounts, please contact discord server staff.");
             return;
         }
 
