@@ -357,7 +357,7 @@ module.exports = {
             .setTitle("Leaderboard for " + game + ":")
             .setThumbnail(data.assets["cover-large"].uri)
             .setFooter({ text: date });
-        for(let i = 0; i < 25; i++) {
+        for(let i = 0; i < Math.min(25, playerList.length); i++) {
             const player = playerList[i];
             embed.addFields([
                 { name: "#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), value: `WRs:${player[1]}`, inline: true }
