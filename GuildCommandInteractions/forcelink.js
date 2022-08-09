@@ -21,7 +21,7 @@ module.exports = {
                 .setDescription("Minecraft username")
                 .setRequired(true)
         )
-        .setDefaultMemberPermissions(0),
+        .setDefaultMemberPermissions('0'),
     async execute(params) {
         const { interaction } = params;
         const discordID = interaction.options.getUser("user").id;
