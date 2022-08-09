@@ -113,18 +113,20 @@ async function generateBoard(game, channel) {
     }
 
     let subcategories = [];
-    let sublevels = [];
     /**
      * Provides an array containing all subcategories for full game
      * Format: [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]
      */
     for(const category of data.categories.data) {
+        if(category.miscellaneous) {
+            continue;
+        }
         if(category.type == "per-game") {
             let subArr = [];
             let idArr = [];
             for(const sub of category.variables.data) {
                 if(sub["is-subcategory"]){
-                    const options = Object.keys(sub.values.values);
+                    const options = Object.keys(sub.values.values).filter(option => sub.values.values[option].flags.miscellaneous !== true);
                     subArr.push(options);
                     idArr.push(sub.id);
                 }
@@ -137,39 +139,10 @@ async function generateBoard(game, channel) {
         }
     }
 
-    /**
-     * Provides an array containing all subcategories for individual levels
-     * Format: [levelID, [categoryID, [Array containing ids of each variable for the category], [Array containing all combinations of variable ids]]]
-     */
-    for(const level of data.levels.data) {
-        for(const category of data.categories.data) {
-            if(category.type == "per-level") {
-                let subArr = [];
-                let idArr = [];
-                for(const sub of level.variables.data) {
-                    if(sub["is-subcategory"] && (!sub.category || sub.category == category.id)) {
-                        const options = Object.keys(sub.values.values);
-                        subArr.push(options);
-                        idArr.push(sub.id);
-                    }
-                }
-                let combinations = [];
-                if(subArr.length != 0) {
-                    combinations = cartesian(...subArr);
-                }
-                sublevels.push([level.id, [category.id, idArr, combinations]]);
-            }
-        }
-    }
-
     // Full Game Progress
     let progress = 0;
-    // IL Progress
-    let progress2 = 0;
     // Total Full Game
     let count = 0;
-    // Total IL
-    let count2 = 0;
     // Last Embed Progress
     let lastEmbed = 0;
     // Counts Full Game
@@ -178,14 +151,6 @@ async function generateBoard(game, channel) {
             count++;
         } else {
             count += c[2].length;
-        }
-    }
-    // Counts ILs
-    for(const c of sublevels) {
-        if(c[1][2].length == 0) {
-            count2++;
-        } else {
-            count2 += c[1][2].length;
         }
     }
 
@@ -197,7 +162,6 @@ async function generateBoard(game, channel) {
         .setFooter({ text: date })
         .addFields([
             { name: "Full Game Progress:", value: `${progress}/${count}` },
-            { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
         ]);
     let message = await channel.send({ embeds: [embed] });
     let playerList = [];
@@ -290,106 +254,9 @@ async function generateBoard(game, channel) {
                 .setFooter({ text: date })
                 .addFields([
                     { name: "Full Game Progress:", value: `${progress}/${count}` },
-                    { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
                 ]);
             await message.edit({ embeds: [embed] });
             lastEmbed = Math.floor(progress/10);
-        }
-    }
-
-    // Iterates through each level
-    for(const c of sublevels) {
-        let data3;
-        // If level has no sub categories
-        if(c[1][2].length == 0) {
-            data3 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?top=1&embed=players`);
-            // Gets each WR run
-            for(const run of data3.data.runs) {
-                b:
-                // Gets each player of the run
-                for(const player of run.run.players) {
-                    // If player is in playerList then increment their WRs
-                    for(const item of playerList) {
-                        if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0] == player.name) {
-                            item[1] = item[1] + 1;
-                            continue b;
-                        }
-                    }
-                    if(player.rel == "user") {
-                        // If player is a user then find user.id
-                        for(const user of data3.data.players.data) {
-                            if(player.id == user.id) {
-                                playerList.push([user.names.international, 1, user.id]);
-                                continue b;
-                            }
-                        }
-                    } else if(player.rel == "guest") {
-                        playerList.push([player.name, 1, player.name]);
-                        continue b;
-                    }
-                }
-            }
-            progress2++;
-        } else {
-            // Runs for each combination of sublevels
-            for(const o of c[1][2]) {
-                // Builds string of variables
-                let varString = "";
-                if(Array.isArray(o)) {
-                    for(let i = 0; i < o.length; i++) {
-                        varString += `&var-${c[1][1][i]}=${o[i]}`;
-                    }
-                } else {
-                    varString += `&var-${c[1][1][0]}=${o}`;
-                }
-                data3 = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + "&top=1&embed=players");
-                if(!data3.data) {
-                    console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/level/${c[0]}/${c[1][0]}?` + varString.substr(1) + "&top=1&embed=players");
-                    console.log(data3);
-                    continue;
-                }
-                // Gets each WR run
-                for(const run of data3.data.runs) {
-                    b:
-                    // Gets each player of the run
-                    for(const player of run.run.players) {
-                        // If player is in playerList then increment their WRs
-                        for(const item of playerList) {
-                            if(player.rel == "user" && item[2] == player.id || player.rel == "guest" && item[0].toLowerCase() == player.name.toLowerCase()) {
-                                item[1] = item[1] + 1;
-                                continue b;
-                            }
-                        }
-                        if(player.rel == "user") {
-                            // If player is a user then find user.id
-                            for(const user of data3.data.players.data) {
-                                if(player.id == user.id) {
-                                    playerList.push([user.names.international, 1, user.id]);
-                                    continue b;
-                                }
-                            }
-                        } else if(player.rel == "guest") {
-                            playerList.push([player.name, 1, player.name]);
-                            continue b;
-                        }
-                    }
-                }
-                progress2++;
-            }
-        }
-        // Update embed if enough progress has been made
-        if(Math.floor(progress2/10) > lastEmbed) {
-            embed = new EmbedBuilder()
-                .setColor("#118855")
-                .setTitle("Leaderboard for " + game + ":")
-                .setThumbnail(data.assets["cover-large"].uri)
-                .setFooter({ text: date })
-                .addFields([
-                    { name: "Full Game Progress:", value: `${progress}/${count}` },
-                    { name: "Individual Levels Progress:", value: `${progress2}/${count2}` }
-                ]);
-            await message.edit({ embeds: [embed] });
-            lastEmbed = Math.floor(progress2/10);
         }
     }
 
