@@ -25,9 +25,12 @@ module.exports = {
             "hypixel_tp",
             "tkr",
         ];
-        await runDaily(daily, await client.channels.cache.get("792473904391651369"));
+        const blocked = [
+            "9qj3gool"
+        ]
+        await runDaily(daily, await client.channels.cache.get("792473904391651369"), blocked);
         await sleep(10000);
-        await runDaily(daily2, await client.channels.cache.get("782073727881183304"));
+        await runDaily(daily2, await client.channels.cache.get("782073727881183304"), blocked);
     },
 };
 
@@ -36,7 +39,7 @@ module.exports = {
  * @param {*} games array of games to get leaderboard of
  * @param {*} channel channel to send leaderboards
  */
-async function runDaily(games, channel) {
+async function runDaily(games, channel, blocked) {
     // List of users with #1 spot
     let topPlayers = [];
     // Total combined WRs
@@ -126,7 +129,7 @@ async function generateBoard(game, channel) {
             let idArr = [];
             for(const sub of category.variables.data) {
                 if(sub["is-subcategory"]){
-                    const options = Object.keys(sub.values.values).filter(option => sub.values.values[option].flags.miscellaneous !== true);
+                    const options = Object.keys(sub.values.values).filter(option => sub.values.values[option].flags.miscellaneous !== true && !blocked.includes(option));
                     subArr.push(options);
                     idArr.push(sub.id);
                 }
