@@ -6,7 +6,7 @@ const { EmbedBuilder } = require("discord.js");
  */
 module.exports = {
     data: {
-        interval: "0 0 16 * * *"
+        interval: "0 17 16 * * *"
     },
     async execute(client) {
         const daily = [
@@ -42,7 +42,7 @@ module.exports = {
  */
 async function runDaily(games, channel, blocked) {
     // List of users with #1 spot
-    let topPlayers = [];
+    let topPlayers = new Set();
     // Total combined WRs
     let totalScores = [];
     let scores;
@@ -52,9 +52,7 @@ async function runDaily(games, channel, blocked) {
             scores = data;
         });
         // If top player is not already in array then add them
-        if(topPlayers.indexOf(scores[0][0]) == -1) {
-            topPlayers.push(scores[0][0]);
-        }
+        topPlayers.add(scores[0][0]);
         k:
         // Add all player's scores
         for(const player of scores) {
