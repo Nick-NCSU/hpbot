@@ -24,6 +24,7 @@ module.exports = {
             "hypixel_duels",
             "hypixel_tp",
             "hypixel_ww",
+            "hypixel_dropper",
         ];
         const blocked = [
             "9qj3gool"
