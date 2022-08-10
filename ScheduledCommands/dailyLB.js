@@ -6,7 +6,7 @@ const { EmbedBuilder } = require("discord.js");
  */
 module.exports = {
     data: {
-        interval: "0 0 5 * * *"
+        interval: "0 0 16 * * *"
     },
     async execute(client) {
         const daily = [
@@ -23,11 +23,12 @@ module.exports = {
             "hypixel_sg",
             "hypixel_duels",
             "hypixel_tp",
+            "hypixel_ww",
             "tkr",
         ];
         const blocked = [
             "9qj3gool"
-        ]
+        ];
         await runDaily(daily, await client.channels.cache.get("792473904391651369"), blocked);
         await sleep(10000);
         await runDaily(daily2, await client.channels.cache.get("782073727881183304"), blocked);
@@ -47,7 +48,7 @@ async function runDaily(games, channel, blocked) {
     let scores;
     // Iterates through each game
     for(const game of games) {
-        await generateBoard(game, channel).then(function(data) {
+        await generateBoard(game, channel, blocked).then(function(data) {
             scores = data;
         });
         // If top player is not already in array then add them
@@ -103,7 +104,7 @@ async function runDaily(games, channel, blocked) {
     }
     await channel.send({ embeds: [embed] });
 }
-async function generateBoard(game, channel) {
+async function generateBoard(game, channel, blocked) {
     // From rsp via https://stackoverflow.com/questions/12303989/cartesian-product-of-multiple-arrays-in-javascript
     // Provides cartesian product of arrays
     const cartesian = (...a) => a.reduce((a, b) => a.flatMap(d => b.map(e => [d, e].flat())));
