@@ -6,7 +6,7 @@ const { EmbedBuilder } = require("discord.js");
  */
 module.exports = {
     data: {
-        interval: "0 17 16 * * *"
+        interval: "0 0 5 * * *"
     },
     async execute(client) {
         const daily = [
@@ -24,7 +24,6 @@ module.exports = {
             "hypixel_duels",
             "hypixel_tp",
             "hypixel_ww",
-            "tkr",
         ];
         const blocked = [
             "9qj3gool"
@@ -45,14 +44,13 @@ async function runDaily(games, channel, blocked) {
     let topPlayers = new Set();
     // Total combined WRs
     let totalScores = [];
-    let scores;
     // Iterates through each game
     for(const game of games) {
-        await generateBoard(game, channel, blocked).then(function(data) {
-            scores = data;
-        });
+        const scores = await generateBoard(game, channel, blocked);
         // If top player is not already in array then add them
-        topPlayers.add(scores[0][0]);
+        if(scores[0][0]) {
+            topPlayers.add(scores[0][0]);
+        }
         k:
         // Add all player's scores
         for(const player of scores) {
