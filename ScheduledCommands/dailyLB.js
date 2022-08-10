@@ -87,20 +87,14 @@ async function runDaily(games, channel, blocked) {
         return b[1] - a[1];
     });
     let place = 1;
-    let iterator = 0;
-    let countPlayer = 0;
-    for(let player of totalScores) {
+    for(let i = 0; i < Math.min(totalScores.length, 25); i++) {
+        const player = totalScores[i];
         embed.addFields([
             { name: "#" + place + " " + player[0].replace(/[\\*_~]/g, "\\$&"), value: `WRs:${player[1]}`, inline: true }
         ]);
-        countPlayer++;
-        if(totalScores[iterator + 1] && totalScores[iterator + 1][1] != totalScores[iterator][1]) {
+        if(totalScores[i + 1] && totalScores[i + 1][1] != totalScores[i][1]) {
             place++;
         }
-        if(countPlayer > 30) {
-            break;
-        }
-        iterator++;
     }
     await channel.send({ embeds: [embed] });
 }
