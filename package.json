@@ -14,7 +14,7 @@
     "@discordjs/rest": "^1.0.1",
     "discord.js": "^14.2.0",
     "dotenv": "^16.0.1",
-    "mongodb": "^4.8.1",
+    "mongodb": "^4.9.0",
     "node-cron": "^3.0.2",
     "node-fetch": "^3.2.10",
     "perf_hooks": "0.0.1",
