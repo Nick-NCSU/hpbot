@@ -10,8 +10,8 @@ module.exports = {
   },
   async execute(client) {
     const channel = await client.channels.cache.get("795130255324348456");
-    let data = await tokens.fetch(`https://www.speedrun.com/api/v1/runs?status=new&category=zd3q41ek&var-yn2m5ye8=5q8yjpkl&max=${Math.floor(Math.random() * 10 + 10)}`);
-    for(const run of data.data) {
+    let data = await tokens.fetch(`https://www.speedrun.com/api/v1/runs?status=new&category=zd3q41ek&max=${Math.floor(Math.random() * 10 + 10)}`);
+    for(const run of data.data.filter((run) => run.values?.yn2m5ye8 === "5q8yjpkl")) {
       const status = {
         "status": {
           "status": "rejected",
