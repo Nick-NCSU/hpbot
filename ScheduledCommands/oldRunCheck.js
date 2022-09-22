@@ -22,13 +22,13 @@ module.exports = {
       "hypixel_dropper",
     ];
     for(const game of games) {
-      await checkRuns(game);
+      await checkRuns(game, client);
       await sleep(5000);
     }
   },
 };
 
-async function checkRuns(game) {
+async function checkRuns(game, client) {
   const channel = await client.channels.cache.get("728402518014689333");
   const gameData = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}`);
   let data = await tokens.fetch(`https://www.speedrun.com/api/v1/runs?status=new&game=${gameData.data?.id}&max=200`);
