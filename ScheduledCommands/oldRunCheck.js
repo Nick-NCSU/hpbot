@@ -3,7 +3,7 @@ const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
   data: {
-    interval: "0 */2 * * * *"
+    interval: "0 0 */6 * * *"
   },
   async execute(client) {
     const games = [
@@ -29,7 +29,7 @@ module.exports = {
 };
 
 async function checkRuns(game, client) {
-  const channel = await client.channels.cache.get("728402518014689333");
+  const channel = await client.channels.cache.get("1022357372854870076");
   const gameData = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}`);
   let data = await tokens.fetch(`https://www.speedrun.com/api/v1/runs?status=new&game=${gameData.data?.id}&max=200`);
   const oldRuns = [];
