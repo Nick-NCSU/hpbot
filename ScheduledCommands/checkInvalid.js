@@ -9,7 +9,7 @@ module.exports = {
     interval: "0 */5 * * * *"
   },
   async execute(client) {
-    const channel = await client.channels.cache.get("795130255324348456");
+    const channel = await client.channels.cache.get("1022357372854870076");
     let data = await tokens.fetch(`https://www.speedrun.com/api/v1/runs?status=new&category=zd3q41ek&max=${Math.floor(Math.random() * 10 + 10)}`);
     for(const run of data.data.filter((run) => run.values?.yn2m5ye8 === "5q8yjpkl")) {
       const status = {
