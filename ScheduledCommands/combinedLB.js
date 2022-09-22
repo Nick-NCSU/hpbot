@@ -132,7 +132,7 @@ async function updateRuns(category, vars, client) {
       body: JSON.stringify(run),
       headers: { "Content-Type": "application/json", "X-API-Key": tokens.src }
     });
-    weblinks.push(submittedRun.weblink);
+    weblinks.push(submittedRun.data?.weblink);
   }
   embed = new EmbedBuilder()
     .setColor("#118855")
