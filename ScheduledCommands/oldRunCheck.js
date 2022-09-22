@@ -43,7 +43,7 @@ async function checkRuns(game, client) {
   if(oldRuns.length) {
     let embed = new EmbedBuilder()
       .setColor("#118855")
-      .setTitle("Old unverified runs found for game: " + gameData?.names?.international)
+      .setTitle("Old unverified runs found for game: " + gameData.data?.names?.international)
       .addFields(...oldRuns.slice(0, 25).map((run) => {
         return {
           name: run.weblink,
