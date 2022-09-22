@@ -1,4 +1,4 @@
-const { EmbedBuilder } = require("@discordjs/builders");
+const { EmbedBuilder } = require("discord.js");
 const tokens = require("../index.js");
 
 /**
@@ -61,7 +61,7 @@ async function findPlayers(category, mode) {
 }
 
 async function updateRuns(category, vars, client) {
-  const channel = await client.channels.cache.get("795130255324348456");
+  const channel = await client.channels.cache.get("1022357372854870076");
   let date = new Date().toISOString().slice(0, 10);
   let embed = new EmbedBuilder()
     .setColor("#118855")
