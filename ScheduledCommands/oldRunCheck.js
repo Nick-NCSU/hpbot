@@ -20,6 +20,17 @@ module.exports = {
       "hypixel_tp",
       "hypixel_ww",
       "hypixel_dropper",
+      "mcm_hm",
+      "mcm_sw",
+      "mcm_wotf",
+      "mcm_bbf",
+      "mcm_cd",
+      "mcm_hr",
+      "mcm_za",
+      "tkr",
+      "hypixel_zombies",
+      "hypixel_pg",
+      "hypixel_smp",
     ];
     for(const game of games) {
       await checkRuns(game, client);
