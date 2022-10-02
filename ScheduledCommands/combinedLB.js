@@ -9,21 +9,32 @@ module.exports = {
     interval: "0 0 6 * * *"
   },
   async execute(client) {
-    await findPlayers("824m59e2", "Solo");
-    await findPlayers("wkpmj40k", "Doubles");
-    await findPlayers("wdmlzyxk", "3v3v3v3");
-    await findPlayers("vdom0912", "4v4v4v4");
-    await findPlayers("wkpm70jk", "4v4");
-    await updateRuns("zd3q41ek", [["yn2m5ye8", "5q8yjpkl"]], client);
+    await findPlayers("m1z9l2d0", "824m59e2", {}, "Solo");
+    await findPlayers("m1z9l2d0", "wkpmj40k", { "68kdmk4l": "5lm4rz8l" }, "Doubles");
+    await findPlayers("m1z9l2d0", "wdmlzyxk", { "wl33656l": "mln04koq" }, "3v3v3v3");
+    await findPlayers("m1z9l2d0", "vdom0912", { "wlex6zx8": "9qj46j7q" }, "4v4v4v4");
+    await findPlayers("m1z9l2d0", "wkpm70jk", { "wlexj3x8": "klrym0jq" }, "4v4");
+    await updateRuns("m1z9l2d0", "zd3q41ek", { "yn2m5ye8": "5q8yjpkl" }, client);
+
+    players = [];
+    await findPlayers("m1z9l2d0", "824m59e2", {}, "Solo");
+    await findPlayers("m1z9l2d0", "wkpmj40k", { "68kdmk4l": "jq6x93vq" }, "Doubles");
+    await findPlayers("m1z9l2d0", "wdmlzyxk", { "wl33656l": "4qyyv86q" }, "3v3v3v3");
+    await findPlayers("m1z9l2d0", "vdom0912", { "wlex6zx8": "810mo3ol" }, "4v4v4v4");
+    await findPlayers("m1z9l2d0", "wkpm70jk", { "wlexj3x8": "21d3wy4q" }, "4v4");
+    await updateRuns("m1z9l2d0", "zd3q41ek", { "yn2m5ye8": "0q50vd21" }, client);
   },
 };
 
 let players = [];
 
-async function findPlayers(category, mode) {
-  const data = await tokens.fetch(`https://www.speedrun.com/api/v1/categories/${category}/records?top=10000`);
+async function findPlayers(game, category, vars, mode) {
+  const varMap = Object.entries(vars);
+  const varString = varMap.length ? `?${varMap.map(([variable, option]) => `var-${variable}=${option}`).join('&')}` : '';
+  console.log(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}${varString}`)
+  const data = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}${varString}`);
   // Iterates through the runs in the category
-  for (const run of data.data[0].runs) {
+  for (const run of data.data.runs) {
     // Iterates through each player in the run
     for (const player of run.run.players) {
       // If the player is a guest then skip
@@ -60,7 +71,7 @@ async function findPlayers(category, mode) {
   }
 }
 
-async function updateRuns(category, vars, client) {
+async function updateRuns(game, category, vars, client) {
   const channel = await client.channels.cache.get("1022357372854870076");
   let date = new Date().toISOString().slice(0, 10);
   let embed = new EmbedBuilder()
@@ -69,7 +80,10 @@ async function updateRuns(category, vars, client) {
     .setFooter({ text: date });
   await channel.send({ embeds: [embed] });
 
-  const data = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/m1z9l2d0/category/zd3q41ek?top=100${vars.length ? "&" : ""}${vars.map(([k, v]) => `var-${k}=${v}`).join("&")}`);
+  const varMap = Object.values(vars);
+  const varString = varMap.length ? `?${varMap.map(([variable, option]) => `var-${variable}=${option}`).join('&')}` : '';
+
+  const data = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}${varString}`);
   // Filters out only the players with a time in every category
   players = players.filter(function (player) {
     return Object.prototype.hasOwnProperty.call(player, "Solo") &&
@@ -117,7 +131,7 @@ async function updateRuns(category, vars, client) {
         ],
         emulated: false,
         comment: `Solo: ${player["Solo"].link}\nDoubles: ${player["Doubles"].link}\n3v3v3v3: ${player["3v3v3v3"].link}\n4v4v4v4: ${player["4v4v4v4"].link}\n4v4: ${player["4v4"].link}`,
-        variables: vars.reduce((variables, variable) => {
+        variables: varMap.reduce((variables, variable) => {
           variables[variable[0]] = {
             type: "pre-defined",
             value: variable[1],
