@@ -18,7 +18,7 @@
     "node-cron": "^3.0.2",
     "node-fetch": "^3.2.10",
     "perf_hooks": "0.0.1",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   },
   "engines": {
     "node": "16.16.0",
