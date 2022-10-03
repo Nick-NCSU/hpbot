@@ -13,7 +13,7 @@
     "@discordjs/builders": "^1.1.0",
     "@discordjs/rest": "^1.0.1",
     "discord.js": "^14.2.0",
-    "dotenv": "^16.0.1",
+    "dotenv": "^16.0.3",
     "mongodb": "^4.9.0",
     "node-cron": "^3.0.2",
     "node-fetch": "^3.2.10",
