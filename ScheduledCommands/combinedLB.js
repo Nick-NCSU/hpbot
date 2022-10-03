@@ -6,7 +6,7 @@ const tokens = require("../index.js");
  */
 module.exports = {
   data: {
-    interval: "0 27 13 * * *"
+    interval: "0 0 6 * * *"
   },
   async execute(client) {
     await findPlayers("m1z9l2d0", "824m59e2", {}, "Solo");
