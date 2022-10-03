@@ -6,7 +6,7 @@ const tokens = require("../index.js");
  */
 module.exports = {
   data: {
-    interval: "0 0 6 * * *"
+    interval: "0 27 13 * * *"
   },
   async execute(client) {
     await findPlayers("m1z9l2d0", "824m59e2", {}, "Solo");
@@ -79,7 +79,7 @@ async function updateRuns(game, category, vars, client) {
     .setFooter({ text: date });
   await channel.send({ embeds: [embed] });
 
-  const varMap = Object.values(vars);
+  const varMap = Object.entries(vars);
   const varString = varMap.length ? `?${varMap.map(([variable, option]) => `var-${variable}=${option}`).join('&')}` : '';
 
   const data = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}${varString}`);
@@ -116,7 +116,7 @@ async function updateRuns(game, category, vars, client) {
     // Creates the run
     const run = {
       run: {
-        category: category,
+        category,
         platform: "8gej2n93",
         verified: true,
         times: {
