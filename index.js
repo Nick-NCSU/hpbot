@@ -186,8 +186,9 @@ exports.fetchMojang = async function limitMojangFetch(text) {
 
 exports.fetchHypixel = async function limitHypixelFetch(text) {
   await hypixelLimiter.removePoints(1);
-  const data = await fetch(text);
-  return await data.json();
+  const response = await fetch(text);
+  return await response.json();
+
 };
 
 function sleep(ms) {
