@@ -151,7 +151,8 @@ exports.limit = function getLimit() {
 
 exports.fetch = async function limitFetch(text) {
   let data;
-  while(true) {
+  let attemptCount = 0;
+  while(attemptCount++ < 20) {
     await limiter.removePoints(1).then(data = await fetch(text).then(response => response.json()));
     if(data.status != 420) {
       return data;
@@ -162,7 +163,8 @@ exports.fetch = async function limitFetch(text) {
 
 exports.post = async function limitPost(text, params) {
   let data;
-  while(true) {
+  let attemptCount = 0;
+  while(attemptCount++ < 20) {
     await limiter.removePoints(1).then(data = await fetch(text, params).then(response => response.json()));
     if(data.status != 420) {
       return data;

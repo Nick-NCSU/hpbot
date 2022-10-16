@@ -55,5 +55,8 @@ Finds runners with verified runs of certain categories and automatically submits
 ### Invalid Check
 Ensures runs submitted to categories managed by a bot are rejected.
 
+### Old Run Check
+Checks a list of games for unverified runs older than 2 weeks. Sends a list of "old runs" to logging channel.
+
 ## Credits
 * [Nick-NCSU](https://github.com/Nick-NCSU) Developer

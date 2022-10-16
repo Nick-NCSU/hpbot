@@ -30,7 +30,7 @@ let players = [];
 
 async function findPlayers(game, category, vars, mode) {
   const varMap = Object.entries(vars);
-  const varString = varMap.length ? `?${varMap.map(([variable, option]) => `var-${variable}=${option}`).join('&')}` : '';
+  const varString = varMap.length ? `?${varMap.map(([variable, option]) => `var-${variable}=${option}`).join("&")}` : "";
   const data = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}${varString}`);
   // Iterates through the runs in the category
   for (const run of data.data.runs) {
@@ -80,7 +80,7 @@ async function updateRuns(game, category, vars, client) {
   await channel.send({ embeds: [embed] });
 
   const varMap = Object.entries(vars);
-  const varString = varMap.length ? `?${varMap.map(([variable, option]) => `var-${variable}=${option}`).join('&')}` : '';
+  const varString = varMap.length ? `?${varMap.map(([variable, option]) => `var-${variable}=${option}`).join("&")}` : "";
 
   const data = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}${varString}`);
   // Filters out only the players with a time in every category
