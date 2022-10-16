@@ -150,39 +150,45 @@ exports.limit = function getLimit() {
 };
 
 exports.fetch = async function limitFetch(text) {
-  let data;
   let attemptCount = 0;
   while(attemptCount++ < 20) {
-    await limiter.removePoints(1).then(data = await fetch(text).then(response => response.json()));
-    if(data.status != 420) {
-      return data;
+    await limiter.removePoints(1);
+    const response = await fetch(text);
+    if(response.status != 420) {
+      return await response.json();
     }
     await sleep(2000);
   }
 };
 
 exports.post = async function limitPost(text, params) {
-  let data;
   let attemptCount = 0;
   while(attemptCount++ < 20) {
-    await limiter.removePoints(1).then(data = await fetch(text, params).then(response => response.json()));
-    if(data.status != 420) {
-      return data;
+    await limiter.removePoints(1);
+    const response = await fetch(text, params);
+    if(response.status != 420) {
+      return await response.json();
     }
     await sleep(2000);
   }
 };
 
 exports.fetchMojang = async function limitMojangFetch(text) {
-  let data;
-  await mojangLimiter.removePoints(1).then(data = await fetch(text).then(response => response.json()).catch(() => ""));
-  return data;
+  await mojangLimiter.removePoints(1);
+  const response = await fetch(text);
+  try {
+    return await response.json();
+  } catch (error) {
+    // Returns an empty response if the player doesn't exist
+    return;
+  }
 };
 
 exports.fetchHypixel = async function limitHypixelFetch(text) {
-  let data;
-  await hypixelLimiter.removePoints(1).then(data = await fetch(text).then(response => response.json()));
-  return data;
+  await hypixelLimiter.removePoints(1);
+  const response = await fetch(text);
+  return await response.json();
+
 };
 
 function sleep(ms) {

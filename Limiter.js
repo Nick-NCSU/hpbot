@@ -57,15 +57,15 @@ class Limit {
      * @param {*} num number of points to remove
      */
   removePoints(num) {
+    let self = this;
     // Promise that resolves when num points can be removed
     return new Promise((resolve) => {
-      let self = this;
       // Repeats checking until there are enough points
       (function wait() {
         if(self.points - num >= 0) { // If there is room to remove the points
-          self.points = self.points - num; // Remove the points
-          setTimeout(() => self.addPoints(num), self.timeout); // Add the points back timeout ms after
-          return resolve();
+          self.points -= num; // Remove the points
+          setTimeout(() => self.addPoints(num), self.TIMEOUT); // Add the points back timeout ms after
+          resolve();
         } else {
           setTimeout(wait, 1000); // Else try again after 1 second
         }
