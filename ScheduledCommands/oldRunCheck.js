@@ -59,7 +59,7 @@ async function checkRuns(game, client) {
         return {
           name: run.weblink,
           value: new Date(run.submitted).toISOString().slice(0, 10)
-        }
+        };
       }));
     await channel.send({ embeds: [embed] });
   }
