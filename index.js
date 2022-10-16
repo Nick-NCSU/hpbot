@@ -157,7 +157,6 @@ exports.fetch = async function limitFetch(text) {
     if(response.status != 420) {
       return await response.json();
     }
-    console.log('retry')
     await sleep(2000);
   }
 };
