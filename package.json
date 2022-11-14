@@ -16,7 +16,7 @@
     "dotenv": "^16.0.3",
     "mongodb": "^4.10.0",
     "node-cron": "^3.0.2",
-    "node-fetch": "^3.2.10",
+    "node-fetch": "^3.3.0",
     "perf_hooks": "0.0.1",
     "uuid": "^9.0.0"
   },
