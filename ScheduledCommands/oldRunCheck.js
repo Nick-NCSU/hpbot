@@ -58,7 +58,7 @@ async function checkRuns(game, client) {
       .addFields(...oldRuns.slice(0, 25).map((run) => {
         return {
           name: run.weblink,
-          value: new Date(run.submitted).toISOString().slice(0, 10)
+          value: `<t:${run.submitted}:R>`,
         };
       }));
     await channel.send({ embeds: [embed] });
