@@ -3,7 +3,7 @@ const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
   data: {
-    interval: "0 12 * * * *"
+    interval: "0 14 * * * *"
   },
   async execute(client) {
     const games = [
@@ -58,7 +58,7 @@ async function checkRuns(game, client) {
       .addFields(...oldRuns.slice(0, 25).map((run) => {
         return {
           name: run.weblink,
-          value: `<t:${new Date(run.submitted).getTime()}:R>`,
+          value: `<t:${Math.floor(new Date(run.submitted).getTime() / 1000)}:R>`,
         };
       }));
     await channel.send({ embeds: [embed] });
