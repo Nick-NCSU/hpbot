@@ -22,3 +22,6 @@ jobs:
 
       - name: Set Environment Variables
         run: cp ~/.env ~/actions-runner/_work/hpbot/hpbot/.env
+
+      - name: Restart App
+        run: pm2 restart HPBot
