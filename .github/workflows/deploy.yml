@@ -19,3 +19,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Set Environment Variables
+        run: cp ~/.env ~/actions-runner/_work/hpbot/hpbot/.env
