@@ -80,10 +80,10 @@ async function updateRuns(game, category, vars, count, client) {
   const varString = varMap.length ? `?${varMap.map(([variable, option]) => `var-${variable}=${option}`).join("&")}` : "";
 
   const data = await tokens.fetch(`https://www.speedrun.com/api/v1/leaderboards/${game}/category/${category}${varString}`);
-  console.log(JSON.stringify(players.find(p => p.id === 'x3554nqj')));
+
   // Filters out only the players with a time in every category
   players = players.filter(player => Object.keys(player.runs).length === count);
-  console.log(JSON.stringify(players, null, 2));
+
   embed = new EmbedBuilder()
     .setColor("#118855")
     .setTitle("Found " + players.length + " players with runs in all categories")
@@ -131,14 +131,13 @@ async function updateRuns(game, category, vars, count, client) {
         }, {})
       }
     };
-    console.log(JSON.stringify(run, null, 2));
     // Submits the run
-    // const submittedRun = await tokens.post("https://www.speedrun.com/api/v1/runs", {
-    //   method: "post",
-    //   body: JSON.stringify(run),
-    //   headers: { "Content-Type": "application/json", "X-API-Key": tokens.src }
-    // });
-    // weblinks.push(submittedRun.data?.weblink);
+    const submittedRun = await tokens.post("https://www.speedrun.com/api/v1/runs", {
+      method: "post",
+      body: JSON.stringify(run),
+      headers: { "Content-Type": "application/json", "X-API-Key": tokens.src }
+    });
+    weblinks.push(submittedRun.data?.weblink);
   }
   embed = new EmbedBuilder()
     .setColor("#118855")
