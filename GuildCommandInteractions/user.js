@@ -109,7 +109,7 @@ module.exports = {
       data.discordID = document.discordID;
     }
     for(const uuid of document.minecraftUUIDs) {
-      const player = await tokens.fetchMojang(`https://api.mojang.com/user/profiles/${uuid}`);
+      const player = await tokens.fetchMojang(`https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`);
       data.accounts.push({
         uuid,
         ign: player.name
