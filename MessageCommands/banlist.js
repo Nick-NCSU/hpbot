@@ -86,8 +86,8 @@ async function list(message) {
   let results = await cursor.toArray();
   let str = "```";
   for(const player of results) {
-    const player2 = await token.fetchMojang(`https://api.mojang.com/user/profiles/${player.id}/names`);
-    str += "IGN: " + player2[player2.length - 1].name + "\n";
+    const player2 = await token.fetchMojang(`https://api.mojang.com/user/profiles/${player.id}`);
+    str += "IGN: " + player2.name + "\n";
   }
   return await message.reply(str + "```");
 }

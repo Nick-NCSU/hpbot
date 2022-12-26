@@ -105,8 +105,8 @@ async function list(message) {
   let results = await cursor.toArray();
   let str = "```";
   for(const player of results) {
-    const player2 = await token.fetchMojang(`https://api.mojang.com/user/profiles/${player.id}/names`);
-    str += player2[player2.length - 1].name + ", ";
+    const player2 = await token.fetchMojang(`https://api.mojang.com/user/profiles/${player.id}`);
+    str += player2.name + ", ";
   }
   return await message.reply(str.slice(0, -2) + "```");
 }
@@ -172,9 +172,9 @@ async function searchSRC(id, message) {
     .setURL(src.data.weblink);
   for(const account of accounts) {
     // Gets player from mojang api
-    const player = await token.fetchMojang(`https://api.mojang.com/user/profiles/${account.id}/names`);
+    const player = await token.fetchMojang(`https://api.mojang.com/user/profiles/${account.id}`);
     embed.addFields([
-      { name: `${player[player.length - 1].name}`, value: `[Stats](https://sk1er.club/s/${player[player.length - 1].name})` }
+      { name: `${player.name}`, value: `[Stats](https://sk1er.club/s/${player.name})` }
     ]);
   }
   return await message.reply({ embeds: [embed] });
