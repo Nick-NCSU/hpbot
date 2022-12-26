@@ -109,10 +109,10 @@ module.exports = {
       data.discordID = document.discordID;
     }
     for(const uuid of document.minecraftUUIDs) {
-      const player = await tokens.fetchMojang(`https://api.mojang.com/user/profiles/${uuid}/names`);
+      const player = await tokens.fetchMojang(`https://api.mojang.com/user/profiles/${uuid}`);
       data.accounts.push({
         uuid,
-        ign: player[player.length - 1].name
+        ign: player.name
       });
     }
     let date = new Date().toISOString().slice(0, 10);
