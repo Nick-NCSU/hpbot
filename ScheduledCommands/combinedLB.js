@@ -9,7 +9,7 @@ module.exports = {
     interval: "0 0 6 * * *"
   },
   async execute(client) {
-    await findPlayers("m1z9l2d0", "824m59e2", {}, "Solo");
+    await findPlayers("m1z9l2d0", "824m59e2", { "9l75jz98": "4lx6wz2l" }, "Solo");
     await findPlayers("m1z9l2d0", "wkpmj40k", { "68kdmk4l": "5lm4rz8l" }, "Doubles");
     await findPlayers("m1z9l2d0", "wdmlzyxk", { "wl33656l": "mln04koq" }, "3v3v3v3");
     await findPlayers("m1z9l2d0", "vdom0912", { "wlex6zx8": "9qj46j7q" }, "4v4v4v4");
@@ -17,7 +17,7 @@ module.exports = {
     await updateRuns("m1z9l2d0", "zd3q41ek", { "yn2m5ye8": "5q8yjpkl" }, 5, client);
 
     players = [];
-    await findPlayers("m1z9l2d0", "824m59e2", {}, "Solo");
+    await findPlayers("m1z9l2d0", "824m59e2", { "9l75jz98": "4lx6wz2l" }, "Solo");
     await findPlayers("m1z9l2d0", "wkpmj40k", { "68kdmk4l": "jq6x93vq" }, "Doubles");
     await findPlayers("m1z9l2d0", "wdmlzyxk", { "wl33656l": "4qyyv86q" }, "3v3v3v3");
     await findPlayers("m1z9l2d0", "vdom0912", { "wlex6zx8": "810mo3ol" }, "4v4v4v4");
