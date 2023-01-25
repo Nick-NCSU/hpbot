@@ -30,7 +30,7 @@ module.exports = {
       const guild = await token.fetchHypixel(`https://api.hypixel.net/guild?player=${player.id}&key=${token.hypixel}`);
       result += player.name + ":\n";
       // Checks if player is friends with other players
-      for(const friend of friends.records) {
+      for(const friend of friends.records || []) {
         if(friend.uuidSender != player.id) {
           for(const player2 of players) {
             if(player2.id == friend.uuidSender) {
