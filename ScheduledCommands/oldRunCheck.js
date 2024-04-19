@@ -3,7 +3,7 @@ const { EmbedBuilder } = require("discord.js");
 
 module.exports = {
   data: {
-    interval: "0 0 */6 * * *"
+    interval: "0 0 0 * * *"
   },
   async execute(client) {
     const games = [
