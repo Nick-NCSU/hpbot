@@ -10,21 +10,19 @@
   "author": "penguin",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^1.4.0",
-    "@discordjs/rest": "^1.5.0",
-    "discord.js": "^14.11.0",
-    "dotenv": "^16.0.3",
-    "mongodb": "^4.13.0",
-    "node-cron": "^3.0.2",
-    "node-fetch": "^3.3.0",
-    "perf_hooks": "0.0.1",
-    "uuid": "^9.0.0"
+    "@discordjs/builders": "^1.10.1",
+    "@discordjs/rest": "^1.7.1",
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7",
+    "node-cron": "^3.0.3",
+    "node-fetch": "^3.3.2",
+    "uuid": "^9.0.1"
   },
   "engines": {
-    "node": "16.16.0",
-    "npm": "8.11.0"
+    "node": "20",
+    "npm": "10.7.0"
   },
   "devDependencies": {
-    "eslint": "^8.34.0"
+    "eslint": "^8.57.1"
   }
 }

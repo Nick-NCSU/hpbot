@@ -4,7 +4,6 @@ const fs = require("fs");
 const Limit = require("./Limiter.js");
 const { REST } = require("@discordjs/rest");
 const fetch = (...args) => import("node-fetch").then(({default: fetch}) => fetch(...args));
-const { MongoClient } = require("mongodb");
 var cron = require("node-cron");
 require("dotenv").config();
 
@@ -34,9 +33,6 @@ getCommands("./CommandInteractions", (command) => {
 getCommands("./GuildCommandInteractions", (command) => {
   client.guildCommands.set(command.data.name, command);
 });
-getCommands("./ButtonInteractions", (command) => {
-  client.buttonCommands.set(command.data, command);
-});
 getCommands("./SelectMenuInteractions", (command) => {
   client.selectCommands.set(command.data, command);
 });
@@ -63,7 +59,6 @@ const rest = new REST({ version: "10" }).setToken(token);
 // Sets bot activity and announces that bot is ready for use
 client.once("ready", async () => {
   client.user.setActivity("speedrun.com | /help", { type: ActivityType.Watching });
-  await dbclient.connect();
     
   try {
     console.log("Started refreshing application (/) commands.");
@@ -127,7 +122,7 @@ client.on("interactionCreate", async interaction => {
       console.error(error);
       await interaction.editReply({ content: "There was an error while executing this command!", ephemeral: true });
     }
-  } else if(interaction.isSelectMenu()) {
+  } else if(interaction.isStringSelectMenu()) {
     if(!client.selectCommands.has(interaction.customId)) return;
     await client.selectCommands.get(interaction.customId).execute({
       interaction,
@@ -200,6 +195,3 @@ function sleep(ms) {
     setTimeout(resolve, ms);
   });
 }
-
-const dbclient = new MongoClient(mongourl);
-exports.db = dbclient;

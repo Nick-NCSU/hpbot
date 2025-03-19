@@ -1,8 +1,6 @@
 # SRC-BOT
 A Discord Bot to connect the Speedrun.com and Hypixel APIs.
 
-Uses MongoDB for a database to store the banlist and known runners.
-
 ## Slash Commands
 Command|Description
 :-----:|:-----:
@@ -18,32 +16,10 @@ Command|Description
 /ping|Provides bot response time.
 
 ## Message Commands
-### src!banlist
-Command|Description
-:-----:|:-----:
-src!banlist list|Lists all accounts in the banlist.
-src!banlist add \<player>|Adds an account to the banlist.
-src!banlist remove \<player>|Removes an account from the banlist.
-src!banlist search \<player>|Searches for banned player and returns information regarding ban
-
-### src!runners
-Command|Description
-:-----:|:-----:
-src!runners list|Lists all accounts in the known runners.
-src!runners add \<player> \<src account>|Adds an account to the known runners.
-src!runners remove \<player>|Removes an account from the known runners.
-src!runners search \<player>|Searches for known and returns information account information.
-src!runners searchsrc \<src account>| Searches by src account and returns all associated accounts.
-
 ### src!dream
 Command|Description
 :-----:|:-----:
 src!dream (simulations)|Same as slash command version.
-
-### src!check
-Command|Description
-:-----:|:-----:
-src!check (...account)|Checks a list of accounts for Hypixel friends/guild lists, banlist, and known runners list.
 
 ## Scheduled Actions
 ### Daily Leaderboard
