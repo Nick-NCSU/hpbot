@@ -12,7 +12,6 @@ const prefix = "src!";
 
 let token = process.env.token;
 let hypixel = process.env.hypixel;
-let mongourl = process.env.mongourl;
 let src = process.env.srcapi;
 
 const limiter = new Limit(95, 70 * 1000);
@@ -54,7 +53,7 @@ function getCommands(dir, callback) {
   }
 }
 
-const rest = new REST({ version: "10" }).setToken(token);
+const rest = new REST().setToken(token);
 
 // Sets bot activity and announces that bot is ready for use
 client.once("ready", async () => {
