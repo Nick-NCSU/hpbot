@@ -70,11 +70,7 @@ async function findPlayers(game, category, vars, mode, level) {
 async function updateRuns(game, category, vars, count, client) {
   const channel = await client.channels.cache.get("1022357372854870076");
   let date = new Date().toISOString().slice(0, 10);
-  let embed = new EmbedBuilder()
-    .setColor("#118855")
-    .setTitle("Generating combined leaderboard for " + players.length + " players")
-    .setFooter({ text: date });
-  await channel.send({ embeds: [embed] });
+  console.log("Generating combined leaderboard for " + players.length + " players");
 
   const varMap = Object.entries(vars);
   const varString = varMap.length ? `?${varMap.map(([variable, option]) => `var-${variable}=${option}`).join("&")}` : "";
@@ -83,12 +79,8 @@ async function updateRuns(game, category, vars, count, client) {
 
   // Filters out only the players with a time in every category
   players = players.filter(player => Object.keys(player.runs).length === count);
+  console.log("Found " + players.length + " players with runs in all categories");
 
-  embed = new EmbedBuilder()
-    .setColor("#118855")
-    .setTitle("Found " + players.length + " players with runs in all categories")
-    .setFooter({ text: date });
-  await channel.send({ embeds: [embed] });
   const weblinks = [];
 
   next:
@@ -139,11 +131,7 @@ async function updateRuns(game, category, vars, count, client) {
     });
     weblinks.push(submittedRun.data?.weblink);
   }
-  embed = new EmbedBuilder()
-    .setColor("#118855")
-    .setTitle(weblinks.length + " runs found to update/create.")
-    .setFooter({ text: date });
-  await channel.send({ embeds: [embed] });
+  console.log(weblinks.length + " runs found to update/create.")
 
   for (let i = 0; i < weblinks.length; i += 20) {
     await channel.send("```\n" + weblinks.slice(i, i + 20).join("\n") + "```");

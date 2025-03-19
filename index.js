@@ -104,6 +104,10 @@ client.on("messageCreate", async message => {
 });
 
 client.on("interactionCreate", async interaction => {
+  await fs.appendFile(
+    './data/interactions.txt', 
+    `${interaction.user.id}|${interaction.user.username}|${interaction.type}|${interaction.commandName}|${interaction.customId}`
+  ).catch(console.error);
   if(interaction.type === InteractionType.ApplicationCommand) {
     if (!client.commands.has(interaction.commandName) && !client.guildCommands.has(interaction.commandName)) return;
     await interaction.deferReply();
