@@ -1,6 +1,7 @@
 // Imports
 const { Client, GatewayIntentBits, Collection, InteractionType, Routes, ActivityType } = require("discord.js");
 const fs = require("fs");
+const fsPromises = require("fs/promises");
 const Limit = require("./Limiter.js");
 const { REST } = require("@discordjs/rest");
 const fetch = (...args) => import("node-fetch").then(({default: fetch}) => fetch(...args));
@@ -60,6 +61,8 @@ client.once("ready", async () => {
   client.user.setActivity("speedrun.com | /help", { type: ActivityType.Watching });
     
   try {
+    await fsPromises.mkdir('data');
+
     console.log("Started refreshing application (/) commands.");
 
     await rest.put(
@@ -98,10 +101,10 @@ client.on("messageCreate", async message => {
 });
 
 client.on("interactionCreate", async interaction => {
-  await fs.appendFile(
+  await fsPromises.appendFile(
     './data/interactions.txt', 
-    `${interaction.user.id}|${interaction.user.username}|${interaction.type}|${interaction.commandName}|${interaction.customId}`
-  ).catch(console.error);
+    `${interaction.user.id}|${interaction.user.username}|${interaction.type}|${interaction.commandName}|${interaction.customId}\n`,
+  );
   if(interaction.type === InteractionType.ApplicationCommand) {
     if (!client.commands.has(interaction.commandName) && !client.guildCommands.has(interaction.commandName)) return;
     await interaction.deferReply();
