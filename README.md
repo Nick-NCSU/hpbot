@@ -5,7 +5,6 @@ A Discord Bot to connect the Speedrun.com and Hypixel APIs.
 Command|Description
 :-----:|:-----:
 /help|Shows a help message.
-/hypixel|Provides helpful links for Hypixel Speedruns.
 /link \<game>|Sends a link to the provided game.
 /categories \<game>|Shows the categories/variables for the provided game.
 /search \<keyword> (page)|Searches for games containing the keyword(s).

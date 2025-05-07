@@ -1,7 +1,6 @@
 // Imports
 const { Client, GatewayIntentBits, Collection, InteractionType, Routes, ActivityType } = require("discord.js");
 const fs = require("fs");
-const fsPromises = require("fs/promises");
 const Limit = require("./Limiter.js");
 const { REST } = require("@discordjs/rest");
 const fetch = (...args) => import("node-fetch").then(({default: fetch}) => fetch(...args));
@@ -22,19 +21,14 @@ const hypixelLimiter = new Limit(120, 60 * 1000);
 // Creates new Client
 const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.MessageContent] });
 client.commands = new Collection();
-client.msgCommands = new Collection();
 client.guildCommands = new Collection();
-client.buttonCommands = new Collection();
-client.selectCommands = new Collection();
+client.msgCommands = new Collection();
 
 getCommands("./CommandInteractions", (command) => {
   client.commands.set(command.data.name, command);
 });
 getCommands("./GuildCommandInteractions", (command) => {
   client.guildCommands.set(command.data.name, command);
-});
-getCommands("./SelectMenuInteractions", (command) => {
-  client.selectCommands.set(command.data, command);
 });
 getCommands("./MessageCommands", (command) => {
   client.msgCommands.set(command.data.name, command);
@@ -61,7 +55,8 @@ client.once("ready", async () => {
   client.user.setActivity("speedrun.com | /help", { type: ActivityType.Watching });
     
   try {
-    await fsPromises.mkdir('data');
+    if(!fs.existsSync('data'))
+      fs.mkdirSync('data');
 
     console.log("Started refreshing application (/) commands.");
 
@@ -101,9 +96,9 @@ client.on("messageCreate", async message => {
 });
 
 client.on("interactionCreate", async interaction => {
-  await fsPromises.appendFile(
+  fs.appendFileSync(
     './data/interactions.txt', 
-    `${interaction.user.id}|${interaction.user.username}|${interaction.type}|${interaction.commandName}|${interaction.customId}\n`,
+    `${new Date().toISOString()}|${interaction.user.id}|${interaction.user.username}|${interaction.type}|${interaction.commandName}|${interaction.customId}\n`,
   );
   if(interaction.type === InteractionType.ApplicationCommand) {
     if (!client.commands.has(interaction.commandName) && !client.guildCommands.has(interaction.commandName)) return;

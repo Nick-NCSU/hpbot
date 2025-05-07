@@ -18,7 +18,7 @@ module.exports = {
     )
     .addStringOption(option =>
       option.setName("description")
-        .setDescription("Description fo the suggestion (max 4096 characters).")
+        .setDescription("Description of the suggestion (max 4096 characters).")
         .setRequired(true)
     ),
   async execute(params) {
