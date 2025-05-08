@@ -10,9 +10,14 @@ require("dotenv").config();
 // Prefix to call the bot
 const prefix = "src!";
 
-let token = process.env.token;
-let hypixel = process.env.hypixel;
-let src = process.env.srcapi;
+const loadEnv = (key) => {
+  if(process.env[key] === undefined) console.error(`Undefined environment variable ${key}`);
+  return process.env[key];
+}
+
+let token = loadEnv('APPLICATION_TOKEN');
+let hypixel = loadEnv('HYPIXEL_API_KEY');
+let src = loadEnv('SRC_API_KEY');
 
 const limiter = new Limit(95, 70 * 1000);
 const mojangLimiter = new Limit(600, 600 * 1000);
@@ -61,7 +66,7 @@ client.once("ready", async () => {
     console.log("Started refreshing application (/) commands.");
 
     await rest.put(
-      Routes.applicationGuildCommands(process.env.id, process.env.guildid),
+      Routes.applicationGuildCommands(loadEnv('APPLICATION_ID'), loadEnv('GUILD_ID')),
       { body: client.guildCommands.map(command => command.data.toJSON()) },
     );
 
@@ -69,7 +74,7 @@ client.once("ready", async () => {
     const commands = new Set(client.commands.map(command => command.data.name));
     if(commandValues.size !== commands.size || ![...commandValues].every(command => commands.has(command))) {
       await rest.put(
-        Routes.applicationCommands(process.env.id),
+        Routes.applicationCommands(loadEnv('APPLICATION_ID')),
         { body: client.commands.map(command => command.data.toJSON()) },
       );
       console.log("Successfully reloaded application (/) commands.");
