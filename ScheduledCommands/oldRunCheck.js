@@ -31,6 +31,7 @@ module.exports = {
       "hypixel_zombies",
       "hypixel_pg",
       "hypixel_smp",
+      "hypixel_bridging",
     ];
     for(const game of games) {
       await checkRuns(game, client);
