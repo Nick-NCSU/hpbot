@@ -1,5 +1,6 @@
 const tokens = require("../index.js");
 const { EmbedBuilder } = require("discord.js");
+const { loadEnv } = require('../utils.js');
 
 module.exports = {
   data: {
@@ -35,13 +36,12 @@ module.exports = {
     ];
     for(const game of games) {
       await checkRuns(game, client);
-      await sleep(5000);
     }
   },
 };
 
 async function checkRuns(game, client) {
-  const channel = await client.channels.cache.get("1022357372854870076");
+  const channel = await client.channels.cache.get(loadEnv("LOG_CHANNEL_ID"));
   const gameData = await tokens.fetch(`https://www.speedrun.com/api/v1/games/${game}`);
   let data = await tokens.fetch(`https://www.speedrun.com/api/v1/runs?status=new&game=${gameData.data?.id}&max=200`);
   const oldRuns = [];

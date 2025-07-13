@@ -4,16 +4,12 @@ const fs = require("fs");
 const Limit = require("./Limiter.js");
 const { REST } = require("@discordjs/rest");
 const fetch = (...args) => import("node-fetch").then(({default: fetch}) => fetch(...args));
+const { loadEnv } = require('./utils.js');
 var cron = require("node-cron");
 require("dotenv").config();
 
 // Prefix to call the bot
 const prefix = "src!";
-
-const loadEnv = (key) => {
-  if(process.env[key] === undefined) console.error(`Undefined environment variable ${key}`);
-  return process.env[key];
-}
 
 let token = loadEnv('APPLICATION_TOKEN');
 let hypixel = loadEnv('HYPIXEL_API_KEY');

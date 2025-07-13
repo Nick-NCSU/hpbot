@@ -1,5 +1,6 @@
 const { EmbedBuilder } = require("discord.js");
 const tokens = require("../index.js");
+const { loadEnv } = require('../utils.js');
 
 /**
  * Modified version of leaderboard.js to perform daily leaderboard updates and combine data
@@ -68,7 +69,7 @@ async function findPlayers(game, category, vars, mode, level) {
 }
 
 async function updateRuns(game, category, vars, count, client) {
-  const channel = await client.channels.cache.get("1022357372854870076");
+  const channel = await client.channels.cache.get(loadEnv("LOG_CHANNEL_ID"));
   let date = new Date().toISOString().slice(0, 10);
   console.log("Generating combined leaderboard for " + players.length + " players");
 
