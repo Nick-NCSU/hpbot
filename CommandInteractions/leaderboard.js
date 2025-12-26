@@ -136,10 +136,6 @@ module.exports = {
       }
     }
 
-    if(!game.startsWith("hypixel_") && count + count2 > 500) {
-      return await interaction.editReply(`Game ${game} has too many categories. Number of categories: ${count + count2}.`);
-    }
-
     let date = new Date().toISOString().slice(0, 10);
     let embed = new EmbedBuilder()
       .setColor("#118855")
